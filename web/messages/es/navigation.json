@@ -1,0 +1,36 @@
+{
+  "main": {
+    "tracing": "Trazas",
+    "sessions": "Sesiones",
+    "users": "Usuarios",
+    "prompts": "Prompts",
+    "playground": "Playground",
+    "datasets": "Datasets",
+    "scores": "Puntuaciones",
+    "dashboard": "Panel",
+    "settings": "Configuración",
+    "models": "Modelos",
+    "annotations": "Anotaciones"
+  },
+  "groups": {
+    "observability": "Observabilidad",
+    "promptManagement": "Gestión de Prompts",
+    "evaluation": "Evaluación"
+  },
+  "breadcrumbs": {
+    "home": "Inicio",
+    "project": "Proyecto",
+    "organization": "Organización"
+  },
+  "projectSwitcher": {
+    "switchProject": "Cambiar proyecto",
+    "createNewProject": "Crear nuevo proyecto",
+    "allProjects": "Todos los proyectos",
+    "noProjects": "No se encontraron proyectos"
+  },
+  "orgSwitcher": {
+    "switchOrganization": "Cambiar organización",
+    "organizationSettings": "Configuración de organización",
+    "createNewOrganization": "Crear nueva organización"
+  }
+}

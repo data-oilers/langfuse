@@ -1,15 +1,17 @@
 import * as React from "react";
 import { Monitor, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
+import { useTranslations } from "next-intl";
 import { cn } from "@/src/utils/tailwind";
 import { usePostHogClientCapture } from "@/src/features/posthog-analytics/usePostHogClientCapture";
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
   const capture = usePostHogClientCapture();
+  const t = useTranslations("common");
   return (
     <div className="flex items-center space-x-1">
-      <span className="mr-2">Theme</span>
+      <span className="mr-2">{t("userMenu.theme")}</span>
       <div title="Light mode">
         <Sun
           className={cn(

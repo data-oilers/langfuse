@@ -1,0 +1,36 @@
+{
+  "main": {
+    "tracing": "Tracing",
+    "sessions": "Sessions",
+    "users": "Users",
+    "prompts": "Prompts",
+    "playground": "Playground",
+    "datasets": "Datasets",
+    "scores": "Scores",
+    "dashboard": "Dashboard",
+    "settings": "Settings",
+    "models": "Models",
+    "annotations": "Annotations"
+  },
+  "groups": {
+    "observability": "Observability",
+    "promptManagement": "Prompt Management",
+    "evaluation": "Evaluation"
+  },
+  "breadcrumbs": {
+    "home": "Home",
+    "project": "Project",
+    "organization": "Organization"
+  },
+  "projectSwitcher": {
+    "switchProject": "Switch project",
+    "createNewProject": "Create new project",
+    "allProjects": "All projects",
+    "noProjects": "No projects found"
+  },
+  "orgSwitcher": {
+    "switchOrganization": "Switch organization",
+    "organizationSettings": "Organization settings",
+    "createNewOrganization": "Create new organization"
+  }
+}

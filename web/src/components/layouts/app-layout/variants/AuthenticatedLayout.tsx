@@ -5,6 +5,7 @@
  */
 
 import type { PropsWithChildren } from "react";
+import { useTranslations } from "next-intl";
 import Head from "next/head";
 import { SidebarProvider, SidebarInset } from "@/src/components/ui/sidebar";
 import { AppSidebar } from "@/src/components/nav/app-sidebar";
@@ -12,6 +13,7 @@ import { Toaster } from "@/src/components/ui/sonner";
 import { PaymentBannerProvider } from "@/src/features/payment-banner";
 import { ResizableContent } from "../components/ResizableContent";
 import { ThemeToggle } from "@/src/features/theming/ThemeToggle";
+import { LanguageSelector } from "@/src/features/i18n/LanguageSelector";
 import type { Session } from "next-auth";
 import type { NavigationItem } from "@/src/components/layouts/utilities/routes";
 import type { RouteGroup } from "@/src/components/layouts/routes";
@@ -76,6 +78,8 @@ export function AuthenticatedLayout({
   metadata,
   onSignOut,
 }: AuthenticatedLayoutProps) {
+  const t = useTranslations("common");
+
   // Safe assertion: AuthenticatedLayout is only rendered after auth checks pass
   // in AppLayout, which guarantees session.user exists at this point
   const user = session.user;
@@ -92,9 +96,18 @@ export function AuthenticatedLayout({
       avatar: user.image ?? "",
     },
     items: [
-      { name: "Account Settings", href: "/account/settings" },
-      { name: "Theme", onClick: () => {}, content: <ThemeToggle /> },
-      { name: "Sign out", onClick: onSignOut },
+      { name: t("userMenu.accountSettings"), href: "/account/settings" },
+      {
+        name: t("userMenu.theme"),
+        onClick: () => {},
+        content: <ThemeToggle />,
+      },
+      {
+        name: t("userMenu.language"),
+        onClick: () => {},
+        content: <LanguageSelector />,
+      },
+      { name: t("userMenu.signOut"), onClick: onSignOut },
     ],
   };
 

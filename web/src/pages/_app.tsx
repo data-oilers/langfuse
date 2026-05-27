@@ -3,6 +3,7 @@ import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { setUser } from "@sentry/nextjs";
 import { useSession } from "next-auth/react";
+import { NextIntlClientProvider } from "next-intl";
 import { TooltipProvider } from "@/src/components/ui/tooltip";
 import { CommandMenuProvider } from "@/src/features/command-k-menu/CommandMenuProvider";
 
@@ -13,7 +14,7 @@ import { QueryParamProvider } from "use-query-params";
 
 import "@/src/styles/globals.css";
 import { AppLayout } from "@/src/components/layouts/app-layout";
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useRouter } from "next/router";
 
 import posthog from "posthog-js";
@@ -104,11 +105,26 @@ if (
   });
 }
 
+import enCommon from "@/messages/en/common.json";
+import enNavigation from "@/messages/en/navigation.json";
+import esCommon from "@/messages/es/common.json";
+import esNavigation from "@/messages/es/navigation.json";
+
+const allMessages: Record<string, Record<string, unknown>> = {
+  en: { common: enCommon, navigation: enNavigation },
+  es: { common: esCommon, navigation: esNavigation },
+};
+
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
   const router = useRouter();
+  const locale = router.locale ?? "en";
+  const messages = useMemo(
+    () => allMessages[locale] ?? allMessages.en,
+    [locale],
+  );
 
   useEffect(() => {
     // PostHog (cloud.langfuse.com)
@@ -126,41 +142,43 @@ const MyApp: AppType<{ session: Session | null }> = ({
   }, []);
 
   return (
-    <QueryParamProvider adapter={NextAdapterPages}>
-      <TooltipProvider>
-        <CommandMenuProvider>
-          <PostHogProvider client={posthog}>
-            <SessionProvider
-              session={session}
-              refetchOnWindowFocus={true}
-              refetchInterval={5 * 60} // 5 minutes
-              basePath={`${env.NEXT_PUBLIC_BASE_PATH ?? ""}/api/auth`}
-            >
-              <DetailPageListsProvider>
-                <MarkdownContextProvider>
-                  <ThemeProvider
-                    attribute="class"
-                    enableSystem
-                    disableTransitionOnChange
-                  >
-                    <ScoreCacheProvider>
-                      <CorrectionCacheProvider>
-                        <SupportDrawerProvider defaultOpen={false}>
-                          <AppLayout>
-                            <Component {...pageProps} />
-                            <UserTracking />
-                          </AppLayout>
-                        </SupportDrawerProvider>
-                      </CorrectionCacheProvider>
-                    </ScoreCacheProvider>
-                  </ThemeProvider>
-                </MarkdownContextProvider>
-              </DetailPageListsProvider>
-            </SessionProvider>
-          </PostHogProvider>
-        </CommandMenuProvider>
-      </TooltipProvider>
-    </QueryParamProvider>
+    <NextIntlClientProvider locale={locale} messages={messages}>
+      <QueryParamProvider adapter={NextAdapterPages}>
+        <TooltipProvider>
+          <CommandMenuProvider>
+            <PostHogProvider client={posthog}>
+              <SessionProvider
+                session={session}
+                refetchOnWindowFocus={true}
+                refetchInterval={5 * 60} // 5 minutes
+                basePath={`${env.NEXT_PUBLIC_BASE_PATH ?? ""}/api/auth`}
+              >
+                <DetailPageListsProvider>
+                  <MarkdownContextProvider>
+                    <ThemeProvider
+                      attribute="class"
+                      enableSystem
+                      disableTransitionOnChange
+                    >
+                      <ScoreCacheProvider>
+                        <CorrectionCacheProvider>
+                          <SupportDrawerProvider defaultOpen={false}>
+                            <AppLayout>
+                              <Component {...pageProps} />
+                              <UserTracking />
+                            </AppLayout>
+                          </SupportDrawerProvider>
+                        </CorrectionCacheProvider>
+                      </ScoreCacheProvider>
+                    </ThemeProvider>
+                  </MarkdownContextProvider>
+                </DetailPageListsProvider>
+              </SessionProvider>
+            </PostHogProvider>
+          </CommandMenuProvider>
+        </TooltipProvider>
+      </QueryParamProvider>
+    </NextIntlClientProvider>
   );
 };
 
