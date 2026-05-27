@@ -2,6 +2,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod/v4";
+import { useTranslations } from "next-intl";
 import { Button } from "@/src/components/ui/button";
 import {
   DialogBody,
@@ -51,6 +52,8 @@ export const RemoteExperimentUpsertForm = ({
   } | null;
   setShowRemoteExperimentUpsertForm: (show: boolean) => void;
 }) => {
+  const t = useTranslations("datasets");
+  const tCommon = useTranslations("common");
   const hasDatasetAccess = useHasProjectAccess({
     projectId,
     scope: "datasets:CUD",
@@ -74,8 +77,8 @@ export const RemoteExperimentUpsertForm = ({
     api.datasets.upsertRemoteExperiment.useMutation({
       onSuccess: () => {
         showSuccessToast({
-          title: "Setup successfully",
-          description: "Your changes have been saved.",
+          title: t("remoteExperiment.setupSuccess"),
+          description: t("remoteExperiment.setupSuccessDescription"),
         });
         setShowRemoteExperimentUpsertForm(false);
         utils.datasets.getRemoteExperiment.invalidate({
@@ -95,9 +98,8 @@ export const RemoteExperimentUpsertForm = ({
     api.datasets.deleteRemoteExperiment.useMutation({
       onSuccess: () => {
         showSuccessToast({
-          title: "Deleted successfully",
-          description:
-            "The remote dataset run trigger has been removed from this dataset.",
+          title: t("remoteExperiment.deleteSuccess"),
+          description: t("remoteExperiment.deleteSuccessDescription"),
         });
         setShowRemoteExperimentUpsertForm(false);
       },
@@ -158,15 +160,15 @@ export const RemoteExperimentUpsertForm = ({
           onClick={() => setShowRemoteExperimentUpsertForm(false)}
           className="inline-block self-start"
         >
-          ← Back
+          {t("remoteExperiment.back")}
         </Button>
         <DialogTitle>
           {existingRemoteExperiment
-            ? "Edit remote dataset run trigger"
-            : "Set up remote dataset run trigger in UI"}
+            ? t("remoteExperiment.editTitle")
+            : t("remoteExperiment.setupTitle")}
         </DialogTitle>
         <DialogDescription>
-          Enable your team to run custom dataset runs on dataset{" "}
+          {t("remoteExperiment.setupDescription")}{" "}
           <strong>
             {dataset.isSuccess ? (
               <>&quot;{dataset.data?.name}&quot;</>
@@ -174,9 +176,6 @@ export const RemoteExperimentUpsertForm = ({
               <Loader2 className="inline h-4 w-4 animate-spin" />
             )}
           </strong>
-          . Configure a webhook URL to trigger remote custom dataset runs from
-          UI. We will send dataset info (name, id) and config to your service,
-          which can run against the dataset and post results to Langfuse.
         </DialogDescription>
       </DialogHeader>
 
@@ -188,10 +187,9 @@ export const RemoteExperimentUpsertForm = ({
               name="url"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>URL</FormLabel>
+                  <FormLabel>{t("remoteExperiment.urlLabel")}</FormLabel>
                   <FormDescription>
-                    The URL that will be called when the remote dataset run is
-                    triggered.
+                    {t("remoteExperiment.urlDescription")}
                   </FormDescription>
                   <FormControl>
                     <Input
@@ -209,11 +207,9 @@ export const RemoteExperimentUpsertForm = ({
               name="defaultPayload"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Default config</FormLabel>
+                  <FormLabel>{t("remoteExperiment.defaultConfig")}</FormLabel>
                   <FormDescription>
-                    Set a default config that will be sent to the remote dataset
-                    run URL. This can be modified before starting a new run.
-                    View docs for more details.
+                    {t("remoteExperiment.defaultConfigDescription")}
                   </FormDescription>
                   <CodeMirrorEditor
                     value={field.value}
@@ -241,7 +237,7 @@ export const RemoteExperimentUpsertForm = ({
                   {deleteRemoteExperimentMutation.isPending && (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   )}
-                  Delete
+                  {tCommon("actions.delete")}
                 </Button>
               )}
               <Button
@@ -251,7 +247,9 @@ export const RemoteExperimentUpsertForm = ({
                 {upsertRemoteExperimentMutation.isPending ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 ) : null}
-                {existingRemoteExperiment ? "Update" : "Set up"}
+                {existingRemoteExperiment
+                  ? t("remoteExperiment.update")
+                  : t("remoteExperiment.setUp")}
               </Button>
             </div>
           </DialogFooter>

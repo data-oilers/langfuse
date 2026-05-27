@@ -1,0 +1,72 @@
+{
+  "messages": {
+    "system": "System",
+    "user": "User",
+    "assistant": "Assistant",
+    "addMessage": "Add message",
+    "addToMessages": "Add to messages",
+    "streamResponses": "Stream responses",
+    "streamingEnabled": "Real-time response streaming",
+    "streamingDisabled": "Complete response at once",
+    "messagePlaceholders": "Message Placeholders",
+    "noVariablesOrPlaceholders": "No variables or message placeholders defined.",
+    "noVariablesDefined": "No variables defined.",
+    "variablesHint": "Use double curly braces in your prompts to add a variable:"
+  },
+  "config": {
+    "title": "Model Config",
+    "tools": "Tools",
+    "toolsDescription": "Configure tools for your model to use.",
+    "noToolsAttached": "No tools attached.",
+    "schema": "Schema",
+    "structuredOutput": "Structured Output",
+    "structuredOutputDescription": "Configure JSON schema for structured output.",
+    "noSchemaProvided": "No schema provided.",
+    "variables": "Variables",
+    "variablesAbbreviation": "Vars",
+    "variablesAndPlaceholders": "Variables & Message Placeholders",
+    "variablesAndPlaceholdersDescription": "Configure variables and message placeholders for your prompts.",
+    "temperature": "Temperatura",
+    "maxTokens": "Max Tokens",
+    "model": "Modelo",
+    "provider": "Proveedor"
+  },
+  "output": {
+    "title": "Salida",
+    "copyOutput": "Copiar salida",
+    "toggleJson": "Toggle Input/Output JSON",
+    "cost": "Costo",
+    "tokensUsed": "Tokens utilizados",
+    "latency": "Latencia"
+  },
+  "actions": {
+    "submit": "Submit",
+    "run": "Run",
+    "runAll": "Run All (Ctrl + Enter)",
+    "clear": "Clear",
+    "resetPlayground": "Reset playground",
+    "resetPlaygroundState": "Reset playground state",
+    "freshPlayground": "Fresh playground",
+    "addToExisting": "Add to existing",
+    "includeOutput": "Include output",
+    "testInPlayground": "Test in LLM playground",
+    "testInPlaygroundUnavailable": "Test in LLM playground is not available since messages are not in valid ChatML format or tool calls have been used. If you think this is not correct, please open a GitHub issue.",
+    "saveAsPrompt": "Save as prompt",
+    "saveAsNewPrompt": "Save as new prompt",
+    "saveAsNewPromptVersion": "Save as new prompt version",
+    "searchChatPrompts": "Search chat prompts...",
+    "noChatPromptFound": "No chat prompt found",
+    "newSplitWindow": "New split window",
+    "removeWindow": "Remove window",
+    "windows": "{count} windows",
+    "window": "{count} window"
+  },
+  "page": {
+    "title": "Playground",
+    "helpDescription": "A sandbox to test and iterate your prompts across multiple windows",
+    "noModelConfiguredTitle": "No Model Configured",
+    "noModelConfiguredDescriptionBefore": "To use the playground, you need to configure a model first. Go to",
+    "noModelConfiguredDescriptionAfter": "to add an LLM API key and configure your models.",
+    "llmConnectionSettings": "LLM Connection Settings"
+  }
+}

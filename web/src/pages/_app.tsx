@@ -105,15 +105,7 @@ if (
   });
 }
 
-import enCommon from "@/messages/en/common.json";
-import enNavigation from "@/messages/en/navigation.json";
-import esCommon from "@/messages/es/common.json";
-import esNavigation from "@/messages/es/navigation.json";
-
-const allMessages: Record<string, Record<string, unknown>> = {
-  en: { common: enCommon, navigation: enNavigation },
-  es: { common: esCommon, navigation: esNavigation },
-};
+import { allMessages } from "@/src/i18n/messages";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,

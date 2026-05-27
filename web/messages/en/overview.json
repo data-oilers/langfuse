@@ -1,0 +1,29 @@
+{
+  "project": {
+    "goToProject": "Go to project",
+    "beingDeleted": "Project is being deleted",
+    "newProject": "New project"
+  },
+  "organization": {
+    "title": "Organizations",
+    "fallbackName": "Organization",
+    "newOrganization": "New Organization",
+    "searchProjects": "Search projects",
+    "helpDescription": "Organizations help you manage access to projects. Each organization can have multiple projects and team members with different roles.",
+    "demoOrganization": "Demo Organization",
+    "demoOrgBadge": "Demo Org"
+  },
+  "demo": {
+    "tryLangfuseDemo": "Try Langfuse Demo",
+    "demoDescription": "We have built a Q&A chatbot that answers questions based on the Langfuse Docs. Interact with it to see traces in Langfuse.",
+    "viewDemoProject": "View Demo Project"
+  },
+  "onboarding": {
+    "getStarted": "Get Started",
+    "createOrgDescription": "Create an organization to get started. Alternatively, ask your organization admin to invite you.",
+    "needInviteDescription": "You need to get invited to an organization to get started with Langfuse.",
+    "docs": "Docs",
+    "askAi": "Ask AI"
+  },
+  "loading": "loading..."
+}

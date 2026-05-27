@@ -30,6 +30,7 @@ import { useState } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/src/components/ui/alert";
 import startCase from "lodash/startCase";
 import { useLangfuseEnvCode } from "@/src/features/public-api/hooks/useLangfuseEnvCode";
+import { useTranslations } from "next-intl";
 
 type ApiKeyScope = "project" | "organization";
 type ApiKeyEntity = { id: string; note: string | null };
@@ -37,6 +38,7 @@ type ApiKeyEntity = { id: string; note: string | null };
 export function ApiKeyList(props: { entityId: string; scope: ApiKeyScope }) {
   const { entityId, scope } = props;
   const envCode = useLangfuseEnvCode();
+  const t = useTranslations("settings");
 
   if (!entityId) {
     throw new Error(
@@ -71,21 +73,26 @@ export function ApiKeyList(props: { entityId: string; scope: ApiKeyScope }) {
   if (!hasAccess) {
     return (
       <div>
-        <Header title="API Keys" />
+        <Header title={t("apiKeys.title")} />
         <Alert>
-          <AlertTitle>Access Denied</AlertTitle>
+          <AlertTitle>{t("apiKeys.accessDenied")}</AlertTitle>
           <AlertDescription>
-            You do not have permission to view API keys for this {scope}.
+            {t("apiKeys.accessDeniedDescription", { scope })}
           </AlertDescription>
         </Alert>
       </div>
     );
   }
 
+  const headerTitle =
+    scope === "project"
+      ? t("apiKeys.projectApiKeys")
+      : t("apiKeys.organizationApiKeys");
+
   return (
     <div className="space-y-4">
       <Header
-        title={startCase(`${scope} API keys`)}
+        title={headerTitle}
         help={{
           description: `Learn more about ${scope} API keys`,
           href:
@@ -101,11 +108,17 @@ export function ApiKeyList(props: { entityId: string; scope: ApiKeyScope }) {
           <TableHeader>
             <TableRow>
               <TableHead className="hidden text-primary md:table-cell">
-                Created
+                {t("apiKeys.created")}
               </TableHead>
-              <TableHead className="text-primary">Note</TableHead>
-              <TableHead className="text-primary">Public Key</TableHead>
-              <TableHead className="text-primary">Secret Key</TableHead>
+              <TableHead className="text-primary">
+                {t("apiKeys.note")}
+              </TableHead>
+              <TableHead className="text-primary">
+                {t("apiKeys.publicKey")}
+              </TableHead>
+              <TableHead className="text-primary">
+                {t("apiKeys.secretKey")}
+              </TableHead>
               {/* <TableHead className="text-primary">Last used</TableHead> */}
               <TableHead />
             </TableRow>
@@ -193,6 +206,7 @@ function DeleteApiKeyButton(props: {
   });
 
   const [open, setOpen] = useState(false);
+  const t = useTranslations("settings");
 
   if (!hasAccess) return null;
 
@@ -235,11 +249,8 @@ function DeleteApiKeyButton(props: {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="mb-5">Delete API key</DialogTitle>
-          <DialogDescription>
-            Are you sure you want to delete this API key? This action cannot be
-            undone.
-          </DialogDescription>
+          <DialogTitle className="mb-5">{t("apiKeys.deleteTitle")}</DialogTitle>
+          <DialogDescription>{t("apiKeys.deleteConfirm")}</DialogDescription>
         </DialogHeader>
         <DialogFooter>
           <Button
@@ -249,7 +260,7 @@ function DeleteApiKeyButton(props: {
               mutDeleteOrgApiKey.isPending || mutDeleteProjectApiKey.isPending
             }
           >
-            Permanently delete
+            {t("apiKeys.permanentlyDelete")}
           </Button>
           <Button variant="ghost" onClick={() => setOpen(false)}>
             Cancel
@@ -291,6 +302,7 @@ function ApiKeyNote({
 
   const [note, setNote] = useState(apiKey.note ?? "");
   const [isEditing, setIsEditing] = useState(false);
+  const tNote = useTranslations("settings");
 
   const handleBlur = () => {
     setIsEditing(false);
@@ -330,7 +342,7 @@ function ApiKeyNote({
       onClick={() => setIsEditing(true)}
       className="-mx-2 cursor-pointer rounded px-2 py-1 hover:bg-secondary/50"
     >
-      {note || "Click to add note"}
+      {note || tNote("apiKeys.noteClickToAdd")}
     </div>
   );
 }

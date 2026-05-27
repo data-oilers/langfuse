@@ -25,9 +25,11 @@ import { usePostHogClientCapture } from "@/src/features/posthog-analytics/usePos
 import { useQueryProject } from "@/src/features/projects/hooks";
 import { useHasProjectAccess } from "@/src/features/rbac/utils/checkProjectAccess";
 import { env } from "@/src/env.mjs";
+import { useTranslations } from "next-intl";
 
 export function DeleteProjectButton() {
   const capture = usePostHogClientCapture();
+  const t = useTranslations("settings");
 
   //code for dynamic confirmation message
   const { project, organization } = useQueryProject();
@@ -75,13 +77,13 @@ export function DeleteProjectButton() {
     <Dialog>
       <DialogTrigger asChild>
         <Button variant="destructive-secondary" disabled={!hasAccess}>
-          Delete Project
+          {t("actions.deleteProject")}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle className="text-lg font-semibold">
-            Delete Project
+            {t("actions.deleteProject")}
           </DialogTitle>
           <DialogDescription className=" ">
             {`To confirm, type "${confirmMessage}" in the input box `}
@@ -110,7 +112,7 @@ export function DeleteProjectButton() {
                 loading={deleteProject.isPending}
                 className="w-full"
               >
-                Delete project
+                {t("actions.deleteProjectConfirm")}
               </Button>
             </DialogFooter>
           </form>

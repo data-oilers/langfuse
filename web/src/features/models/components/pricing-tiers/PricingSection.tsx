@@ -7,6 +7,7 @@ import { TierPriceEditor } from "./TierPriceEditor";
 import { TierPrefillButtons } from "./TierPrefillButtons";
 import type { UseFormReturn, UseFieldArrayReturn } from "react-hook-form";
 import type { FormUpsertModel } from "../../validation";
+import { useTranslations } from "next-intl";
 
 type PricingSectionProps = {
   fields: UseFieldArrayReturn<FormUpsertModel, "pricingTiers">["fields"];
@@ -23,6 +24,7 @@ export function PricingSection({
   remove,
   addTier,
 }: PricingSectionProps) {
+  const t = useTranslations("models");
   const hasMultipleTiers = fields.length > 1;
   const defaultTierIndex = fields.findIndex((f) => f.isDefault);
 
@@ -31,11 +33,8 @@ export function PricingSection({
     return (
       <div className="space-y-4">
         <div>
-          <FormLabel>Prices</FormLabel>
-          <FormDescription>
-            Set prices per usage type for this model. Usage types must exactly
-            match the keys of the ingested usage details.
-          </FormDescription>
+          <FormLabel>{t("pricing.prices")}</FormLabel>
+          <FormDescription>{t("pricing.pricesDescription")}</FormDescription>
         </div>
 
         <TierPrefillButtons tierIndex={defaultTierIndex} form={form} />
@@ -47,7 +46,7 @@ export function PricingSection({
 
         <Button type="button" variant="ghost" onClick={addTier}>
           <PlusCircle className="mr-2 h-4 w-4" />
-          Add Custom Pricing Tier
+          {t("pricing.addCustomTier")}
         </Button>
       </div>
     );
@@ -57,10 +56,9 @@ export function PricingSection({
   return (
     <div className="space-y-4">
       <div>
-        <FormLabel>Pricing Tiers</FormLabel>
+        <FormLabel>{t("pricing.pricingTiers")}</FormLabel>
         <FormDescription>
-          Define pricing rules evaluated in priority order. Tiers are checked
-          from top to bottom until conditions match.
+          {t("pricing.pricingTiersDescription")}
         </FormDescription>
       </div>
 
@@ -83,7 +81,7 @@ export function PricingSection({
 
       <Button type="button" variant="outline" onClick={addTier}>
         <PlusCircle className="mr-2 h-4 w-4" />
-        Add Custom Tier
+        {t("pricing.addCustomTierShort")}
       </Button>
     </div>
   );

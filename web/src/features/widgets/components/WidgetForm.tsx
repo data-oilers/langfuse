@@ -64,6 +64,7 @@ import {
   MAX_PIVOT_TABLE_DIMENSIONS,
   MAX_PIVOT_TABLE_METRICS,
 } from "@/src/features/widgets/utils/pivot-table-utils";
+import { useTranslations } from "next-intl";
 
 type ChartType = {
   group: "time-series" | "total-value";
@@ -151,6 +152,24 @@ interface SelectedMetric {
   label: string;
 }
 
+// Lookup map: chart type value → translation key in dashboard.charts namespace
+const CHART_TYPE_TO_KEY: Record<string, string> = {
+  NUMBER: "bigNumber",
+  LINE_TIME_SERIES: "lineChart",
+  BAR_TIME_SERIES: "barChart",
+  HORIZONTAL_BAR: "horizontalBar",
+  VERTICAL_BAR: "barChart",
+  HISTOGRAM: "histogram",
+  PIE: "pieChart",
+  PIVOT_TABLE: "pivotTable",
+};
+
+// Lookup map: chart group → translation key in dashboard.charts namespace
+const CHART_GROUP_TO_KEY: Record<string, string> = {
+  "time-series": "timeSeries",
+  "total-value": "totalValue",
+};
+
 export function WidgetForm({
   initialValues,
   projectId,
@@ -184,6 +203,9 @@ export function WidgetForm({
   }) => void;
   widgetId?: string;
 }) {
+  const t = useTranslations("dashboard");
+  const tCommon = useTranslations("common");
+
   // State for form fields
   const [widgetName, setWidgetName] = useState<string>(initialValues.name);
   const [widgetDescription, setWidgetDescription] = useState<string>(
@@ -933,7 +955,7 @@ export function WidgetForm({
 
   const handleSaveWidget = () => {
     if (!widgetName.trim()) {
-      showErrorToast("Error", "Widget name is required");
+      showErrorToast(t("widgetForm.errorTitle"), t("widgetForm.nameRequired"));
       return;
     }
 
@@ -943,8 +965,8 @@ export function WidgetForm({
     );
     if (selectedChartType === "PIVOT_TABLE" && validMetrics.length === 0) {
       showErrorToast(
-        "Error",
-        "At least one metric is required for pivot tables",
+        t("widgetForm.errorTitle"),
+        t("widgetForm.atLeastOneMetric"),
       );
       return;
     }
@@ -1092,19 +1114,21 @@ export function WidgetForm({
       <div className="h-full w-1/3 min-w-[430px]">
         <Card className="flex h-full flex-col">
           <CardHeader>
-            <CardTitle>Widget Configuration</CardTitle>
+            <CardTitle>{t("widgetForm.configTitle")}</CardTitle>
             <CardDescription>
-              Configure your widget by selecting data and visualization options
+              {t("widgetForm.configDescription")}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4 overflow-y-auto">
             {/* Data Selection Section */}
             <div className="space-y-4">
-              <h3 className="text-lg font-bold">Data Selection</h3>
+              <h3 className="text-lg font-bold">
+                {t("widgetForm.dataSelection")}
+              </h3>
 
               {/* View Selection */}
               <div className="space-y-2">
-                <Label htmlFor="view-select">View</Label>
+                <Label htmlFor="view-select">{t("widgetForm.viewLabel")}</Label>
                 <Select
                   value={selectedView}
                   onValueChange={(value) => {
@@ -1164,7 +1188,9 @@ export function WidgetForm({
                   }}
                 >
                   <SelectTrigger id="view-select">
-                    <SelectValue placeholder="Select a view" />
+                    <SelectValue
+                      placeholder={t("widgetForm.viewPlaceholder")}
+                    />
                   </SelectTrigger>
                   <SelectContent>
                     {views.options.map((view) => (
@@ -1182,7 +1208,9 @@ export function WidgetForm({
               {/* Metrics Selection */}
               <div className="space-y-2">
                 <Label htmlFor="metrics-select">
-                  {selectedChartType === "PIVOT_TABLE" ? "Metrics" : "Metric"}
+                  {selectedChartType === "PIVOT_TABLE"
+                    ? t("widgetForm.metricsLabel")
+                    : t("widgetForm.metricLabel")}
                 </Label>
 
                 {/* For pivot tables: multiple metrics selection */}
@@ -1213,8 +1241,10 @@ export function WidgetForm({
                           <div key={index} className="space-y-2">
                             <div className="flex items-center justify-between">
                               <Label htmlFor={`pivot-metric-${index}`}>
-                                Metric {index + 1}{" "}
-                                {index === 0 ? "(Required)" : "(Optional)"}
+                                {t("widgetForm.metricLabel")} {index + 1}{" "}
+                                {index === 0
+                                  ? t("widgetForm.metricRequired")
+                                  : t("widgetForm.metricOptional")}
                               </Label>
                               {index > 0 && (
                                 <Button
@@ -1247,10 +1277,14 @@ export function WidgetForm({
                                     <SelectValue
                                       placeholder={
                                         !isEnabled
-                                          ? "Select previous metric first"
+                                          ? t(
+                                              "widgetForm.selectPreviousMetricFirst",
+                                            )
                                           : !canEdit
-                                            ? "No more measures available"
-                                            : "Select measure"
+                                            ? t(
+                                                "widgetForm.noMoreMeasuresAvailable",
+                                              )
+                                            : t("widgetForm.selectMeasure")
                                       }
                                     />
                                   </SelectTrigger>
@@ -1289,7 +1323,11 @@ export function WidgetForm({
                                     }
                                   >
                                     <SelectTrigger>
-                                      <SelectValue placeholder="Select aggregation" />
+                                      <SelectValue
+                                        placeholder={t(
+                                          "widgetForm.selectAggregation",
+                                        )}
+                                      />
                                     </SelectTrigger>
                                     <SelectContent>
                                       {aggregationsForIndex.map(
@@ -1324,7 +1362,9 @@ export function WidgetForm({
                           className="w-full"
                         >
                           <Plus className="mr-1 h-3 w-3" />
-                          Add Metric {selectedMetrics.length + 1}
+                          {t("widgetForm.addMetric", {
+                            number: selectedMetrics.length + 1,
+                          })}
                         </Button>
                       )}
                   </div>
@@ -1336,7 +1376,9 @@ export function WidgetForm({
                       onValueChange={(value) => setSelectedMeasure(value)}
                     >
                       <SelectTrigger id="metrics-select">
-                        <SelectValue placeholder="Select metrics" />
+                        <SelectValue
+                          placeholder={t("widgetForm.selectMeasure")}
+                        />
                       </SelectTrigger>
                       <SelectContent>
                         {availableMetrics.map((metric) => {
@@ -1369,7 +1411,9 @@ export function WidgetForm({
                           }
                         >
                           <SelectTrigger id="aggregation-select">
-                            <SelectValue placeholder="Select Aggregation" />
+                            <SelectValue
+                              placeholder={t("widgetForm.selectAggregation")}
+                            />
                           </SelectTrigger>
                           <SelectContent>
                             {metricAggregations.options.map((aggregation) => (
@@ -1381,8 +1425,7 @@ export function WidgetForm({
                         </Select>
                         {selectedChartType === "HISTOGRAM" && (
                           <p className="text-xs text-muted-foreground">
-                            Aggregation is automatically set to
-                            &quot;histogram&quot; for histogram charts
+                            {t("widgetForm.histogramAggNote")}
                           </p>
                         )}
                       </div>
@@ -1393,7 +1436,7 @@ export function WidgetForm({
 
               {/* Filters Section */}
               <div className="space-y-2">
-                <Label>Filters</Label>
+                <Label>{t("widgetForm.filtersLabel")}</Label>
                 <div className="space-y-2">
                   <InlineFilterBuilder
                     columns={filterColumns}
@@ -1415,14 +1458,16 @@ export function WidgetForm({
                 selectedChartType !== "PIVOT_TABLE" && (
                   <div className="space-y-2">
                     <Label htmlFor="dimension-select">
-                      Breakdown Dimension (Optional)
+                      {t("widgetForm.breakdownDimension")}
                     </Label>
                     <Select
                       value={selectedDimension}
                       onValueChange={setSelectedDimension}
                     >
                       <SelectTrigger id="dimension-select">
-                        <SelectValue placeholder="Select a dimension" />
+                        <SelectValue
+                          placeholder={t("widgetForm.selectDimension")}
+                        />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="none">None</SelectItem>
@@ -1452,12 +1497,12 @@ export function WidgetForm({
                 <div className="space-y-4">
                   <div>
                     <h4 className="mb-2 text-sm font-semibold">
-                      Row Dimensions
+                      {t("widgetForm.rowDimensions")}
                     </h4>
                     <p className="mb-3 text-xs text-muted-foreground">
-                      Configure up to {MAX_PIVOT_TABLE_DIMENSIONS} dimensions
-                      for pivot table rows. Each dimension creates groupings
-                      with subtotals.
+                      {t("widgetForm.rowDimensionsDescription", {
+                        max: MAX_PIVOT_TABLE_DIMENSIONS,
+                      })}
                     </p>
                   </div>
 
@@ -1475,7 +1520,9 @@ export function WidgetForm({
                       return (
                         <div key={index} className="space-y-2">
                           <Label htmlFor={`pivot-dimension-${index}`}>
-                            Dimension {index + 1} (Optional)
+                            {t("widgetForm.dimensionLabel", {
+                              number: index + 1,
+                            })}
                           </Label>
                           <Select
                             value={currentValue}
@@ -1488,8 +1535,10 @@ export function WidgetForm({
                               <SelectValue
                                 placeholder={
                                   isEnabled
-                                    ? "Select a dimension"
-                                    : "Select previous dimension first"
+                                    ? t("widgetForm.selectDimension")
+                                    : t(
+                                        "widgetForm.selectPreviousDimensionFirst",
+                                      )
                                 }
                               />
                             </SelectTrigger>
@@ -1530,26 +1579,31 @@ export function WidgetForm({
                 <div className="space-y-4">
                   <div>
                     <h4 className="mb-2 text-sm font-semibold">
-                      Default Sort Configuration
+                      {t("widgetForm.defaultSortConfig")}
                     </h4>
                     <p className="mb-3 text-xs text-muted-foreground">
-                      Configure the default sort order for the pivot table. This
-                      will be applied when the widget is first loaded.
+                      {t("widgetForm.defaultSortDescription")}
                     </p>
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="default-sort-column">Sort Column</Label>
+                      <Label htmlFor="default-sort-column">
+                        {t("widgetForm.sortColumn")}
+                      </Label>
                       <Select
                         value={defaultSortColumn}
                         onValueChange={setDefaultSortColumn}
                       >
                         <SelectTrigger id="default-sort-column">
-                          <SelectValue placeholder="Select a column to sort by" />
+                          <SelectValue
+                            placeholder={t("widgetForm.sortColumnPlaceholder")}
+                          />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="none">No default sort</SelectItem>
+                          <SelectItem value="none">
+                            {t("widgetForm.noDefaultSort")}
+                          </SelectItem>
                           {/* Show available metrics as sort options */}
                           {selectedMetrics
                             .filter(
@@ -1566,7 +1620,9 @@ export function WidgetForm({
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="default-sort-order">Sort Order</Label>
+                      <Label htmlFor="default-sort-order">
+                        {t("widgetForm.sortOrder")}
+                      </Label>
                       <Select
                         value={defaultSortOrder}
                         onValueChange={(value: "ASC" | "DESC") =>
@@ -1580,8 +1636,12 @@ export function WidgetForm({
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="ASC">Ascending (A-Z)</SelectItem>
-                          <SelectItem value="DESC">Descending (Z-A)</SelectItem>
+                          <SelectItem value="ASC">
+                            {t("widgetForm.ascending")}
+                          </SelectItem>
+                          <SelectItem value="DESC">
+                            {t("widgetForm.descending")}
+                          </SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -1592,11 +1652,15 @@ export function WidgetForm({
 
             {/* Visualization Section */}
             <div className="mt-6 space-y-4">
-              <h3 className="text-lg font-bold">Visualization</h3>
+              <h3 className="text-lg font-bold">
+                {t("widgetForm.visualization")}
+              </h3>
 
               {/* Widget Name */}
               <div className="space-y-2">
-                <Label htmlFor="widget-name">Name</Label>
+                <Label htmlFor="widget-name">
+                  {t("widgetForm.widgetName")}
+                </Label>
                 <Input
                   id="widget-name"
                   value={widgetName}
@@ -1604,13 +1668,15 @@ export function WidgetForm({
                     if (!autoLocked) setAutoLocked(true);
                     setWidgetName(e.target.value);
                   }}
-                  placeholder="Enter widget name"
+                  placeholder={t("widgetForm.widgetNamePlaceholder")}
                 />
               </div>
 
               {/* Widget Description */}
               <div className="space-y-2">
-                <Label htmlFor="widget-description">Description</Label>
+                <Label htmlFor="widget-description">
+                  {t("widgetForm.widgetDescription")}
+                </Label>
                 <Input
                   id="widget-description"
                   value={widgetDescription}
@@ -1618,23 +1684,31 @@ export function WidgetForm({
                     if (!autoLocked) setAutoLocked(true);
                     setWidgetDescription(e.target.value);
                   }}
-                  placeholder="Enter widget description"
+                  placeholder={t("widgetForm.widgetDescriptionPlaceholder")}
                 />
               </div>
 
               {/* Chart Type Selection */}
               <div className="space-y-2">
-                <Label htmlFor="chart-type-select">Chart Type</Label>
+                <Label htmlFor="chart-type-select">
+                  {t("widgetForm.chartTypeLabel")}
+                </Label>
                 <Select
                   value={selectedChartType}
                   onValueChange={setSelectedChartType}
                 >
                   <SelectTrigger id="chart-type-select">
-                    <SelectValue placeholder="Select a chart type" />
+                    <SelectValue
+                      placeholder={t("widgetForm.chartTypePlaceholder")}
+                    />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      <SelectLabel>Time Series</SelectLabel>
+                      <SelectLabel>
+                        {t(
+                          `charts.${CHART_GROUP_TO_KEY["time-series"] ?? "timeSeries"}`,
+                        )}
+                      </SelectLabel>
                       {chartTypes
                         .filter((item) => item.group === "time-series")
                         .map((chart) => (
@@ -1643,13 +1717,23 @@ export function WidgetForm({
                               {React.createElement(chart.icon, {
                                 className: "mr-2 w-4",
                               })}
-                              <span>{chart.name}</span>
+                              <span>
+                                {CHART_TYPE_TO_KEY[chart.value]
+                                  ? t(
+                                      `charts.${CHART_TYPE_TO_KEY[chart.value]}`,
+                                    )
+                                  : chart.name}
+                              </span>
                             </div>
                           </SelectItem>
                         ))}
                     </SelectGroup>
                     <SelectGroup>
-                      <SelectLabel>Total Value</SelectLabel>
+                      <SelectLabel>
+                        {t(
+                          `charts.${CHART_GROUP_TO_KEY["total-value"] ?? "totalValue"}`,
+                        )}
+                      </SelectLabel>
                       {chartTypes
                         .filter((item) => item.group === "total-value")
                         .map((chart) => (
@@ -1658,7 +1742,13 @@ export function WidgetForm({
                               {React.createElement(chart.icon, {
                                 className: "mr-2 w-4",
                               })}
-                              <span>{chart.name}</span>
+                              <span>
+                                {CHART_TYPE_TO_KEY[chart.value]
+                                  ? t(
+                                      `charts.${CHART_TYPE_TO_KEY[chart.value]}`,
+                                    )
+                                  : chart.name}
+                              </span>
                             </div>
                           </SelectItem>
                         ))}
@@ -1668,7 +1758,7 @@ export function WidgetForm({
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="date-select">Date Range</Label>
+                <Label htmlFor="date-select">{t("dateRange.label")}</Label>
                 <DatePickerWithRange
                   dateRange={dateRange}
                   setDateRangeAndOption={(option, range) => {
@@ -1688,7 +1778,9 @@ export function WidgetForm({
               {/* Histogram Bins Selection - Only shown for HISTOGRAM chart type */}
               {selectedChartType === "HISTOGRAM" && (
                 <div className="space-y-2">
-                  <Label htmlFor="histogram-bins">Number of Bins (1-100)</Label>
+                  <Label htmlFor="histogram-bins">
+                    {t("widgetForm.histogramBins")}
+                  </Label>
                   <Input
                     id="histogram-bins"
                     type="number"
@@ -1701,7 +1793,7 @@ export function WidgetForm({
                         setHistogramBins(value);
                       }
                     }}
-                    placeholder="Enter number of bins (1-100)"
+                    placeholder={t("widgetForm.histogramBinsPlaceholder")}
                   />
                 </div>
               )}
@@ -1714,7 +1806,7 @@ export function WidgetForm({
                 ) && (
                   <div className="space-y-2">
                     <Label htmlFor="row-limit">
-                      Breakdown Row Limit (0-1000)
+                      {t("widgetForm.rowLimit")}
                     </Label>
                     <Input
                       id="row-limit"
@@ -1728,7 +1820,7 @@ export function WidgetForm({
                           setRowLimit(value);
                         }
                       }}
-                      placeholder="Enter breakdown row limit (0-1000)"
+                      placeholder={t("widgetForm.rowLimitPlaceholder")}
                     />
                   </div>
                 )}
@@ -1736,7 +1828,7 @@ export function WidgetForm({
           </CardContent>
           <CardFooter className="mt-auto">
             <Button className="w-full" size="lg" onClick={handleSaveWidget}>
-              Save Widget
+              {t("widgetForm.saveWidget")}
             </Button>
           </CardFooter>
         </Card>
@@ -1793,7 +1885,7 @@ export function WidgetForm({
             <CardContent>
               <div className="flex h-[300px] items-center justify-center">
                 <p className="text-muted-foreground">
-                  Waiting for Input / Loading...
+                  {t("widgetForm.waitingForInput")}
                 </p>
               </div>
             </CardContent>

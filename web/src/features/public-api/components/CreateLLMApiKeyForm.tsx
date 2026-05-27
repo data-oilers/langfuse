@@ -1,6 +1,7 @@
 import { useFieldArray, useForm } from "react-hook-form";
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
 import {
   type BedrockConfig,
   type BedrockCredential,
@@ -185,6 +186,7 @@ export function CreateLLMApiKeyForm({
 }: CreateLLMApiKeyFormProps) {
   const [showAdvancedSettings, setShowAdvancedSettings] = useState(false);
   const utils = api.useUtils();
+  const t = useTranslations("settings");
   const capture = usePostHogClientCapture();
 
   const existingKeys = api.llmApiKey.all.useQuery(
@@ -565,9 +567,9 @@ export function CreateLLMApiKeyForm({
             name="adapter"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>LLM adapter</FormLabel>
+                <FormLabel>{t("llmKeys.adapterLabel")}</FormLabel>
                 <FormDescription>
-                  Schema that is accepted at that provider endpoint.
+                  {t("llmKeys.adapterDescription")}
                 </FormDescription>
                 <Select
                   defaultValue={field.value}
@@ -603,10 +605,9 @@ export function CreateLLMApiKeyForm({
             name="provider"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Provider name</FormLabel>
+                <FormLabel>{t("llmKeys.providerName")}</FormLabel>
                 <FormDescription>
-                  Key to identify the connection within Langfuse. Cannot contain
-                  colons.
+                  {t("llmKeys.providerNameDescription")}
                 </FormDescription>
                 <FormControl>
                   <Input
@@ -961,8 +962,8 @@ export function CreateLLMApiKeyForm({
               >
                 <span>
                   {showAdvancedSettings
-                    ? "Hide advanced settings"
-                    : "Show advanced settings"}
+                    ? t("llmKeys.hideAdvancedSettings")
+                    : t("llmKeys.showAdvancedSettings")}
                 </span>
                 <ChevronDown
                   className={`ml-1 h-4 w-4 transition-transform ${showAdvancedSettings ? "rotate-180" : "rotate-0"}`}
@@ -1072,7 +1073,9 @@ export function CreateLLMApiKeyForm({
               className="w-full"
               loading={form.formState.isSubmitting}
             >
-              {mode === "create" ? "Create connection" : "Save changes"}
+              {mode === "create"
+                ? t("llmKeys.createConnection")
+                : t("llmKeys.saveChanges")}
             </Button>
             {form.formState.errors.root && (
               <FormMessage>{form.formState.errors.root.message}</FormMessage>

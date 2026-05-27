@@ -33,6 +33,7 @@ import Link from "next/link";
 import { showSuccessToast } from "@/src/features/notifications/showSuccessToast";
 import { showErrorToast } from "@/src/features/notifications/showErrorToast";
 import { env } from "@/src/env.mjs";
+import { useTranslations } from "next-intl";
 
 const displayNameSchema = z.object({
   name: StringNoHTML.min(1, "Name cannot be empty").max(
@@ -44,6 +45,7 @@ const displayNameSchema = z.object({
 function UpdateDisplayName() {
   const { data: session, update: updateSession } = useSession();
   const utils = api.useUtils();
+  const t = useTranslations("settings");
 
   const form = useForm({
     resolver: zodResolver(displayNameSchema),
@@ -58,8 +60,8 @@ function UpdateDisplayName() {
       await utils.invalidate();
       form.reset();
       showSuccessToast({
-        title: "Display Name Updated",
-        description: "Your display name has been successfully updated.",
+        title: t("account.displayNameUpdated"),
+        description: t("account.displayNameUpdatedDescription"),
       });
     },
     onError: (error) => form.setError("name", { message: error.message }),
@@ -71,20 +73,20 @@ function UpdateDisplayName() {
 
   return (
     <div>
-      <Header title="Display Name" />
+      <Header title={t("account.displayName")} />
       <Card className="p-3">
         {form.getValues().name !== "" ? (
           <p className="mb-4 text-sm text-primary">
-            Your display name will be updated from &quot;
-            {session?.user?.name ?? ""}
-            &quot; to &quot;
-            <b>{form.watch().name}</b>&quot;.
+            {t("account.displayNameChangePreview", {
+              from: session?.user?.name ?? "",
+              to: form.watch().name,
+            })}
           </p>
         ) : (
           <p className="mb-4 text-sm text-primary">
-            Your display name is currently &quot;
-            <b>{session?.user?.name ?? ""}</b>
-            &quot;.
+            {t("account.displayNameCurrent", {
+              name: session?.user?.name ?? "",
+            })}
           </p>
         )}
         <Form {...form}>
@@ -112,7 +114,7 @@ function UpdateDisplayName() {
               disabled={form.getValues().name === ""}
               className="mt-4"
             >
-              Save
+              {t("actions.save")}
             </Button>
           </form>
         </Form>
@@ -124,6 +126,7 @@ function UpdateDisplayName() {
 function DeleteAccountButton() {
   const { data: session } = useSession();
   const userEmail = session?.user?.email ?? "";
+  const t = useTranslations("settings");
 
   const { data: canDeleteData } = api.userAccount.checkCanDelete.useQuery();
   const deleteAccount = api.userAccount.delete.useMutation();
@@ -149,15 +152,15 @@ function DeleteAccountButton() {
     try {
       await deleteAccount.mutateAsync();
       showSuccessToast({
-        title: "Account Deleted",
-        description: "Your account has been successfully deleted.",
+        title: t("account.deleteAccountSuccess"),
+        description: t("account.deleteAccountSuccessDescription"),
       });
       await new Promise((resolve) => setTimeout(resolve, 2000));
       await signOut();
     } catch (error) {
       console.error(error);
       showErrorToast(
-        "Failed to Delete Account",
+        t("account.deleteAccountFailed"),
         error instanceof Error ? error.message : "An unexpected error occurred",
       );
     }
@@ -166,19 +169,20 @@ function DeleteAccountButton() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="destructive-secondary">Delete Account</Button>
+        <Button variant="destructive-secondary">
+          {t("account.deleteAccountButton")}
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle className="text-lg font-semibold">
-            Delete Account
+            {t("account.deleteAccountTitle")}
           </DialogTitle>
           <DialogDescription>
             {!canDelete && blockingOrganizations.length > 0 ? (
               <div>
                 <p className="mb-2">
-                  You cannot delete your account because you are the last owner
-                  of the following organization(s):
+                  {t("account.deleteAccountBlockedDescription")}
                 </p>
                 <ul className="list-inside list-disc space-y-1">
                   {blockingOrganizations.map((org) => (
@@ -193,12 +197,13 @@ function DeleteAccountButton() {
                   ))}
                 </ul>
                 <p className="mt-2">
-                  Please add another owner or delete these organizations before
-                  deleting your account.
+                  {t("account.deleteAccountBlockedAction")}
                 </p>
               </div>
             ) : (
-              `To confirm, type your email address "${userEmail}" in the input box`
+              t("account.deleteAccountConfirmDescription", {
+                email: userEmail,
+              })
             )}
           </DialogDescription>
         </DialogHeader>
@@ -228,7 +233,7 @@ function DeleteAccountButton() {
                 disabled={!canDelete}
                 className="w-full"
               >
-                Delete Account
+                {t("account.deleteAccountButton")}
               </Button>
             </DialogFooter>
           </form>
@@ -248,13 +253,17 @@ type AccountSettingsPage = {
 export function useAccountSettingsPages(): AccountSettingsPage[] {
   const { data: session } = useSession();
   const userEmail = session?.user?.email ?? "";
+  const t = useTranslations("settings");
 
-  return getAccountSettingsPages(userEmail);
+  return getAccountSettingsPages(userEmail, t);
 }
 
-const getAccountSettingsPages = (userEmail: string): AccountSettingsPage[] => [
+const getAccountSettingsPages = (
+  userEmail: string,
+  t: ReturnType<typeof useTranslations<"settings">>,
+): AccountSettingsPage[] => [
   {
-    title: "General",
+    title: t("sections.general"),
     slug: "index",
     cmdKKeywords: [
       "account",
@@ -270,27 +279,25 @@ const getAccountSettingsPages = (userEmail: string): AccountSettingsPage[] => [
     content: (
       <div className="flex flex-col gap-6">
         <div>
-          <Header title="Email" />
+          <Header title={t("account.email")} />
           <Card className="p-3">
             <p className="text-sm text-primary">
-              Your email address: <b>{userEmail}</b>
+              {t("account.emailCurrent", { email: userEmail })}
             </p>
           </Card>
         </div>
         <UpdateDisplayName />
         <div>
-          <Header title="Password" />
+          <Header title={t("account.password")} />
           <Card className="p-3">
             <p className="mb-4 text-sm text-primary">
-              To change your password, we will send you a secure link to your
-              email address. Click the button below to start the password reset
-              process.
+              {t("account.passwordDescription")}
             </p>
             <Button asChild variant="secondary">
               <Link
                 href={`${env.NEXT_PUBLIC_BASE_PATH ?? ""}/auth/reset-password`}
               >
-                Change Password
+                {t("account.changePassword")}
               </Link>
             </Button>
           </Card>
@@ -298,9 +305,8 @@ const getAccountSettingsPages = (userEmail: string): AccountSettingsPage[] => [
         <SettingsDangerZone
           items={[
             {
-              title: "Delete your account",
-              description:
-                "You can delete your account if you are not the last owner of any organization. If you are the last owner, please add another owner or delete the organization and all projects first.",
+              title: t("dangerZone.deleteAccountSection"),
+              description: t("dangerZone.deleteAccountSectionDescription"),
               button: <DeleteAccountButton />,
             },
           ]}
@@ -314,13 +320,14 @@ export default function AccountSettingsPage() {
   const { data: session } = useSession();
   const router = useRouter();
   const userEmail = session?.user?.email ?? "";
+  const t = useTranslations("settings");
 
-  const pages = getAccountSettingsPages(userEmail);
+  const pages = getAccountSettingsPages(userEmail, t);
 
   return (
     <ContainerPage
       headerProps={{
-        title: "Account Settings",
+        title: t("pageTitle.account"),
       }}
     >
       <PagedSettingsContainer

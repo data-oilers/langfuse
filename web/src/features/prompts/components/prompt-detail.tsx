@@ -45,6 +45,7 @@ import {
 } from "@/src/components/ui/dialog";
 import { CreateExperimentsForm } from "@/src/features/experiments/components/CreateExperimentsForm";
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import { showSuccessToast } from "@/src/features/notifications/showSuccessToast";
 import { DuplicatePromptButton } from "@/src/features/prompts/components/duplicate-prompt";
 import Page from "@/src/components/layouts/page";
@@ -106,6 +107,7 @@ await langfuse.prompt.get("${name}", { version: ${version} })
 export const PromptDetail = ({
   promptName: promptNameProp,
 }: { promptName?: string } = {}) => {
+  const t = useTranslations("prompts");
   const projectId = useProjectIdFromURL();
   const capture = usePostHogClientCapture();
   const router = useRouter();
@@ -265,7 +267,7 @@ export const PromptDetail = ({
   }, [prompt?.id]);
 
   if (!promptHistory.data || !prompt) {
-    return <div className="p-3">Loading...</div>;
+    return <div className="p-3">{t("detail.loading")}</div>;
   }
 
   const extractedVariables = prompt
@@ -284,12 +286,10 @@ export const PromptDetail = ({
     <Page
       headerProps={{
         title: prompt.name,
-        titleTooltip:
-          "Prompt names cannot be changed. Instead, duplicate this prompt to a different name.",
+        titleTooltip: t("detail.titleTooltip"),
         itemType: "PROMPT",
         help: {
-          description:
-            "You can use this prompt within your application through the Langfuse SDKs and integrations. Refer to the documentation for more information.",
+          description: t("detail.helpDescription"),
           href: "https://langfuse.com/docs/prompts",
         },
         breadcrumb: [
@@ -356,7 +356,9 @@ export const PromptDetail = ({
                 href={`/project/${projectId}/prompts/new?promptId=${encodeURIComponent(prompt.id)}`}
               >
                 <Plus className="h-4 w-4 md:mr-2" />
-                <span className="hidden lg:inline">New version</span>
+                <span className="hidden lg:inline">
+                  {t("versions.newVersion")}
+                </span>
               </Link>
             </Button>
           </div>
@@ -427,7 +429,7 @@ export const PromptDetail = ({
                       >
                         <FlaskConical className="h-4 w-4" />
                         <span className="hidden md:ml-2 md:inline">
-                          Run experiment
+                          {t("actions.runExperiment")}
                         </span>
                       </Button>
                     </DialogTrigger>
@@ -483,12 +485,18 @@ export const PromptDetail = ({
             onValueChange={(value) => setCurrentTab(value)}
           >
             <TabsBarList className="min-w-0 max-w-full justify-start overflow-x-auto">
-              <TabsBarTrigger value="prompt">Prompt</TabsBarTrigger>
-              <TabsBarTrigger value="config">Config</TabsBarTrigger>
-              <TabsBarTrigger value="linked-generations">
-                Linked Generations
+              <TabsBarTrigger value="prompt">
+                {t("detail.tabPrompt")}
               </TabsBarTrigger>
-              <TabsBarTrigger value="use-prompt">Use Prompt</TabsBarTrigger>
+              <TabsBarTrigger value="config">
+                {t("detail.tabConfig")}
+              </TabsBarTrigger>
+              <TabsBarTrigger value="linked-generations">
+                {t("detail.tabLinkedGenerations")}
+              </TabsBarTrigger>
+              <TabsBarTrigger value="use-prompt">
+                {t("detail.tabUsePrompt")}
+              </TabsBarTrigger>
             </TabsBarList>
             <TabsBarContent
               value="linked-generations"
@@ -521,13 +529,13 @@ export const PromptDetail = ({
                           value="resolved"
                           className="h-fit px-1 text-xs"
                         >
-                          Resolved prompt
+                          {t("versions.resolvedPrompt")}
                         </TabsTrigger>
                         <TabsTrigger
                           value="tagged"
                           className="h-fit px-1 text-xs"
                         >
-                          Tagged prompt
+                          {t("versions.taggedPrompt")}
                         </TabsTrigger>
                       </TabsList>
                     </Tabs>
@@ -549,7 +557,7 @@ export const PromptDetail = ({
                   promptGraph.data?.resolvedPrompt ? (
                     <CodeView
                       content={String(promptGraph.data.resolvedPrompt)}
-                      title="Text Prompt (resolved)"
+                      title={t("detail.textPromptResolved")}
                     />
                   ) : (
                     <CodeView
@@ -558,7 +566,7 @@ export const PromptDetail = ({
                         prompt.prompt,
                       )}
                       originalContent={prompt.prompt}
-                      title="Text Prompt"
+                      title={t("detail.textPromptTitle")}
                     />
                   )
                 ) : (

@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowUpRight } from "lucide-react";
 import * as z from "zod/v4";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/src/components/ui/button";
 import {
@@ -58,6 +59,8 @@ export const CreateOrEditLLMToolDialog: React.FC<CreateOrEditLLMToolDialog> = (
   props,
 ) => {
   const { children, projectId, onSave, existingLlmTool } = props;
+  const t = useTranslations("models");
+  const tCommon = useTranslations("common");
 
   const utils = api.useUtils();
   const createLlmTool = api.llmTools.create.useMutation();
@@ -160,11 +163,9 @@ export const CreateOrEditLLMToolDialog: React.FC<CreateOrEditLLMToolDialog> = (
       >
         <DialogHeader>
           <DialogTitle>
-            {existingLlmTool ? "Edit LLM Tool" : "Create LLM Tool"}
+            {existingLlmTool ? t("tools.editTitle") : t("tools.createTitle")}
           </DialogTitle>
-          <DialogDescription>
-            Define a tool for LLM function calling
-          </DialogDescription>
+          <DialogDescription>{t("tools.description")}</DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
@@ -179,7 +180,7 @@ export const CreateOrEditLLMToolDialog: React.FC<CreateOrEditLLMToolDialog> = (
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Name</FormLabel>
+                      <FormLabel>{t("tools.name")}</FormLabel>
                       <FormControl>
                         <Input placeholder="e.g., get_weather" {...field} />
                       </FormControl>
@@ -193,10 +194,9 @@ export const CreateOrEditLLMToolDialog: React.FC<CreateOrEditLLMToolDialog> = (
                   name="description"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Description</FormLabel>
+                      <FormLabel>{t("tools.description2")}</FormLabel>
                       <FormDescription>
-                        This description will be sent to the LLM to help it
-                        understand the tool&apos;s purpose and functionality.
+                        {t("tools.descriptionHelp")}
                       </FormDescription>
                       <FormControl>
                         <Textarea
@@ -218,17 +218,16 @@ export const CreateOrEditLLMToolDialog: React.FC<CreateOrEditLLMToolDialog> = (
                   name="parameters"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Parameters (JSON Schema)</FormLabel>
+                      <FormLabel>{t("tools.parameters")}</FormLabel>
                       <FormDescription>
-                        Define the structure of your tool parameters using JSON
-                        Schema format.{" "}
+                        {t("tools.parametersDescription")}{" "}
                         <a
                           href="https://json-schema.org/learn/miscellaneous-examples"
                           target="_blank"
                           rel="noopener noreferrer"
                           className="flex items-center"
                         >
-                          See JSON Schema examples here
+                          {t("tools.jsonSchemaExamples")}
                           <ArrowUpRight className="h-3 w-3" />
                         </a>
                       </FormDescription>
@@ -248,12 +247,12 @@ export const CreateOrEditLLMToolDialog: React.FC<CreateOrEditLLMToolDialog> = (
                             onClick={prettifyJson}
                             className="absolute right-3 top-3 text-xs"
                           >
-                            Prettify
+                            {t("tools.prettify")}
                           </Button>
                         </div>
                       </FormControl>
                       <p className="text-xs text-muted-foreground">
-                        Parameters must be a valid JSON Schema object
+                        {t("tools.parametersNote")}
                       </p>
                       <FormMessage />
                     </FormItem>
@@ -265,8 +264,7 @@ export const CreateOrEditLLMToolDialog: React.FC<CreateOrEditLLMToolDialog> = (
             <DialogFooter className="sticky bottom-0 mt-4 flex flex-col gap-2 border-t bg-background pt-4">
               <div className="flex w-full flex-col gap-2">
                 <p className="text-xs text-muted-foreground">
-                  Note: Changes to tools are reflected to all members of this
-                  project.
+                  {t("tools.projectNote")}
                 </p>
                 <div className="flex items-center justify-between gap-2">
                   {existingLlmTool && (
@@ -276,7 +274,7 @@ export const CreateOrEditLLMToolDialog: React.FC<CreateOrEditLLMToolDialog> = (
                       onClick={handleDelete}
                       className="mr-auto"
                     >
-                      Delete
+                      {tCommon("actions.delete")}
                     </Button>
                   )}
                   <Button
@@ -284,9 +282,9 @@ export const CreateOrEditLLMToolDialog: React.FC<CreateOrEditLLMToolDialog> = (
                     variant="outline"
                     onClick={() => setOpen(false)}
                   >
-                    Cancel
+                    {tCommon("actions.cancel")}
                   </Button>
-                  <Button type="submit">Save</Button>
+                  <Button type="submit">{tCommon("actions.save")}</Button>
                 </div>
               </div>
             </DialogFooter>

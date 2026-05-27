@@ -12,6 +12,7 @@ import {
 import { useV4Beta } from "@/src/features/events/hooks/useV4Beta";
 import ObservationsEventsTable from "@/src/features/events/components/EventsTable";
 import { useQueryProject } from "@/src/features/projects/hooks";
+import { useTranslations } from "next-intl";
 
 export default function Traces() {
   const router = useRouter();
@@ -19,6 +20,7 @@ export default function Traces() {
   const { isBetaEnabled } = useV4Beta();
   const [, setQueryParams] = useQueryParams({ viewMode: StringParam });
   const { project } = useQueryProject();
+  const t = useTranslations("traces");
 
   // Clear viewMode query when beta is turned off (e.g. from sidebar)
   useEffect(() => {
@@ -51,10 +53,9 @@ export default function Traces() {
     return (
       <Page
         headerProps={{
-          title: "Tracing",
+          title: t("pages.tracingTitle"),
           help: {
-            description:
-              "A trace represents a single function/api invocation. Traces contain observations. See [docs](https://langfuse.com/docs/observability/data-model) to learn more.",
+            description: t("pages.tracingHelp"),
             href: "https://langfuse.com/docs/observability/data-model",
           },
         }}
@@ -68,7 +69,7 @@ export default function Traces() {
   return (
     <Page
       headerProps={{
-        title: "Tracing",
+        title: t("pages.tracingTitle"),
         help: {
           description: (
             <>

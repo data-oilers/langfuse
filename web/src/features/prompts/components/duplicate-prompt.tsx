@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import { useTranslations } from "next-intl";
 import { Button } from "@/src/components/ui/button";
 import { api } from "@/src/utils/api";
 import { Copy } from "lucide-react";
@@ -48,6 +49,7 @@ const DuplicatePromptForm: React.FC<{
   promptVersion: number;
   onFormSuccess: () => void;
 }> = ({ projectId, promptId, promptName, promptVersion, onFormSuccess }) => {
+  const t = useTranslations("prompts");
   const capture = usePostHogClientCapture();
   const router = useRouter();
   const form = useForm({
@@ -119,7 +121,7 @@ const DuplicatePromptForm: React.FC<{
             name="name"
             render={({ field }) => (
               <FormItem className="flex flex-col gap-2">
-                <FormLabel>Name</FormLabel>
+                <FormLabel>{t("editor.nameLabel")}</FormLabel>
                 <FormControl>
                   <Input {...field} type="text" />
                 </FormControl>
@@ -132,7 +134,7 @@ const DuplicatePromptForm: React.FC<{
             name="isCopySingleVersion"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Settings</FormLabel>
+                <FormLabel>{t("actions.duplicateSettings")}</FormLabel>
                 <FormControl>
                   <RadioGroup
                     {...field}
@@ -145,7 +147,9 @@ const DuplicatePromptForm: React.FC<{
                         <RadioGroupItem value={CopySettings.SINGLE_VERSION} />
                       </FormControl>
                       <FormLabel className="font-normal">
-                        Copy only version {promptVersion}
+                        {t("actions.duplicateSingleVersion", {
+                          version: promptVersion,
+                        })}
                       </FormLabel>
                     </FormItem>
                     <FormItem className="flex items-center space-x-3 space-y-0">
@@ -153,7 +157,7 @@ const DuplicatePromptForm: React.FC<{
                         <RadioGroupItem value={CopySettings.ALL_VERSIONS} />
                       </FormControl>
                       <FormLabel className="font-normal">
-                        Copy all prompt versions and labels
+                        {t("actions.duplicateAllVersions")}
                       </FormLabel>
                     </FormItem>
                   </RadioGroup>
@@ -169,7 +173,7 @@ const DuplicatePromptForm: React.FC<{
             loading={duplicatePrompt.isPending}
             className="mt-auto w-full"
           >
-            Submit
+            {t("actions.duplicateButton")}
           </Button>
         </DialogFooter>
       </form>
@@ -183,6 +187,7 @@ export const DuplicatePromptButton: React.FC<{
   promptName: string;
   promptVersion: number;
 }> = ({ projectId, promptId, promptName, promptVersion }) => {
+  const t = useTranslations("prompts");
   const [open, setOpen] = useState(false);
   const hasAccess = useHasProjectAccess({
     projectId,
@@ -211,18 +216,20 @@ export const DuplicatePromptButton: React.FC<{
           hasAccess={hasAccess}
           variant="outline"
           limit={promptLimit}
-          title="Duplicate prompt"
+          title={t("actions.duplicatePrompt")}
           limitValue={allPromptNames.data?.length ?? undefined}
           onClick={() => {
             capture("prompt_detail:duplicate_button_click");
           }}
         >
-          <span className="hidden md:ml-1 md:inline">Duplicate</span>
+          <span className="hidden md:ml-1 md:inline">
+            {t("actions.duplicateButton")}
+          </span>
         </ActionButton>
       </DialogTrigger>
       <DialogContent className="max-h-[90vh] min-h-0">
         <DialogHeader>
-          <DialogTitle>Duplicate prompt</DialogTitle>
+          <DialogTitle>{t("actions.duplicatePrompt")}</DialogTitle>
         </DialogHeader>
         <DuplicatePromptForm
           projectId={projectId}

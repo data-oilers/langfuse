@@ -8,6 +8,7 @@ import { type DashboardWidgetChartType } from "@langfuse/shared/src/db";
 import { type views, type metricAggregations } from "@/src/features/query";
 import { type z } from "zod/v4";
 import { type WidgetChartConfig } from "@/src/features/widgets/utils";
+import { useTranslations } from "next-intl";
 
 export default function EditWidget() {
   const router = useRouter();
@@ -16,6 +17,7 @@ export default function EditWidget() {
     widgetId: string;
     dashboardId?: string;
   };
+  const t = useTranslations("dashboard");
 
   // Fetch the widget details
   const utils = api.useUtils();
@@ -37,8 +39,8 @@ export default function EditWidget() {
     },
     onSuccess: () => {
       showSuccessToast({
-        title: "Widget updated successfully",
-        description: "Your widget has been updated.",
+        title: t("widgetPages.updatedTitle"),
+        description: t("widgetPages.updatedDescription"),
       });
       // Navigate back to dashboard if provided else widgets list
       if (dashboardId) {
@@ -50,7 +52,7 @@ export default function EditWidget() {
       }
     },
     onError: (error) => {
-      showErrorToast("Failed to update widget", error.message);
+      showErrorToast(t("widgetPages.updateFailedTitle"), error.message);
     },
   });
 
@@ -88,9 +90,9 @@ export default function EditWidget() {
     <Page
       withPadding
       headerProps={{
-        title: "Edit Widget",
+        title: t("widgetPages.editTitle"),
         help: {
-          description: "Edit an existing widget",
+          description: t("widgetPages.editHelpDescription"),
         },
       }}
     >
@@ -120,7 +122,7 @@ export default function EditWidget() {
         />
       ) : (
         <div className="flex h-[300px] items-center justify-center">
-          <p className="text-muted-foreground">Loading...</p>
+          <p className="text-muted-foreground">{t("widgets.loading")}</p>
         </div>
       )}
     </Page>

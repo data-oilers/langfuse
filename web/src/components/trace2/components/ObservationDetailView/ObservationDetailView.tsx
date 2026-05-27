@@ -53,6 +53,7 @@ import { useTraceData } from "@/src/components/trace2/contexts/TraceDataContext"
 import { useParsedObservation } from "@/src/hooks/useParsedObservation";
 import { useCommentedPaths } from "@/src/features/comments/hooks/useCommentedPaths";
 import { api } from "@/src/utils/api";
+import { useTranslations } from "next-intl";
 
 // Extracted components
 import { ObservationDetailViewHeader } from "./ObservationDetailViewHeader";
@@ -76,6 +77,7 @@ export function ObservationDetailView({
   traceId,
 }: ObservationDetailViewProps) {
   // Tab and view state from URL (via SelectionContext)
+  const t = useTranslations("traces");
   const {
     selectedTab: globalSelectedTab,
     setSelectedTab: setGlobalSelectedTab,
@@ -287,13 +289,13 @@ export function ObservationDetailView({
       >
         <TooltipProvider>
           <TabsBarList>
-            <TabsBarTrigger value="preview">Preview</TabsBarTrigger>
-            <TabsBarTrigger value="scores">Scores</TabsBarTrigger>
+            <TabsBarTrigger value="preview">{t("tabs.preview")}</TabsBarTrigger>
+            <TabsBarTrigger value="scores">{t("tabs.scores")}</TabsBarTrigger>
             {showLogViewTab && (
               <TabsBarTrigger value="log">
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <span>Log View</span>
+                    <span>{t("tabs.logView")}</span>
                   </TooltipTrigger>
                   <TooltipContent className="text-xs">
                     {isLogViewVirtualized
@@ -330,7 +332,7 @@ export function ObservationDetailView({
                 >
                   <TabsList className="h-fit py-0.5">
                     <TabsTrigger value="pretty" className="h-fit px-1 text-xs">
-                      Formatted
+                      {t("viewToggle.formatted")}
                     </TabsTrigger>
                     {selectedTab === "log" && isLogViewVirtualized ? (
                       <HoverCard openDelay={200}>
@@ -350,11 +352,15 @@ export function ObservationDetailView({
                           className="w-64 text-sm"
                           sideOffset={8}
                         >
-                          <p className="font-medium">JSON view unavailable</p>
+                          <p className="font-medium">
+                            {t("viewToggle.jsonViewUnavailable")}
+                          </p>
                           <p className="mt-1 text-muted-foreground">
-                            Disabled for traces with{" "}
-                            {TRACE_VIEW_CONFIG.logView.virtualizationThreshold}+
-                            observations to maintain performance.
+                            {t("viewToggle.jsonViewUnavailableDescription", {
+                              threshold:
+                                TRACE_VIEW_CONFIG.logView
+                                  .virtualizationThreshold,
+                            })}
                           </p>
                         </HoverCardContent>
                       </HoverCard>
@@ -375,7 +381,7 @@ export function ObservationDetailView({
                         onCheckedChange={handleBetaToggle}
                       />
                       <span className="text-xs text-muted-foreground">
-                        Beta
+                        {t("viewToggle.beta")}
                       </span>
                     </div>
                   )}

@@ -17,6 +17,7 @@ import {
   HoverCardTrigger,
 } from "@/src/components/ui/hover-card";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 interface CorrectedOutputFieldProps {
   projectId: string;
@@ -37,6 +38,7 @@ export function CorrectedOutputField({
   environment = "default",
   compact = false,
 }: CorrectedOutputFieldProps) {
+  const t = useTranslations("traces");
   const hasAccess = useHasProjectAccess({ projectId, scope: "scores:CUD" });
 
   // JSON validation toggle (persisted in localStorage)
@@ -166,7 +168,7 @@ export function CorrectedOutputField({
                   compact ? "text-xs" : "text-sm",
                 )}
               >
-                {compact ? "" : "Corrected Output (Beta)"}
+                {compact ? "" : t("correction.correctedOutput")}
               </span>
               <HoverCard>
                 <HoverCardTrigger asChild>
@@ -196,22 +198,24 @@ export function CorrectedOutputField({
                 {!isValidJson && isEditing && hasContent && (
                   <span className="mr-2 text-xs text-red-500">
                     {strictJsonMode
-                      ? "Invalid JSON - fix to save"
-                      : "Cannot save empty content"}
+                      ? t("correction.invalidJson")
+                      : t("correction.cannotSaveEmpty")}
                   </span>
                 )}
                 {isValidJson && saveStatus === "saving" && (
                   <div className="mr-2 flex items-center gap-1">
                     <Loader2 className="h-3 w-3 animate-spin" />
                     <span className="text-xs text-muted-foreground">
-                      Saving
+                      {t("correction.saving")}
                     </span>
                   </div>
                 )}
                 {isValidJson && saveStatus === "saved" && (
                   <div className="mr-2 flex items-center gap-1">
                     <Check className="h-3 w-3" />
-                    <span className="text-xs text-muted-foreground">Saved</span>
+                    <span className="text-xs text-muted-foreground">
+                      {t("correction.saved")}
+                    </span>
                   </div>
                 )}
                 {hasContent && (
@@ -221,7 +225,7 @@ export function CorrectedOutputField({
                       variant="ghost"
                       onClick={() => setIsDiffDialogOpen(true)}
                       className="hover:bg-border"
-                      title={"View diff between original and corrected output"}
+                      title={t("correction.viewDiff")}
                     >
                       <FileDiff className="h-3 w-3" />
                     </Button>
@@ -232,7 +236,7 @@ export function CorrectedOutputField({
                         onClick={handleEdit}
                         disabled={!hasAccess}
                         className="hover:bg-border"
-                        title="Edit corrected output"
+                        title={t("correction.editCorrection")}
                       >
                         <Pencil className="h-3 w-3" />
                       </Button>
@@ -243,7 +247,7 @@ export function CorrectedOutputField({
                       onClick={handleDeleteWithExitEdit}
                       disabled={!hasAccess}
                       className="hover:bg-border"
-                      title="Delete corrected output"
+                      title={t("correction.deleteCorrection")}
                     >
                       <Trash className="h-3 w-3" />
                     </Button>
@@ -270,7 +274,7 @@ export function CorrectedOutputField({
                 "w-full cursor-pointer rounded-md border px-3 py-4 text-center text-xs text-muted-foreground transition-colors hover:bg-muted/50",
               )}
             >
-              Click to add corrected output
+              {t("correction.clickToAdd")}
             </button>
           ) : isEditing ? (
             <CodeMirrorEditor
@@ -278,7 +282,7 @@ export function CorrectedOutputField({
               onChange={handleEditorChange}
               mode={strictJsonMode ? "json" : "text"}
               minHeight={200}
-              placeholder="Enter corrected output..."
+              placeholder={t("correction.enterPlaceholder")}
               className="bg-accent-light-green"
             />
           ) : (

@@ -16,6 +16,7 @@ import { ChevronDown, ExternalLink } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useState, useCallback } from "react";
+import { useTranslations } from "next-intl";
 
 export const CreateNewAnnotationQueueItem = ({
   projectId,
@@ -30,6 +31,7 @@ export const CreateNewAnnotationQueueItem = ({
   variant?: "outline" | "secondary";
   size?: "default" | "sm" | "xs" | "lg" | "icon" | "icon-xs" | "icon-sm";
 }) => {
+  const t = useTranslations("scores");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const session = useSession();
   const hasAccess = useHasProjectAccess({
@@ -61,7 +63,7 @@ export const CreateNewAnnotationQueueItem = ({
           });
         } else {
           const confirmRemoval = confirm(
-            `Are you sure you want to remove this item from the queue "${queueName}"?`,
+            t("annotationQueues.confirmRemoveFromQueue", { queueName }),
           );
           if (confirmRemoval) {
             await removeFromQueueMutation.mutateAsync({
@@ -137,7 +139,7 @@ export const CreateNewAnnotationQueueItem = ({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuLabel>In queue(s)</DropdownMenuLabel>
+        <DropdownMenuLabel>{t("annotationQueues.inQueues")}</DropdownMenuLabel>
         {queues.data?.queues.length ? (
           queues.data?.queues.map((queue) => (
             <DropdownMenuCheckboxItem
@@ -170,7 +172,7 @@ export const CreateNewAnnotationQueueItem = ({
               event.stopPropagation();
             }}
           >
-            No queues defined
+            {t("annotationQueues.noQueuesDefined")}
           </DropdownMenuItem>
         )}
         <DropdownMenuSeparator />
@@ -182,7 +184,7 @@ export const CreateNewAnnotationQueueItem = ({
           <div>
             <ExternalLink className="mr-2 h-4 w-4" />
             <Link href={`/project/${projectId}/annotation-queues`}>
-              Manage queues
+              {t("annotationQueues.manageQueues")}
             </Link>
           </div>
         </DropdownMenuItem>

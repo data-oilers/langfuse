@@ -9,10 +9,13 @@ import { Label } from "@/src/components/ui/label";
 import { showSuccessToast } from "@/src/features/notifications/showSuccessToast";
 import { showErrorToast } from "@/src/features/notifications/showErrorToast";
 import { useHasProjectAccess } from "@/src/features/rbac/utils/checkProjectAccess";
+import { useTranslations } from "next-intl";
 
 export default function NewDashboard() {
   const router = useRouter();
   const { projectId } = router.query as { projectId: string };
+  const t = useTranslations("dashboard");
+  const tCommon = useTranslations("common");
 
   // State for new dashboard
   const [dashboardName, setDashboardName] = useState("New Dashboard");
@@ -28,14 +31,14 @@ export default function NewDashboard() {
   const createDashboard = api.dashboard.createDashboard.useMutation({
     onSuccess: (data) => {
       showSuccessToast({
-        title: "Dashboard created",
-        description: "Your new dashboard has been created successfully",
+        title: t("new.createdTitle"),
+        description: t("new.createdDescription"),
       });
       // Navigate to the newly created dashboard
       router.push(`/project/${projectId}/dashboards/${data.id}`);
     },
     onError: (error) => {
-      showErrorToast("Error creating dashboard", error.message);
+      showErrorToast(t("new.errorCreating"), error.message);
     },
   });
 
@@ -48,7 +51,7 @@ export default function NewDashboard() {
         description: dashboardDescription,
       });
     } else {
-      showErrorToast("Validation error", "Dashboard name is required");
+      showErrorToast(t("new.validationError"), t("new.nameRequired"));
     }
   };
 
@@ -56,9 +59,9 @@ export default function NewDashboard() {
     <Page
       withPadding
       headerProps={{
-        title: "Create Dashboard",
+        title: t("new.title"),
         help: {
-          description: "Create a new dashboard for your project",
+          description: t("new.helpDescription"),
         },
         actionButtonsRight: (
           <>
@@ -66,7 +69,7 @@ export default function NewDashboard() {
               variant="outline"
               onClick={() => router.push(`/project/${projectId}/dashboards`)}
             >
-              Cancel
+              {tCommon("actions.cancel")}
             </Button>
             <Button
               onClick={handleCreateDashboard}
@@ -77,7 +80,7 @@ export default function NewDashboard() {
               }
               loading={createDashboard.isPending}
             >
-              Create
+              {tCommon("actions.create")}
             </Button>
           </>
         ),
@@ -85,36 +88,35 @@ export default function NewDashboard() {
     >
       <div className="mx-auto my-8 max-w-xl space-y-6">
         <div className="space-y-2">
-          <Label htmlFor="dashboard-name">Dashboard Name</Label>
+          <Label htmlFor="dashboard-name">{t("new.dashboardName")}</Label>
           <Input
             id="dashboard-name"
             value={dashboardName}
             onChange={(e) => {
               setDashboardName(e.target.value);
             }}
-            placeholder="Enter dashboard name"
+            placeholder={t("new.namePlaceholder")}
             required
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="dashboard-description">Description</Label>
+          <Label htmlFor="dashboard-description">
+            {t("new.descriptionLabel")}
+          </Label>
           <Textarea
             id="dashboard-description"
             value={dashboardDescription}
             onChange={(e) => {
               setDashboardDescription(e.target.value);
             }}
-            placeholder="Describe the purpose of this dashboard. Optional, but very helpful."
+            placeholder={t("new.descriptionPlaceholder")}
             rows={4}
           />
         </div>
 
         <div className="text-sm text-muted-foreground">
-          <p>
-            After creating the dashboard, you can add widgets to visualize your
-            data.
-          </p>
+          <p>{t("new.afterCreateHint")}</p>
         </div>
       </div>
     </Page>

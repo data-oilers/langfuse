@@ -13,6 +13,7 @@ import { IOPreviewPretty } from "./IOPreviewPretty";
 import { Button } from "@/src/components/ui/button";
 import { ActionButton } from "@/src/components/ActionButton";
 import { BookOpen, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export type { ViewMode };
 
@@ -138,6 +139,7 @@ export function IOPreview({
   environment = "default",
   showCorrections = true,
 }: IOPreviewProps) {
+  const t = useTranslations("traces");
   const capture = usePostHogClientCapture();
   const [dismissedTraceViewNotifications, setDismissedTraceViewNotifications] =
     useLocalStorage<string[]>(STORAGE_KEY, []);
@@ -300,7 +302,7 @@ export function IOPreview({
                     : [...prev, EMPTY_IO_ALERT_ID],
                 );
               }}
-              title="Dismiss"
+              title={t("io.dismiss")}
             >
               <X className="h-3.5 w-3.5" />
             </Button>
@@ -308,12 +310,10 @@ export function IOPreview({
               <div className="flex h-8 w-8 items-center justify-center rounded-full bg-accent">
                 <BookOpen className="h-4 w-4 text-muted-foreground" />
               </div>
-              <h3 className="text-sm font-semibold">
-                Looks like this trace didn&apos;t receive an input or output.
-              </h3>
+              <h3 className="text-sm font-semibold">{t("io.emptyIOTitle")}</h3>
             </div>
             <p className="max-w-sm text-sm text-muted-foreground">
-              Add it in your code to make debugging a lot easier.
+              {t("io.emptyIODescription")}
             </p>
             <ActionButton
               variant="outline"
@@ -322,7 +322,7 @@ export function IOPreview({
               trackingEventName="notification:click_link"
               trackingProps={{ notification_id: EMPTY_IO_ALERT_ID }}
             >
-              View Documentation
+              {t("io.viewDocumentation")}
             </ActionButton>
           </div>
         </div>

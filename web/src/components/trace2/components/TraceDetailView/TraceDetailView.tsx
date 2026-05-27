@@ -34,6 +34,7 @@ import TagList from "@/src/features/tag/components/TagList";
 import { useJsonExpansion } from "@/src/components/trace2/contexts/JsonExpansionContext";
 import { useMedia } from "@/src/components/trace2/api/useMedia";
 import { useParsedTrace } from "@/src/hooks/useParsedTrace";
+import { useTranslations } from "next-intl";
 
 // Contexts and hooks
 import { useTraceData } from "@/src/components/trace2/contexts/TraceDataContext";
@@ -69,6 +70,7 @@ export function TraceDetailView({
   projectId,
 }: TraceDetailViewProps) {
   // Tab and view state from URL (via SelectionContext)
+  const t = useTranslations("traces");
   const { selectedTab, setSelectedTab } = useSelection();
   const [isPrettyViewAvailable, setIsPrettyViewAvailable] = useState(true);
   const [isJSONBetaVirtualized, setIsJSONBetaVirtualized] = useState(false);
@@ -211,12 +213,12 @@ export function TraceDetailView({
       >
         <TooltipProvider>
           <TabsBarList>
-            <TabsBarTrigger value="preview">Preview</TabsBarTrigger>
+            <TabsBarTrigger value="preview">{t("tabs.preview")}</TabsBarTrigger>
             {showLogViewTab && (
               <TabsBarTrigger value="log">
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <span>Log View</span>
+                    <span>{t("tabs.logView")}</span>
                   </TooltipTrigger>
                   <TooltipContent className="text-xs">
                     {isLogViewVirtualized
@@ -227,7 +229,7 @@ export function TraceDetailView({
               </TabsBarTrigger>
             )}
             {showScoresTab && (
-              <TabsBarTrigger value="scores">Scores</TabsBarTrigger>
+              <TabsBarTrigger value="scores">{t("tabs.scores")}</TabsBarTrigger>
             )}
 
             {/* View toggle (Formatted/JSON) - show for preview and log tabs when pretty view available */}
@@ -256,7 +258,7 @@ export function TraceDetailView({
                 >
                   <TabsList className="h-fit py-0.5">
                     <TabsTrigger value="pretty" className="h-fit px-1 text-xs">
-                      Formatted
+                      {t("viewToggle.formatted")}
                     </TabsTrigger>
                     {selectedTab === "log" && isLogViewVirtualized ? (
                       <HoverCard openDelay={200}>
@@ -274,11 +276,15 @@ export function TraceDetailView({
                           className="w-64 text-sm"
                           sideOffset={8}
                         >
-                          <p className="font-medium">JSON view unavailable</p>
+                          <p className="font-medium">
+                            {t("viewToggle.jsonViewUnavailable")}
+                          </p>
                           <p className="mt-1 text-muted-foreground">
-                            Disabled for traces with{" "}
-                            {TRACE_VIEW_CONFIG.logView.virtualizationThreshold}+
-                            observations to maintain performance.
+                            {t("viewToggle.jsonViewUnavailableDescription", {
+                              threshold:
+                                TRACE_VIEW_CONFIG.logView
+                                  .virtualizationThreshold,
+                            })}
                           </p>
                         </HoverCardContent>
                       </HoverCard>
@@ -299,7 +305,7 @@ export function TraceDetailView({
                         onCheckedChange={handleBetaToggle}
                       />
                       <span className="text-xs text-muted-foreground">
-                        Beta
+                        {t("viewToggle.beta")}
                       </span>
                     </div>
                   )}
@@ -326,7 +332,7 @@ export function TraceDetailView({
                 <div
                   className={`px-2 pt-2 text-sm font-medium ${currentView !== "pretty" ? "flex-shrink-0" : ""}`}
                 >
-                  Tags
+                  {t("io.tags")}
                 </div>
                 <div
                   className={`flex flex-wrap gap-x-1 gap-y-1 px-2 pb-2 ${currentView !== "pretty" ? "flex-shrink-0" : ""}`}

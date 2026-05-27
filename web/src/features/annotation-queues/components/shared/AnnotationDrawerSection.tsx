@@ -10,6 +10,7 @@ import { TriangleAlertIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { AnnotationForm } from "@/src/features/scores/components/AnnotationForm";
 import { type WithStringifiedMetadata } from "@/src/utils/clientSideDomainTypes";
+import { useTranslations } from "next-intl";
 
 interface AnnotationDrawerSectionProps {
   item: AnnotationQueueItem & {
@@ -25,6 +26,7 @@ interface AnnotationDrawerSectionProps {
 export const AnnotationDrawerSection: React.FC<
   AnnotationDrawerSectionProps
 > = ({ item, scoreTarget, scores, configs, environment }) => {
+  const t = useTranslations("scores");
   const session = useSession();
 
   const isLockedByOtherUser = item.lockedByUserId !== session.data?.user?.id;
@@ -54,7 +56,9 @@ export const AnnotationDrawerSection: React.FC<
             <div className="flex items-center justify-center rounded-sm border border-dark-red bg-light-red p-1">
               <TriangleAlertIcon className="mr-1 h-4 w-4 text-dark-red" />
               <span className="text-xs text-dark-red">
-                Currently edited by {item.lockedByUser.name}
+                {t("annotate.currentlyEditedBy", {
+                  name: item.lockedByUser.name,
+                })}
               </span>
             </div>
           ) : undefined
@@ -62,8 +66,7 @@ export const AnnotationDrawerSection: React.FC<
       />
       {hasNonAnnotationScores && (
         <div className="mt-4 text-xs text-muted-foreground">
-          API and eval scores visible when toggling on the detailed view. Add
-          manual annotations above.
+          {t("annotate.apiEvalScoresDetailedNote")}
         </div>
       )}
     </Card>

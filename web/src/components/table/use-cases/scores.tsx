@@ -1,4 +1,5 @@
 import { DataTable } from "@/src/components/table/data-table";
+import { useTranslations } from "next-intl";
 import { useRowHeightLocalStorage } from "@/src/components/table/data-table-row-height-switch";
 import { DataTableToolbar } from "@/src/components/table/data-table-toolbar";
 import {
@@ -110,6 +111,7 @@ export default function ScoresTable({
   localStorageSuffix?: string;
   disableUrlPersistence?: boolean;
 }) {
+  const tScores = useTranslations("scores");
   const utils = api.useUtils();
   const [selectedRows, setSelectedRows] = useState<RowSelectionState>({});
   const [paginationState, setPaginationState] = useQueryParams({
@@ -177,9 +179,8 @@ export default function ScoresTable({
   const scoreDeleteMutation = api.scores.deleteMany.useMutation({
     onSuccess: () => {
       showSuccessToast({
-        title: "Scores deleted",
-        description:
-          "Selected scores will be deleted. Scores are removed asynchronously and may continue to be visible for up to 15 minutes.",
+        title: tScores("list.deletedTitle"),
+        description: tScores("list.deletedDescription"),
       });
     },
     onSettled: () => {
@@ -328,7 +329,7 @@ export default function ScoresTable({
       accessorKey: "id",
       id: "id",
       enableColumnFilter: false,
-      header: "Score ID",
+      header: tScores("list.scoreId"),
       size: 100,
       enableSorting: false,
       defaultHidden: true,
@@ -342,7 +343,7 @@ export default function ScoresTable({
     },
     {
       accessorKey: "traceName",
-      header: "Trace Name",
+      header: tScores("list.traceName"),
       id: "traceName",
       enableHiding: true,
       enableSorting: true,
@@ -364,7 +365,7 @@ export default function ScoresTable({
       accessorKey: "traceId",
       id: "traceId",
       enableColumnFilter: true,
-      header: "Trace",
+      header: tScores("list.trace"),
       enableSorting: true,
       size: 100,
       cell: ({ row }) => {
@@ -382,7 +383,7 @@ export default function ScoresTable({
     {
       accessorKey: "executionTraceId",
       id: "executionTraceId",
-      header: "Execution Trace",
+      header: tScores("list.executionTrace"),
       enableSorting: false,
       enableHiding: true,
       defaultHidden: true,
@@ -400,7 +401,7 @@ export default function ScoresTable({
     {
       accessorKey: "observationId",
       id: "observationId",
-      header: "Observation",
+      header: tScores("list.observation"),
       enableSorting: true,
       size: 100,
       cell: ({ row }) => {
@@ -418,7 +419,7 @@ export default function ScoresTable({
     },
     {
       accessorKey: "sessionId",
-      header: "Session",
+      header: tScores("list.session"),
       id: "sessionId",
       enableHiding: true,
       enableSorting: true,
@@ -435,7 +436,7 @@ export default function ScoresTable({
     },
     {
       accessorKey: "environment",
-      header: "Environment",
+      header: tScores("list.environment"),
       id: "environment",
       size: 150,
       enableHiding: true,
@@ -453,7 +454,7 @@ export default function ScoresTable({
     },
     {
       accessorKey: "userId",
-      header: "User",
+      header: tScores("list.user"),
       id: "userId",
       headerTooltip: {
         description: "The user ID associated with the trace.",
@@ -476,7 +477,7 @@ export default function ScoresTable({
     },
     {
       accessorKey: "timestamp",
-      header: "Timestamp",
+      header: tScores("list.timestamp"),
       id: "timestamp",
       enableHiding: true,
       enableSorting: true,
@@ -488,7 +489,7 @@ export default function ScoresTable({
     },
     {
       accessorKey: "source",
-      header: "Source",
+      header: tScores("list.source"),
       id: "source",
       enableHiding: true,
       enableSorting: true,
@@ -496,7 +497,7 @@ export default function ScoresTable({
     },
     {
       accessorKey: "name",
-      header: "Name",
+      header: tScores("list.name"),
       id: "name",
       enableHiding: true,
       enableSorting: true,
@@ -504,7 +505,7 @@ export default function ScoresTable({
     },
     {
       accessorKey: "dataType",
-      header: "Data Type",
+      header: tScores("list.dataType"),
       id: "dataType",
       enableHiding: true,
       enableSorting: true,
@@ -512,7 +513,7 @@ export default function ScoresTable({
     },
     {
       accessorKey: "value",
-      header: "Value",
+      header: tScores("list.value"),
       id: "value",
       enableHiding: true,
       enableSorting: true,
@@ -520,7 +521,7 @@ export default function ScoresTable({
     },
     {
       accessorKey: "metadata",
-      header: "Metadata",
+      header: tScores("list.metadata"),
       id: "metadata",
       size: 400,
       headerTooltip: {
@@ -542,7 +543,7 @@ export default function ScoresTable({
     },
     {
       accessorKey: "comment",
-      header: "Comment",
+      header: tScores("list.comment"),
       id: "comment",
       enableHiding: true,
       size: 400,
@@ -556,7 +557,7 @@ export default function ScoresTable({
     {
       accessorKey: "author",
       id: "author",
-      header: "Author",
+      header: tScores("list.author"),
       enableHiding: true,
       size: 150,
       cell: ({ row }) => {
@@ -578,7 +579,7 @@ export default function ScoresTable({
     },
     {
       accessorKey: "jobConfigurationId",
-      header: "Eval Configuration ID",
+      header: tScores("list.evalConfigId"),
       id: "jobConfigurationId",
       headerTooltip: {
         description: "The Job Configuration ID associated with the trace.",
@@ -602,7 +603,7 @@ export default function ScoresTable({
     {
       accessorKey: "traceTags",
       id: "traceTags",
-      header: "Trace Tags",
+      header: tScores("list.traceTags"),
       size: 250,
       enableHiding: true,
       defaultHidden: true,
@@ -630,9 +631,8 @@ export default function ScoresTable({
           {
             id: "score-delete",
             type: BatchActionType.Delete,
-            label: "Delete Scores",
-            description:
-              "This action permanently deletes scores and cannot be undone. Score deletion happens asynchronously and may take up to 15 minutes.",
+            label: tScores("actions.deleteScores"),
+            description: tScores("actions.deleteScoresDescription"),
             accessCheck: {
               scope: "traces:delete",
               entitlement: "trace-deletion",
@@ -769,14 +769,14 @@ export default function ScoresTable({
               columns={columns}
               noResultsMessage={
                 <div className="flex flex-col items-center">
-                  <span>No scores found.</span>
+                  <span>{tScores("list.noScoresFound")}</span>
                   <a
                     href="https://langfuse.com/faq/all/what-are-scores"
                     className="pointer-events-auto italic text-primary underline"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    What are scores?
+                    {tScores("list.noScoresFoundLink")}
                   </a>
                 </div>
               }

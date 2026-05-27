@@ -36,6 +36,7 @@ import { ActionButton } from "@/src/components/ActionButton";
 import { usePostHogClientCapture } from "@/src/features/posthog-analytics/usePostHogClientCapture";
 import { useHasProjectAccess } from "@/src/features/rbac/utils/checkProjectAccess";
 import { SettingsTableCard } from "@/src/components/layouts/settings-table-card";
+import { useTranslations } from "next-intl";
 
 export type ModelTableRow = {
   modelId: string;
@@ -68,6 +69,8 @@ const modelConfigDescriptions = {
 export default function ModelTable({ projectId }: { projectId: string }) {
   const router = useRouter();
   const capture = usePostHogClientCapture();
+  const t = useTranslations("models");
+  const tCommon = useTranslations("common");
   const [paginationState, setPaginationState] = useQueryParams({
     pageIndex: withDefault(NumberParam, 0),
     pageSize: withDefault(NumberParam, 50),
@@ -115,7 +118,7 @@ export default function ModelTable({ projectId }: { projectId: string }) {
     {
       accessorKey: "modelName",
       id: "modelName",
-      header: "Model Name",
+      header: t("fields.modelName"),
       headerTooltip: {
         description: modelConfigDescriptions.modelName,
       },
@@ -131,7 +134,7 @@ export default function ModelTable({ projectId }: { projectId: string }) {
     {
       accessorKey: "maintainer",
       id: "maintainer",
-      header: "Maintainer",
+      header: t("fields.maintainer"),
       headerTooltip: {
         description: modelConfigDescriptions.maintainer,
       },
@@ -149,7 +152,9 @@ export default function ModelTable({ projectId }: { projectId: string }) {
                 )}
               </TooltipTrigger>
               <TooltipContent>
-                {isLangfuse ? "Langfuse maintained" : "User maintained"}
+                {isLangfuse
+                  ? t("definitions.langfuseMaintained")
+                  : t("definitions.userMaintained")}
               </TooltipContent>
             </Tooltip>
           </div>
@@ -162,7 +167,7 @@ export default function ModelTable({ projectId }: { projectId: string }) {
       headerTooltip: {
         description: modelConfigDescriptions.matchPattern,
       },
-      header: "Match Pattern",
+      header: t("fields.matchPattern"),
       size: 200,
       cell: ({ row }) => {
         const value: string = row.getValue("matchPattern");
@@ -178,7 +183,9 @@ export default function ModelTable({ projectId }: { projectId: string }) {
       header: () => {
         return (
           <div className="flex items-center gap-2">
-            <span>Prices {priceUnit}</span>
+            <span>
+              {t("pricing.prices")} {priceUnit}
+            </span>
             <PriceUnitSelector />
           </div>
         );
@@ -202,7 +209,7 @@ export default function ModelTable({ projectId }: { projectId: string }) {
     {
       accessorKey: "tokenizerId",
       id: "tokenizerId",
-      header: "Tokenizer",
+      header: t("fields.tokenizer"),
       headerTooltip: {
         description: modelConfigDescriptions.tokenizerId,
       },
@@ -212,7 +219,7 @@ export default function ModelTable({ projectId }: { projectId: string }) {
     {
       accessorKey: "config",
       id: "config",
-      header: "Tokenizer Configuration",
+      header: t("fields.tokenizerConfig"),
       headerTooltip: {
         description: modelConfigDescriptions.config,
       },
@@ -229,7 +236,7 @@ export default function ModelTable({ projectId }: { projectId: string }) {
     {
       accessorKey: "lastUsed",
       id: "lastUsed",
-      header: "Last used",
+      header: t("fields.lastUsed"),
       headerTooltip: {
         description: modelConfigDescriptions.lastUsed,
       },
@@ -243,7 +250,7 @@ export default function ModelTable({ projectId }: { projectId: string }) {
     },
     {
       accessorKey: "actions",
-      header: "Actions",
+      header: tCommon("table.actions"),
       size: 120,
       cell: ({ row }) => {
         return row.original.maintainer !== "Langfuse" ? (
@@ -324,7 +331,7 @@ export default function ModelTable({ projectId }: { projectId: string }) {
                 hasAccess={hasWriteAccess}
                 onClick={() => capture("models:new_form_open")}
               >
-                Add Model Definition
+                {t("actions.addModelDefinition")}
               </ActionButton>
             </UpsertModelFormDialog>
           </>

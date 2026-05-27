@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
 import { api } from "@/src/utils/api";
+import { useTranslations } from "next-intl";
 import {
   Dialog,
   DialogContent,
@@ -50,6 +51,8 @@ export function SelectWidgetDialog({
 }: SelectWidgetDialogProps) {
   const router = useRouter();
   const [selectedWidgetId, setSelectedWidgetId] = useState<string | null>(null);
+  const t = useTranslations("dashboard");
+  const tCommon = useTranslations("common");
 
   // Fetch widgets
   const widgets = api.dashboardWidgets.all.useQuery(
@@ -85,29 +88,31 @@ export function SelectWidgetDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[800px]">
         <DialogHeader>
-          <DialogTitle>Select widget to add</DialogTitle>
+          <DialogTitle>{t("selectWidget.dialogTitle")}</DialogTitle>
         </DialogHeader>
 
         <DialogBody>
           <div className="max-h-[400px] overflow-y-auto">
             {widgets.isPending ? (
-              <div className="py-8 text-center">Loading widgets...</div>
+              <div className="py-8 text-center">
+                {t("selectWidget.loadingWidgets")}
+              </div>
             ) : widgets.isError ? (
               <div className="py-8 text-center text-destructive">
                 Error: {widgets.error.message}
               </div>
             ) : widgets.data?.widgets.length === 0 ? (
               <div className="py-8 text-center text-muted-foreground">
-                No widgets found. Create a new widget to get started.
+                {t("selectWidget.noWidgetsFound")}
               </div>
             ) : (
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Description</TableHead>
-                    <TableHead>View Type</TableHead>
-                    <TableHead>Chart Type</TableHead>
+                    <TableHead>{t("selectWidget.nameHeader")}</TableHead>
+                    <TableHead>{t("selectWidget.descriptionHeader")}</TableHead>
+                    <TableHead>{t("selectWidget.viewTypeHeader")}</TableHead>
+                    <TableHead>{t("selectWidget.chartTypeHeader")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -147,14 +152,14 @@ export function SelectWidgetDialog({
         <DialogFooter className="mt-4 flex justify-between">
           <Button onClick={handleNavigateToNewWidget} variant="outline">
             <PlusIcon className="mr-2 h-4 w-4" />
-            Create New Widget
+            {t("selectWidget.createNewWidget")}
           </Button>
           <div className="flex gap-2">
             <Button onClick={() => onOpenChange(false)} variant="outline">
-              Cancel
+              {tCommon("actions.cancel")}
             </Button>
             <Button onClick={handleAddWidget} disabled={!selectedWidgetId}>
-              Add Selected Widget
+              {t("selectWidget.addSelectedWidget")}
             </Button>
           </div>
         </DialogFooter>

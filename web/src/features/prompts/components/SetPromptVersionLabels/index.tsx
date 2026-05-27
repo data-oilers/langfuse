@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef, type ReactNode } from "react";
+import { useTranslations } from "next-intl";
 import { CircleFadingArrowUp, PlusIcon } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import {
@@ -40,6 +41,8 @@ export function SetPromptVersionLabels({
   showOnlyOnHover?: boolean;
   maxVisibleLabels?: number;
 }) {
+  const t = useTranslations("prompts");
+  const tCommon = useTranslations("common");
   const projectId = useProjectIdFromURL();
   const utils = api.useUtils();
   const capture = usePostHogClientCapture();
@@ -125,7 +128,7 @@ export function SetPromptVersionLabels({
           />
           <Button
             variant="outline"
-            title="Add prompt label"
+            title={t("labels.addPromptLabel")}
             className={cn(
               "h-6 w-6 bg-muted-gray text-primary",
               showOnlyOnHover && "opacity-0 group-hover:opacity-100",
@@ -146,16 +149,16 @@ export function SetPromptVersionLabels({
           onClick={(event) => event.stopPropagation()}
           className="flex flex-col"
         >
-          <h2 className="text-md mb-3 font-semibold">Prompt labels</h2>
+          <h2 className="text-md mb-3 font-semibold">
+            {t("labels.promptLabelsTitle")}
+          </h2>
           <h2 className="mb-3 text-xs">
-            Use labels to fetch prompts via SDKs. The{" "}
-            <strong>production</strong> labeled prompt will be served by
-            default.
+            {t("labels.promptLabelsDescription")}
           </h2>
           <InputCommand className="mx-0 my-3 px-0">
             <InputCommandList className="max-h-full overflow-hidden">
               <InputCommandSeparator />
-              <InputCommandGroup heading="Promote to production?">
+              <InputCommandGroup heading={t("labels.promoteToProduction")}>
                 <LabelCommandItem
                   {...{
                     selectedLabels,
@@ -165,7 +168,7 @@ export function SetPromptVersionLabels({
                 />
               </InputCommandGroup>
               <InputCommandSeparator />
-              <InputCommandGroup heading="Custom labels">
+              <InputCommandGroup heading={t("labels.customLabels")}>
                 <div
                   className="max-h-[300px] overflow-y-auto overflow-x-hidden"
                   ref={customLabelScrollRef}
@@ -206,7 +209,7 @@ export function SetPromptVersionLabels({
                   onClick={() => setIsAddingLabel(true)}
                 >
                   <PlusIcon className="mr-2 h-4 w-4" />
-                  Add custom label
+                  {t("labels.addCustomLabel")}
                 </Button>
               )}
             </div>
@@ -224,10 +227,10 @@ export function SetPromptVersionLabels({
             onClick={handleSubmitLabels}
           >
             {isPromotingToProduction
-              ? "Save and promote to production"
+              ? t("labels.saveAndPromote")
               : isDemotingFromProduction
-                ? "Save and remove from production"
-                : "Save"}
+                ? t("labels.saveAndRemoveFromProduction")
+                : tCommon("actions.save")}
           </Button>
         </div>
       </PopoverContent>

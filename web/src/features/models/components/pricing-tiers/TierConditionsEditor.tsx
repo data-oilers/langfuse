@@ -20,6 +20,7 @@ import {
 } from "@/src/components/ui/select";
 import type { UseFormReturn } from "react-hook-form";
 import type { FormUpsertModel } from "../../validation";
+import { useTranslations } from "next-intl";
 
 type TierConditionsEditorProps = {
   tierIndex: number;
@@ -32,6 +33,7 @@ export function TierConditionsEditor({
   tierIndex,
   form,
 }: TierConditionsEditorProps) {
+  const t = useTranslations("models");
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: `pricingTiers.${tierIndex}.conditions`,
@@ -40,7 +42,7 @@ export function TierConditionsEditor({
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <FormLabel>Conditions</FormLabel>
+        <FormLabel>{t("pricing.conditions")}</FormLabel>
         <Button
           type="button"
           variant="ghost"
@@ -55,14 +57,13 @@ export function TierConditionsEditor({
           }
         >
           <PlusCircle className="mr-1 h-4 w-4" />
-          Add Condition
+          {t("pricing.addCondition")}
         </Button>
       </div>
 
       {fields.length === 0 && (
         <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
-          <strong>Warning:</strong> Non-default tiers require at least one
-          condition. This tier will fail validation.
+          {t("pricing.conditionWarning")}
         </div>
       )}
 
@@ -70,7 +71,7 @@ export function TierConditionsEditor({
         <div key={condition.id} className="space-y-3 rounded-lg border p-3">
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium">
-              Condition {conditionIndex + 1}
+              {t("pricing.conditionNumber", { number: conditionIndex + 1 })}
             </span>
             <Button
               type="button"
@@ -88,12 +89,12 @@ export function TierConditionsEditor({
             name={`pricingTiers.${tierIndex}.conditions.${conditionIndex}.usageDetailPattern`}
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Usage Detail Pattern (Regex)</FormLabel>
+                <FormLabel>{t("pricing.usageDetailPattern")}</FormLabel>
                 <FormControl>
                   <Input {...field} placeholder="^input" />
                 </FormControl>
                 <FormDescription>
-                  Match usage type keys (e.g., ^input, .*cache.*, output_tokens)
+                  {t("pricing.usageDetailPatternDescription")}
                 </FormDescription>
                 <FormMessage />
               </FormItem>
@@ -107,7 +108,7 @@ export function TierConditionsEditor({
               name={`pricingTiers.${tierIndex}.conditions.${conditionIndex}.operator`}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Operator</FormLabel>
+                  <FormLabel>{t("pricing.operator")}</FormLabel>
                   <Select value={field.value} onValueChange={field.onChange}>
                     <SelectTrigger>
                       <SelectValue />
@@ -133,7 +134,7 @@ export function TierConditionsEditor({
               name={`pricingTiers.${tierIndex}.conditions.${conditionIndex}.value`}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Value</FormLabel>
+                  <FormLabel>{t("pricing.value")}</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -161,7 +162,9 @@ export function TierConditionsEditor({
                     onCheckedChange={field.onChange}
                   />
                 </FormControl>
-                <FormLabel className="!mt-0">Case sensitive</FormLabel>
+                <FormLabel className="!mt-0">
+                  {t("pricing.caseSensitive")}
+                </FormLabel>
               </FormItem>
             )}
           />

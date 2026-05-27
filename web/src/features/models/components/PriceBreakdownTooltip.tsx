@@ -12,6 +12,7 @@ import {
 import { usePriceUnitMultiplier } from "@/src/features/models/hooks/usePriceUnitMultiplier";
 import { getMaxDecimals } from "@/src/features/models/utils";
 import { type PriceUnit } from "@/src/features/models/validation";
+import { useTranslations } from "next-intl";
 
 export const PriceBreakdownTooltip = ({
   modelName,
@@ -26,6 +27,7 @@ export const PriceBreakdownTooltip = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { priceUnitMultiplier } = usePriceUnitMultiplier();
+  const t = useTranslations("models");
 
   const maxDecimals = useMemo(
     () =>
@@ -42,7 +44,7 @@ export const PriceBreakdownTooltip = ({
   return (
     <>
       {Object.keys(prices).length === 0 ? (
-        <p>No prices</p>
+        <p>{t("pricing.noPrices")}</p>
       ) : Object.keys(prices).length <= (rowHeight === "m" ? 4 : 2) ? (
         <div className="grid w-full grid-cols-[2fr,3fr] gap-x-2">
           {Object.entries(prices).map(([type, price]) => (
@@ -74,20 +76,24 @@ export const PriceBreakdownTooltip = ({
               onClick={() => setIsOpen(!isOpen)}
             >
               <InfoIcon className="h-3 w-3" />
-              {Object.keys(prices).length} prices set
+              {t("pricing.pricesSet", { count: Object.keys(prices).length })}
             </TooltipTrigger>
             <TooltipContent className="min-w-[16rem] grow p-4">
               <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-1">
-                  <span className="font-semibold">Price breakdown</span>
+                  <span className="font-semibold">
+                    {t("pricing.priceBreakdown")}
+                  </span>
                   <span className="font-mono text-xs font-medium">
                     {modelName}
                   </span>
                 </div>
                 <div className="flex flex-col gap-2">
                   <div className="flex justify-between font-mono text-xs font-semibold">
-                    <span className="mr-4">Usage Type</span>
-                    <span>Price {priceUnit}</span>
+                    <span className="mr-4">{t("pricing.usageType")}</span>
+                    <span>
+                      {t("pricing.prices")} {priceUnit}
+                    </span>
                   </div>
                   {Object.entries(prices).map(([usageType, price]) => (
                     <div

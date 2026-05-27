@@ -2,6 +2,7 @@ import { DataTable } from "@/src/components/table/data-table";
 import TableLink from "@/src/components/table/table-link";
 import { type LangfuseColumnDef } from "@/src/components/table/types";
 import { useDetailPageLists } from "@/src/features/navigate-detail-pages/context";
+import { useTranslations } from "next-intl";
 import { api } from "@/src/utils/api";
 import { formatIntervalSeconds } from "@/src/utils/dates";
 import { useQueryParams, withDefault, NumberParam } from "use-query-params";
@@ -97,6 +98,7 @@ const DatasetRunTableMultiSelectAction = ({
   datasetId: string;
   setRowSelection: (value: Record<string, boolean>) => void;
 }) => {
+  const t = useTranslations("datasets");
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const capture = usePostHogClientCapture();
   const utils = api.useUtils();
@@ -115,7 +117,7 @@ const DatasetRunTableMultiSelectAction = ({
             disabled={selectedRunIds.length < 1}
             onClick={() => capture("dataset_run:compare_view_click")}
           >
-            Actions ({selectedRunIds.length} selected)
+            {t("runs.actionsSelected", { count: selectedRunIds.length })}
             <ChevronDown className="h-5 w-5" />
           </Button>
         </DropdownMenuTrigger>
@@ -129,7 +131,7 @@ const DatasetRunTableMultiSelectAction = ({
           >
             <DropdownMenuItem>
               <Columns3 className="mr-2 h-4 w-4" />
-              <span>Compare</span>
+              <span>{t("runs.compare")}</span>
             </DropdownMenuItem>
           </Link>
           <DropdownMenuItem
@@ -137,7 +139,7 @@ const DatasetRunTableMultiSelectAction = ({
             onClick={() => setIsDeleteDialogOpen(true)}
           >
             <Trash className="mr-2 h-4 w-4" />
-            <span>Delete</span>
+            <span>{t("actions.deleteDataset")}</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -153,11 +155,17 @@ const DatasetRunTableMultiSelectAction = ({
       >
         <DialogContent className="sm:max-w-xl">
           <DialogHeader>
-            <DialogTitle className="mb-4">Please confirm</DialogTitle>
+            <DialogTitle className="mb-4">
+              {t("runs.pleaseConfirm")}
+            </DialogTitle>
             <DialogDescription className="text-md p-0">
-              This action cannot be undone and removes all the data associated
-              with {selectedRunIds.length} dataset run
-              {selectedRunIds.length > 1 ? "s" : ""}.
+              {selectedRunIds.length > 1
+                ? t("runs.deleteRunsDescriptionPlural", {
+                    count: selectedRunIds.length,
+                  })
+                : t("runs.deleteRunsDescription", {
+                    count: selectedRunIds.length,
+                  })}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -176,7 +184,7 @@ const DatasetRunTableMultiSelectAction = ({
                 setIsDeleteDialogOpen(false);
               }}
             >
-              Delete Dataset Runs
+              {t("runs.deleteRuns")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -191,6 +199,7 @@ export function DatasetRunsTable(props: {
   selectedMetrics: string[];
   setScoreOptions: (options: { key: string; value: string }[]) => void;
 }) {
+  const t = useTranslations("datasets");
   const { isDashboardChartsBeta } = useDashboardChartsBeta();
   const [paginationState, setPaginationState] = useQueryParams({
     pageIndex: withDefault(NumberParam, 0),
@@ -387,7 +396,7 @@ export function DatasetRunsTable(props: {
     },
     {
       accessorKey: "name",
-      header: "Name",
+      header: t("runs.name"),
       id: "name",
       size: 150,
       isFixedPosition: true,
@@ -405,7 +414,7 @@ export function DatasetRunsTable(props: {
     },
     {
       accessorKey: "id",
-      header: "Id",
+      header: t("runs.id"),
       id: "id",
       size: 150,
       enableHiding: true,
@@ -422,7 +431,7 @@ export function DatasetRunsTable(props: {
     },
     {
       accessorKey: "description",
-      header: "Description",
+      header: t("runs.description"),
       id: "description",
       size: 300,
       enableHiding: true,
@@ -434,7 +443,7 @@ export function DatasetRunsTable(props: {
     },
     {
       accessorKey: "countRunItems",
-      header: "Run Items",
+      header: t("runs.runItems"),
       id: "countRunItems",
       size: 90,
       enableHiding: true,
@@ -448,7 +457,7 @@ export function DatasetRunsTable(props: {
     },
     {
       accessorKey: "avgLatency",
-      header: "Latency (avg)",
+      header: t("runs.latencyAvg"),
       id: "avgLatency",
       size: 120,
       enableHiding: true,
@@ -462,7 +471,7 @@ export function DatasetRunsTable(props: {
     },
     {
       accessorKey: "avgTotalCost",
-      header: "Trace Cost (avg)",
+      header: t("runs.traceCostAvg"),
       id: "avgTotalCost",
       size: 130,
       enableHiding: true,
@@ -476,7 +485,7 @@ export function DatasetRunsTable(props: {
     },
     {
       accessorKey: "totalCost",
-      header: "Trace Cost (sum)",
+      header: t("runs.traceCostSum"),
       id: "totalCost",
       size: 130,
       enableHiding: true,
@@ -490,7 +499,7 @@ export function DatasetRunsTable(props: {
     },
     {
       accessorKey: "runScores",
-      header: "Run-Level Scores",
+      header: t("runs.runLevelScores"),
       id: "runScores",
       enableHiding: true,
       defaultHidden: true,
@@ -503,7 +512,7 @@ export function DatasetRunsTable(props: {
     },
     {
       accessorKey: "runItemScores",
-      header: "Run Item Scores",
+      header: t("runs.runItemScores"),
       id: "runItemScores",
       enableHiding: true,
       defaultHidden: true,
@@ -514,7 +523,7 @@ export function DatasetRunsTable(props: {
     },
     {
       accessorKey: "createdAt",
-      header: "Created",
+      header: t("runs.created"),
       id: "createdAt",
       size: 150,
       enableHiding: true,
@@ -525,7 +534,7 @@ export function DatasetRunsTable(props: {
     },
     {
       accessorKey: "metadata",
-      header: "Metadata",
+      header: t("runs.metadata"),
       id: "metadata",
       size: 200,
       enableHiding: true,
@@ -540,7 +549,7 @@ export function DatasetRunsTable(props: {
     {
       id: "actions",
       accessorKey: "actions",
-      header: "Actions",
+      header: t("runs.actions"),
       size: 70,
       cell: ({ row }) => {
         const id: DatasetRunRowData["id"] = row.getValue("id");
@@ -549,12 +558,14 @@ export function DatasetRunsTable(props: {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only [position:relative]">Open menu</span>
+                <span className="sr-only [position:relative]">
+                  {t("list.openMenu")}
+                </span>
                 <MoreVertical className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuLabel>{t("runs.actions")}</DropdownMenuLabel>
               <DeleteDatasetRunButton
                 projectId={props.projectId}
                 datasetRunId={id}

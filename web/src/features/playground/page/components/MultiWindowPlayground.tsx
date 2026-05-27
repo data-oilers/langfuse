@@ -1,4 +1,5 @@
 import React, { useMemo, useCallback, useRef, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import { PlaygroundProvider } from "../context";
 import { SaveToPromptButton } from "./SaveToPromptButton";
 import { Button } from "@/src/components/ui/button";
@@ -152,6 +153,7 @@ function PlaygroundWindowContent({
   canRemove: boolean;
   isMobile?: boolean;
 }) {
+  const t = useTranslations("playground");
   const playgroundContext = usePlaygroundContext();
 
   const handleRemove = useCallback(() => {
@@ -186,11 +188,13 @@ function PlaygroundWindowContent({
                         className="h-7 gap-1.5 px-2.5 text-xs @xl:hidden"
                       >
                         <Plus size={14} />
-                        <span className="sr-only">New split window</span>
+                        <span className="sr-only">
+                          {t("actions.newSplitWindow")}
+                        </span>
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent className="text-xs">
-                      New split window
+                      {t("actions.newSplitWindow")}
                     </TooltipContent>
                   </Tooltip>
                   <Button
@@ -199,7 +203,7 @@ function PlaygroundWindowContent({
                     className="hidden h-7 gap-1.5 px-2.5 text-xs @xl:flex"
                   >
                     <Plus size={14} />
-                    <span>New split window</span>
+                    <span>{t("actions.newSplitWindow")}</span>
                   </Button>
                 </>
               )}
@@ -212,11 +216,13 @@ function PlaygroundWindowContent({
                       className="h-6 w-6 p-0 hover:bg-destructive/10 hover:text-destructive"
                     >
                       <X size={14} />
-                      <span className="sr-only">Remove window</span>
+                      <span className="sr-only">
+                        {t("actions.removeWindow")}
+                      </span>
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent className="text-xs">
-                    Remove window
+                    {t("actions.removeWindow")}
                   </TooltipContent>
                 </Tooltip>
               )}

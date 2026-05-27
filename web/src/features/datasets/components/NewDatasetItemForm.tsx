@@ -12,6 +12,7 @@ import {
 } from "@/src/components/ui/form";
 import { api } from "@/src/utils/api";
 import { useState, useMemo, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import { CodeMirrorEditor } from "@/src/components/editor";
 import { type Prisma } from "@langfuse/shared";
 import { cn } from "@/src/utils/tailwind";
@@ -114,6 +115,7 @@ export const NewDatasetItemForm = (props: {
   onFormSuccess?: () => void;
   currentDatasetId?: string;
 }) => {
+  const t = useTranslations("datasets");
   const [formError, setFormError] = useState<string | null>(null);
   const capture = usePostHogClientCapture();
   const form = useForm({
@@ -277,7 +279,7 @@ export const NewDatasetItemForm = (props: {
               name="datasetIds"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>Target datasets</FormLabel>
+                  <FormLabel>{t("items.targetDatasets")}</FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
                       <FormControl>
@@ -291,7 +293,7 @@ export const NewDatasetItemForm = (props: {
                         >
                           {field.value.length > 0
                             ? `${field.value.length} dataset${field.value.length > 1 ? "s" : ""} selected`
-                            : "Select datasets"}
+                            : t("items.selectDatasets")}
                           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                         </Button>
                       </FormControl>
@@ -299,11 +301,11 @@ export const NewDatasetItemForm = (props: {
                     <PopoverContent className="p-0">
                       <InputCommand>
                         <InputCommandInput
-                          placeholder="Search datasets..."
+                          placeholder={t("items.searchDatasets")}
                           variant="bottom"
                         />
                         <InputCommandEmpty>
-                          No datasets found.
+                          {t("items.noDatasetsFound")}
                         </InputCommandEmpty>
                         <InputCommandGroup>
                           <ScrollArea className="h-fit">
@@ -333,7 +335,7 @@ export const NewDatasetItemForm = (props: {
                                 {dataset.name}
                                 {dataset.id === props.currentDatasetId && (
                                   <span className="ml-1 text-muted-foreground">
-                                    (current)
+                                    {t("items.current")}
                                   </span>
                                 )}
                               </InputCommandItem>
@@ -374,7 +376,7 @@ export const NewDatasetItemForm = (props: {
                 render={({ field }) => (
                   <FormItem className="flex flex-col gap-2">
                     <div className="flex items-center gap-2">
-                      <FormLabel>Input</FormLabel>
+                      <FormLabel>{t("items.input")}</FormLabel>
                       {hasInputSchema &&
                         selectedDatasets
                           .filter((d) => d.inputSchema)
@@ -416,7 +418,7 @@ export const NewDatasetItemForm = (props: {
                 render={({ field }) => (
                   <FormItem className="flex flex-col gap-2">
                     <div className="flex items-center gap-2">
-                      <FormLabel>Expected output</FormLabel>
+                      <FormLabel>{t("items.expectedOutputLabel")}</FormLabel>
                       {hasOutputSchema &&
                         selectedDatasets
                           .filter((d) => d.expectedOutputSchema)
@@ -459,7 +461,7 @@ export const NewDatasetItemForm = (props: {
               name="metadata"
               render={({ field }) => (
                 <FormItem className="mt-4 flex flex-col gap-2">
-                  <FormLabel>Metadata</FormLabel>
+                  <FormLabel>{t("items.metadata")}</FormLabel>
                   <FormControl>
                     <CodeMirrorEditor
                       mode="json"

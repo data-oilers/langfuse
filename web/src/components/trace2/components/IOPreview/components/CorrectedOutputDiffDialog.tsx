@@ -10,6 +10,7 @@ import {
   DialogTitle,
 } from "@/src/components/ui/dialog";
 import DiffViewer from "@/src/components/DiffViewer";
+import { useTranslations } from "next-intl";
 
 type CorrectedOutputDiffDialogProps = {
   isOpen: boolean;
@@ -56,6 +57,7 @@ const formatOutputForDiff = (
 export const CorrectedOutputDiffDialog: React.FC<
   CorrectedOutputDiffDialogProps
 > = ({ isOpen, setIsOpen, actualOutput, correctedOutput, strictJsonMode }) => {
+  const t = useTranslations("traces");
   // Format both outputs for comparison
   const formattedActualOutput = formatOutputForDiff(
     actualOutput,
@@ -74,9 +76,9 @@ export const CorrectedOutputDiffDialog: React.FC<
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent size="xl">
         <DialogHeader>
-          <DialogTitle>Output Correction Diff</DialogTitle>
+          <DialogTitle>{t("correction.diffDialogTitle")}</DialogTitle>
           <DialogDescription>
-            Compare the original output with the corrected version
+            {t("correction.diffDialogDescription")}
           </DialogDescription>
         </DialogHeader>
 
@@ -84,9 +86,11 @@ export const CorrectedOutputDiffDialog: React.FC<
           {hasNoOriginalOutput ? (
             <div className="flex flex-col items-center justify-center p-8 text-center">
               <div className="text-muted-foreground">
-                <p className="text-lg font-medium">No original output</p>
+                <p className="text-lg font-medium">
+                  {t("correction.noOriginalOutput")}
+                </p>
                 <p className="mt-2 text-sm">
-                  There is no original output to compare with the correction.
+                  {t("correction.noOriginalOutputDescription")}
                 </p>
               </div>
             </div>
@@ -95,15 +99,17 @@ export const CorrectedOutputDiffDialog: React.FC<
               <DiffViewer
                 oldString={formattedActualOutput}
                 newString={formattedCorrectedOutput}
-                oldLabel="Original Output"
-                newLabel="Corrected Output"
+                oldLabel={t("correction.originalOutput")}
+                newLabel={t("correction.correctedOutputLabel")}
               />
             </div>
           )}
         </DialogBody>
 
         <DialogFooter>
-          <Button onClick={() => setIsOpen(false)}>Close</Button>
+          <Button onClick={() => setIsOpen(false)}>
+            {t("correction.close")}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

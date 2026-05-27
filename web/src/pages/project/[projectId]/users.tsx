@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import { useTranslations } from "next-intl";
 import { useEffect, useMemo } from "react";
 import {
   NumberParam,
@@ -42,6 +43,7 @@ type RowData = {
 };
 
 export default function UsersPage() {
+  const t = useTranslations("sessions");
   const router = useRouter();
   const projectId = router.query.projectId as string;
   const { isBetaEnabled } = useV4Beta();
@@ -81,7 +83,7 @@ export default function UsersPage() {
   return (
     <Page
       headerProps={{
-        title: "Users",
+        title: t("users.title"),
         help: {
           description: (
             <>
@@ -115,6 +117,7 @@ export default function UsersPage() {
 }
 
 const UsersTable = ({ isBetaEnabled }: { isBetaEnabled: boolean }) => {
+  const t = useTranslations("sessions");
   const router = useRouter();
   const projectId = router.query.projectId as string;
 
@@ -284,10 +287,9 @@ const UsersTable = ({ isBetaEnabled }: { isBetaEnabled: boolean }) => {
     {
       accessorKey: "userId",
       enableColumnFilter: true,
-      header: "User ID",
+      header: t("users.userId"),
       headerTooltip: {
-        description:
-          "The unique identifier for the user that was logged in Langfuse. See docs for more details on how to set this up.",
+        description: t("users.userIdTooltip"),
         href: "https://langfuse.com/docs/observability/features/users",
       },
       size: 150,
@@ -305,7 +307,7 @@ const UsersTable = ({ isBetaEnabled }: { isBetaEnabled: boolean }) => {
     },
     {
       accessorKey: "environment",
-      header: "Environment",
+      header: t("users.environment"),
       id: "environment",
       size: 150,
       enableHiding: true,
@@ -323,9 +325,9 @@ const UsersTable = ({ isBetaEnabled }: { isBetaEnabled: boolean }) => {
     },
     {
       accessorKey: "firstEvent",
-      header: "First Event",
+      header: t("users.firstEvent"),
       headerTooltip: {
-        description: "The earliest trace recorded for this user.",
+        description: t("users.firstEventTooltip"),
       },
       size: 150,
       cell: ({ row }) => {
@@ -338,9 +340,9 @@ const UsersTable = ({ isBetaEnabled }: { isBetaEnabled: boolean }) => {
     },
     {
       accessorKey: "lastEvent",
-      header: "Last Event",
+      header: t("users.lastEvent"),
       headerTooltip: {
-        description: "The latest trace recorded for this user.",
+        description: t("users.lastEventTooltip"),
       },
       size: 150,
       cell: ({ row }) => {
@@ -353,10 +355,9 @@ const UsersTable = ({ isBetaEnabled }: { isBetaEnabled: boolean }) => {
     },
     {
       accessorKey: "totalEvents",
-      header: "Total Events",
+      header: t("users.totalEvents"),
       headerTooltip: {
-        description:
-          "Total number of events for the user, includes traces and observations. See data model for more details.",
+        description: t("users.totalEventsTooltip"),
         href: "https://langfuse.com/docs/observability/data-model",
       },
       size: 120,
@@ -370,10 +371,9 @@ const UsersTable = ({ isBetaEnabled }: { isBetaEnabled: boolean }) => {
     },
     {
       accessorKey: "totalTokens",
-      header: "Total Tokens",
+      header: t("users.totalTokens"),
       headerTooltip: {
-        description:
-          "Total number of tokens used for the user across all generations.",
+        description: t("users.totalTokensTooltip"),
         href: "https://langfuse.com/docs/model-usage-and-cost",
       },
       size: 120,
@@ -387,9 +387,9 @@ const UsersTable = ({ isBetaEnabled }: { isBetaEnabled: boolean }) => {
     },
     {
       accessorKey: "totalCost",
-      header: "Total Cost",
+      header: t("users.totalCost"),
       headerTooltip: {
-        description: "Total cost for the user across all generations.",
+        description: t("users.totalCostTooltip"),
         href: "https://langfuse.com/docs/model-usage-and-cost",
       },
       size: 120,
@@ -441,23 +441,25 @@ const UsersTable = ({ isBetaEnabled }: { isBetaEnabled: boolean }) => {
               : {
                   isLoading: false,
                   isError: false,
-                  data: userRowData.rows?.map((t) => {
+                  data: userRowData.rows?.map((row) => {
                     return {
-                      userId: t.id,
-                      environment: t.environment ?? undefined,
+                      userId: row.id,
+                      environment: row.environment ?? undefined,
                       firstEvent:
-                        t.firstTrace?.toLocaleString() ?? "No event yet",
+                        row.firstTrace?.toLocaleString() ??
+                        t("users.noEventYet"),
                       lastEvent:
-                        t.lastTrace?.toLocaleString() ?? "No event yet",
+                        row.lastTrace?.toLocaleString() ??
+                        t("users.noEventYet"),
                       totalEvents: compactNumberFormatter(
                         isBetaEnabled
-                          ? Number(t.totalObservations ?? 0)
-                          : Number(t.totalTraces ?? 0) +
-                              Number(t.totalObservations ?? 0),
+                          ? Number(row.totalObservations ?? 0)
+                          : Number(row.totalTraces ?? 0) +
+                              Number(row.totalObservations ?? 0),
                       ),
-                      totalTokens: compactNumberFormatter(t.totalTokens ?? 0),
+                      totalTokens: compactNumberFormatter(row.totalTokens ?? 0),
                       totalCost: usdFormatter(
-                        t.sumCalculatedTotalCost ?? 0,
+                        row.sumCalculatedTotalCost ?? 0,
                         2,
                         2,
                       ),

@@ -1,0 +1,72 @@
+{
+  "messages": {
+    "system": "Sistema",
+    "user": "Usuario",
+    "assistant": "Asistente",
+    "addMessage": "Agregar mensaje",
+    "addToMessages": "Agregar a mensajes",
+    "streamResponses": "Transmitir respuestas",
+    "streamingEnabled": "Transmisión de respuestas en tiempo real",
+    "streamingDisabled": "Respuesta completa de una vez",
+    "messagePlaceholders": "Marcadores de posición de mensajes",
+    "noVariablesOrPlaceholders": "No hay variables ni marcadores de posición de mensajes definidos.",
+    "noVariablesDefined": "No hay variables definidas.",
+    "variablesHint": "Use llaves dobles en sus prompts para agregar una variable:"
+  },
+  "config": {
+    "title": "Configuración del modelo",
+    "tools": "Herramientas",
+    "toolsDescription": "Configure las herramientas que utilizará su modelo.",
+    "noToolsAttached": "No hay herramientas adjuntas.",
+    "schema": "Esquema",
+    "structuredOutput": "Salida estructurada",
+    "structuredOutputDescription": "Configure el esquema JSON para la salida estructurada.",
+    "noSchemaProvided": "No se proporcionó ningún esquema.",
+    "variables": "Variables",
+    "variablesAbbreviation": "Vars",
+    "variablesAndPlaceholders": "Variables y marcadores de posición",
+    "variablesAndPlaceholdersDescription": "Configure variables y marcadores de posición de mensajes para sus prompts.",
+    "temperature": "Temperatura",
+    "maxTokens": "Max Tokens",
+    "model": "Modelo",
+    "provider": "Proveedor"
+  },
+  "output": {
+    "title": "Salida",
+    "copyOutput": "Copiar salida",
+    "toggleJson": "Alternar JSON de entrada/salida",
+    "cost": "Costo",
+    "tokensUsed": "Tokens utilizados",
+    "latency": "Latencia"
+  },
+  "actions": {
+    "submit": "Enviar",
+    "run": "Ejecutar",
+    "runAll": "Ejecutar todo (Ctrl + Enter)",
+    "clear": "Limpiar",
+    "resetPlayground": "Restablecer Playground",
+    "resetPlaygroundState": "Restablecer estado del Playground",
+    "freshPlayground": "Playground nuevo",
+    "addToExisting": "Agregar al existente",
+    "includeOutput": "Incluir salida",
+    "testInPlayground": "Probar en Playground LLM",
+    "testInPlaygroundUnavailable": "La opción de probar en el Playground LLM no está disponible porque los mensajes no están en formato ChatML válido o se han usado llamadas a herramientas. Si cree que esto no es correcto, abra un issue en GitHub.",
+    "saveAsPrompt": "Guardar como prompt",
+    "saveAsNewPrompt": "Guardar como nuevo prompt",
+    "saveAsNewPromptVersion": "Guardar como nueva versión del prompt",
+    "searchChatPrompts": "Buscar prompts de chat...",
+    "noChatPromptFound": "No se encontró ningún prompt de chat",
+    "newSplitWindow": "Nueva ventana dividida",
+    "removeWindow": "Eliminar ventana",
+    "windows": "{count} ventanas",
+    "window": "{count} ventana"
+  },
+  "page": {
+    "title": "Playground",
+    "helpDescription": "Un entorno de pruebas para iterar sus prompts en múltiples ventanas",
+    "noModelConfiguredTitle": "Ningún modelo configurado",
+    "noModelConfiguredDescriptionBefore": "Para usar el Playground, primero debe configurar un modelo. Vaya a",
+    "noModelConfiguredDescriptionAfter": "para agregar una clave de API de LLM y configurar sus modelos.",
+    "llmConnectionSettings": "Configuración de conexiones LLM"
+  }
+}

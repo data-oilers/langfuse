@@ -1,6 +1,7 @@
 import { Info } from "lucide-react";
 import { format } from "date-fns";
 import { Button } from "@/src/components/ui/button";
+import { useTranslations } from "next-intl";
 
 type DatasetVersionWarningBannerProps = {
   selectedVersion: Date;
@@ -18,6 +19,7 @@ export function DatasetVersionWarningBanner({
   className = "",
   changeCounts,
 }: DatasetVersionWarningBannerProps) {
+  const t = useTranslations("datasets");
   const totalChanges = changeCounts
     ? changeCounts.upserts + changeCounts.deletes
     : 0;
@@ -31,7 +33,7 @@ export function DatasetVersionWarningBanner({
       <div className="flex min-w-0 flex-1 flex-col gap-2">
         <div className="flex items-center justify-between gap-4">
           <p className="break-words text-sm text-muted-foreground">
-            Viewing version from{" "}
+            {t("versionHistory.viewingVersion")}{" "}
             <span className="font-medium text-foreground">
               {format(selectedVersion, "MMM d, yyyy 'at' h:mm a")}
             </span>
@@ -41,7 +43,7 @@ export function DatasetVersionWarningBanner({
             variant="link"
             className="h-auto shrink-0 p-0 text-sm underline-offset-4"
           >
-            Return to latest
+            {t("versionHistory.returnToLatest")}
           </Button>
         </div>
         {changeCounts && hasChanges && (

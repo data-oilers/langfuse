@@ -1,4 +1,5 @@
 import { Button } from "@/src/components/ui/button";
+import { useTranslations } from "next-intl";
 import { usePlaygroundContext } from "@/src/features/playground/page/context";
 import {
   DropdownMenu,
@@ -42,6 +43,7 @@ export const Messages: React.FC<MessagesContext> = (props) => {
 };
 
 const SubmitButton = () => {
+  const t = useTranslations("playground");
   const { handleSubmit, isStreaming } = usePlaygroundContext();
   const defaultStreamingEnabled =
     env.NEXT_PUBLIC_LANGFUSE_PLAYGROUND_STREAMING_ENABLED_DEFAULT === "true";
@@ -59,7 +61,7 @@ const SubmitButton = () => {
         }}
         loading={isStreaming}
       >
-        <p>Submit</p>
+        <p>{t("actions.submit")}</p>
       </Button>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -78,11 +80,13 @@ const SubmitButton = () => {
             onClick={(e) => e.preventDefault()}
           >
             <div className="flex flex-col">
-              <span className="font-medium">Stream responses</span>
+              <span className="font-medium">
+                {t("messages.streamResponses")}
+              </span>
               <span className="text-xs text-muted-foreground">
                 {streamingEnabled
-                  ? "Real-time response streaming"
-                  : "Complete response at once"}
+                  ? t("messages.streamingEnabled")
+                  : t("messages.streamingDisabled")}
               </span>
             </div>
             <Switch

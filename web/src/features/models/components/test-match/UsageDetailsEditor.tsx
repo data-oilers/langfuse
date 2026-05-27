@@ -2,6 +2,7 @@ import { PlusCircle, Trash2 } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import { Input } from "@/src/components/ui/input";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 type UsageDetailsEditorProps = {
   usageDetails: Record<string, number>;
@@ -14,6 +15,7 @@ export function UsageDetailsEditor({
   usageDetails,
   onChange,
 }: UsageDetailsEditorProps) {
+  const t = useTranslations("models");
   const [entries, setEntries] = useState<Array<{ key: string; value: number }>>(
     Object.entries(usageDetails).map(([key, value]) => ({ key, value })),
   );
@@ -59,17 +61,18 @@ export function UsageDetailsEditor({
   return (
     <div className="space-y-4">
       <div>
-        <div className="pb-2 text-sm font-medium">Usage Details (optional)</div>
+        <div className="pb-2 text-sm font-medium">
+          {t("testMatch.usageDetails")}
+        </div>
         <div className="text-sm text-muted-foreground">
-          Add usage details to test pricing tier matching. Leave empty to match
-          the default tier.
+          {t("testMatch.usageDetailsDescription")}
         </div>
       </div>
 
       {/* Template Buttons */}
       <div className="space-y-2">
         <div className="text-sm text-muted-foreground">
-          Prefill from template:
+          {t("testMatch.prefillFromTemplate")}
         </div>
         <div className="flex gap-2">
           <Button
@@ -106,8 +109,8 @@ export function UsageDetailsEditor({
       {entries.length > 0 ? (
         <div className="space-y-2 rounded-lg border p-3">
           <div className="grid grid-cols-[1fr,1fr,auto] gap-2 text-sm font-medium">
-            <div>Usage Type</div>
-            <div>Value</div>
+            <div>{t("testMatch.usageTypeColumn")}</div>
+            <div>{t("testMatch.valueColumn")}</div>
             <div className="w-10" />
           </div>
           {entries.map((entry, index) => (
@@ -145,7 +148,7 @@ export function UsageDetailsEditor({
         className="w-full"
       >
         <PlusCircle className="mr-2 h-4 w-4" />
-        Add Usage Type
+        {t("testMatch.addUsageType")}
       </Button>
     </div>
   );

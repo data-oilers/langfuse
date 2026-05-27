@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { api } from "@/src/utils/api";
+import { useTranslations } from "next-intl";
 import {
   Dialog,
   DialogContent,
@@ -36,6 +37,7 @@ export function SelectDashboardDialog({
   const [selectedDashboardId, setSelectedDashboardId] = useState<string | null>(
     null,
   );
+  const t = useTranslations("dashboard");
 
   const dashboards = api.dashboard.allDashboards.useQuery(
     {
@@ -68,27 +70,31 @@ export function SelectDashboardDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[800px]">
         <DialogHeader>
-          <DialogTitle>Select dashboard to add widget to</DialogTitle>
+          <DialogTitle>{t("selectDashboard.dialogTitle")}</DialogTitle>
         </DialogHeader>
         <DialogBody>
           <div className="mt-4 max-h-[400px] overflow-y-auto">
             {dashboards.isLoading ? (
-              <div className="py-8 text-center">Loading dashboards...</div>
+              <div className="py-8 text-center">
+                {t("selectDashboard.loadingDashboards")}
+              </div>
             ) : dashboards.isError ? (
               <div className="py-8 text-center text-destructive">
                 Error: {dashboards.error.message}
               </div>
             ) : dashboards.data?.dashboards.length === 0 ? (
               <div className="py-8 text-center text-muted-foreground">
-                No dashboards found.
+                {t("selectDashboard.noDashboardsFound")}
               </div>
             ) : (
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Description</TableHead>
-                    <TableHead>Updated</TableHead>
+                    <TableHead>{t("selectDashboard.nameHeader")}</TableHead>
+                    <TableHead>
+                      {t("selectDashboard.descriptionHeader")}
+                    </TableHead>
+                    <TableHead>{t("selectDashboard.updatedHeader")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -118,10 +124,10 @@ export function SelectDashboardDialog({
         </DialogBody>
         <DialogFooter className="mt-4 flex justify-between">
           <Button variant="outline" onClick={handleSkip}>
-            Skip
+            {t("selectDashboard.skip")}
           </Button>
           <Button onClick={handleAdd} disabled={!selectedDashboardId}>
-            Add to Dashboard
+            {t("selectDashboard.addToDashboard")}
           </Button>
         </DialogFooter>
       </DialogContent>

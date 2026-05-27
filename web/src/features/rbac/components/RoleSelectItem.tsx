@@ -4,6 +4,7 @@ import {
   HoverCardTrigger,
 } from "@/src/components/ui/hover-card";
 import { SelectItem } from "@/src/components/ui/select";
+import { useTranslations } from "next-intl";
 import { Role } from "@langfuse/shared";
 import { HoverCardPortal } from "@radix-ui/react-hover-card";
 import {
@@ -23,18 +24,20 @@ export const RoleSelectItem = ({
   role: Role;
   isProjectRole?: boolean;
 }) => {
+  const t = useTranslations("settings");
   const isProjectNoneRole = role === Role.NONE && isProjectRole;
   const isOrgNoneRole = role === Role.NONE && !isProjectRole;
   const orgScopes = reduceScopesToListItems(organizationRoleAccessRights, role);
   const projectScopes = reduceScopesToListItems(projectRoleAccessRights, role);
+  const roleLabel = t(`roles.${role}`);
 
   return (
     <HoverCard openDelay={0} closeDelay={0}>
       <HoverCardTrigger asChild>
         <SelectItem value={role} className="max-w-56">
           <span>
-            {formatRole(role)}
-            {isProjectNoneRole ? " (keep default role)" : ""}
+            {roleLabel}
+            {isProjectNoneRole ? t("roleScopes.keepDefaultRole") : ""}
           </span>
         </SelectItem>
       </HoverCardTrigger>
@@ -46,10 +49,16 @@ export const RoleSelectItem = ({
             <div className="text-xs">{orgNoneRoleComment}</div>
           ) : (
             <>
-              <div className="font-bold">Role: {formatRole(role)}</div>
-              <p className="mt-2 text-xs font-semibold">Organization Scopes</p>
+              <div className="font-bold">
+                {t("roleScopes.roleLabel")}: {roleLabel}
+              </div>
+              <p className="mt-2 text-xs font-semibold">
+                {t("roleScopes.organizationScopes")}
+              </p>
               <ul className="list-inside list-disc text-xs">{orgScopes}</ul>
-              <p className="mt-2 text-xs font-semibold">Project Scopes</p>
+              <p className="mt-2 text-xs font-semibold">
+                {t("roleScopes.projectScopes")}
+              </p>
               <ul className="list-inside list-disc text-xs">{projectScopes}</ul>
               <p className="mt-2 border-t pt-2 text-xs">
                 Note:{" "}
@@ -114,6 +123,3 @@ const reduceScopesToListItems = (
     <li>None</li>
   );
 };
-
-const formatRole = (role: Role) =>
-  role.charAt(0).toUpperCase() + role.slice(1).toLowerCase();

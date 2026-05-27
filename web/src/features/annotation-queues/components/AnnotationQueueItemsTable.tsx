@@ -1,4 +1,5 @@
 import { DataTable } from "@/src/components/table/data-table";
+import { useTranslations } from "next-intl";
 import TableLink from "@/src/components/table/table-link";
 import { type LangfuseColumnDef } from "@/src/components/table/types";
 import { api } from "@/src/utils/api";
@@ -47,6 +48,7 @@ const QueueItemTableMultiSelectAction = ({
   projectId: string;
   onDeleteSuccess: () => void;
 }) => {
+  const t = useTranslations("scores");
   const utils = api.useUtils();
   const [open, setOpen] = useState(false);
 
@@ -92,11 +94,9 @@ const QueueItemTableMultiSelectAction = ({
       >
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Delete queue items</DialogTitle>
+            <DialogTitle>{t("annotationQueues.deleteQueueItems")}</DialogTitle>
             <DialogDescription>
-              This action cannot be undone and removes the selected annotation
-              queue item(s), but
-              <strong> does not delete associated scores.</strong>
+              {t("annotationQueues.deleteQueueItemsDescription")}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="sm:justify-start">
@@ -164,6 +164,7 @@ export function AnnotationQueueItemsTable({
   projectId: string;
   queueId: string;
 }) {
+  const t = useTranslations("scores");
   const [paginationState, setPaginationState] = useQueryParams({
     pageIndex: withDefault(NumberParam, 0),
     pageSize: withDefault(NumberParam, 50),
@@ -221,7 +222,7 @@ export function AnnotationQueueItemsTable({
     },
     {
       accessorKey: "id",
-      header: "Id",
+      header: t("annotationQueues.id"),
       id: "id",
       size: 70,
       isFixedPosition: true,
@@ -237,7 +238,7 @@ export function AnnotationQueueItemsTable({
     },
     {
       accessorKey: "objectType",
-      header: "Type",
+      header: t("annotationQueues.type"),
       id: "objectType",
       size: 50,
       cell: ({ row }) => {
@@ -248,10 +249,9 @@ export function AnnotationQueueItemsTable({
     },
     {
       accessorKey: "source",
-      header: "Source",
+      header: t("annotationQueues.sourceCol"),
       headerTooltip: {
-        description:
-          "Link to the source trace, observation or session based on which this item was added",
+        description: t("annotationQueues.sourceTooltip"),
       },
       id: "source",
       size: 50,
@@ -291,7 +291,7 @@ export function AnnotationQueueItemsTable({
     },
     {
       accessorKey: "sourceId",
-      header: "Source ID",
+      header: t("annotationQueues.sourceId"),
       id: "sourceId",
       size: 50,
       cell: ({ row }) => {
@@ -303,7 +303,7 @@ export function AnnotationQueueItemsTable({
     },
     {
       accessorKey: "status",
-      header: "Status",
+      header: t("annotationQueues.status"),
       id: "status",
       size: 60,
       cell: ({ row }) => {
@@ -319,7 +319,7 @@ export function AnnotationQueueItemsTable({
     },
     {
       accessorKey: "completedAt",
-      header: "Completed At",
+      header: t("annotationQueues.completedAt"),
       id: "completedAt",
       defaultHidden: true,
       enableHiding: true,
@@ -327,7 +327,7 @@ export function AnnotationQueueItemsTable({
     },
     {
       accessorKey: "annotatorUser",
-      header: "Completed by",
+      header: t("annotationQueues.completedBy"),
       id: "annotatorUser",
       enableHiding: true,
       size: 80,

@@ -1,16 +1,17 @@
 import { Separator } from "@/src/components/ui/separator";
+import { useTranslations } from "next-intl";
 import { usePlaygroundContext } from "../context";
 import { PromptVariableComponent } from "./PromptVariableComponent";
 
 export const Variables = () => {
+  const t = useTranslations("playground");
   const { promptVariables } = usePlaygroundContext();
 
   const renderNoVariables = () => (
     <div className="text-xs">
-      <p className="mb-2">No variables defined.</p>
+      <p className="mb-2">{t("messages.noVariablesDefined")}</p>
       <p>
-        Use double curly braces in your prompts to add a variable:
-        &#123;&#123;exampleVariable&#125;&#125;
+        {t("messages.variablesHint")} &#123;&#123;exampleVariable&#125;&#125;
       </p>
     </div>
   );

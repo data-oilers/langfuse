@@ -2,6 +2,7 @@ import { Button } from "@/src/components/ui/button";
 import { useHasProjectAccess } from "@/src/features/rbac/utils/checkProjectAccess";
 import { UpsertModelFormDialog } from "@/src/features/models/components/UpsertModelFormDialog";
 import { type GetModelResult } from "@/src/features/models/validation";
+import { useTranslations } from "next-intl";
 
 export const EditModelButton = ({
   modelData,
@@ -14,16 +15,17 @@ export const EditModelButton = ({
     projectId,
     scope: "models:CUD",
   });
+  const t = useTranslations("models");
 
   return (
     <UpsertModelFormDialog {...{ modelData, projectId, action: "edit" }}>
       <Button
         variant="outline"
         disabled={!hasAccess}
-        title="Edit model"
+        title={t("actions.editModel")}
         className="flex items-center"
       >
-        <span>Edit</span>
+        <span>{t("actions.editModel")}</span>
       </Button>
     </UpsertModelFormDialog>
   );

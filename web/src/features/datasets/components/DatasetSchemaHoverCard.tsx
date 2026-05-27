@@ -11,6 +11,7 @@ import { Separator } from "@/src/components/ui/separator";
 import { useMemo, useState } from "react";
 import { generateSchemaExample } from "../lib/generateSchemaExample";
 import { copyTextToClipboard } from "@/src/utils/clipboard";
+import { useTranslations } from "next-intl";
 
 type DatasetSchemaHoverCardProps = {
   schema: Prisma.JsonValue;
@@ -23,8 +24,11 @@ export const DatasetSchemaHoverCard: React.FC<DatasetSchemaHoverCardProps> = ({
   schemaType,
   showLabel = false,
 }) => {
+  const t = useTranslations("datasets");
   const title =
-    schemaType === "input" ? "Input Schema" : "Expected Output Schema";
+    schemaType === "input"
+      ? t("schemaHoverCard.inputSchema")
+      : t("schemaHoverCard.expectedOutputSchema");
 
   const schemaString = JSON.stringify(schema, null, 2);
 
@@ -53,7 +57,7 @@ export const DatasetSchemaHoverCard: React.FC<DatasetSchemaHoverCardProps> = ({
           size="sm"
         >
           <LockIcon className={showLabel ? "h-3 w-3" : "h-4 w-4"} />
-          {showLabel && <span>Schema enforced</span>}
+          {showLabel && <span>{t("schemaHoverCard.schemaEnforced")}</span>}
         </Button>
       </HoverCardTrigger>
       <HoverCardContent
@@ -62,14 +66,14 @@ export const DatasetSchemaHoverCard: React.FC<DatasetSchemaHoverCardProps> = ({
       >
         <p className="text-sm font-medium">{title}</p>
         <p className="pt-2 text-sm text-muted-foreground">
-          Learn more about{" "}
+          {t("schemaHoverCard.learnMore")}{" "}
           <a
             href="https://json-schema.org/learn/miscellaneous-examples"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center underline hover:text-foreground"
           >
-            JSON Schema
+            {t("schemaHoverCard.jsonSchema")}
             <ArrowUpRight className="ml-0.5 h-3 w-3" />
           </a>
         </p>
@@ -87,7 +91,9 @@ export const DatasetSchemaHoverCard: React.FC<DatasetSchemaHoverCardProps> = ({
           <>
             <Separator className="my-4" />
             <div className="flex items-center justify-between">
-              <p className="text-sm font-medium">Example Object</p>
+              <p className="text-sm font-medium">
+                {t("schemaHoverCard.exampleObject")}
+              </p>
               <Button
                 variant="ghost"
                 size="sm"

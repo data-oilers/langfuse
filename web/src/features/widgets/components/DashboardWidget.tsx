@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { api } from "@/src/utils/api";
+import { useTranslations } from "next-intl";
 import {
   type views,
   type metricAggregations,
@@ -51,6 +52,7 @@ export function DashboardWidget({
 }) {
   const router = useRouter();
   const utils = api.useUtils();
+  const t = useTranslations("dashboard");
   const widget = api.dashboardWidgets.get.useQuery(
     {
       widgetId: placement.widgetId,
@@ -205,7 +207,7 @@ export function DashboardWidget({
       });
     },
     onError: (e) => {
-      showErrorToast("Failed to clone widget", e.message);
+      showErrorToast(t("widgets.deleteFailedTitle"), e.message);
     },
   });
   const handleCopy = () => {
@@ -218,7 +220,7 @@ export function DashboardWidget({
   };
 
   const handleDelete = () => {
-    if (onDeleteWidget && confirm("Please confirm deletion")) {
+    if (onDeleteWidget && confirm(t("widgets.deleteConfirm"))) {
       onDeleteWidget(placement.id);
     }
   };
@@ -228,7 +230,7 @@ export function DashboardWidget({
       <div
         className={`flex items-center justify-center rounded-lg border bg-background p-4`}
       >
-        <div className="text-muted-foreground">Loading...</div>
+        <div className="text-muted-foreground">{t("widgets.loading")}</div>
       </div>
     );
   }
@@ -238,7 +240,9 @@ export function DashboardWidget({
       <div
         className={`flex items-center justify-center rounded-lg border bg-background p-4`}
       >
-        <div className="text-muted-foreground">Widget not found</div>
+        <div className="text-muted-foreground">
+          {t("widgets.widgetNotFound")}
+        </div>
       </div>
     );
   }

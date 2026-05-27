@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod/v4";
 import Head from "next/head";
 import { Button } from "@/src/components/ui/button";
+import { useTranslations } from "next-intl";
 import {
   Form,
   FormControl,
@@ -45,6 +46,7 @@ export function ResetPasswordPage({
 }) {
   const session = useSession();
   const router = useRouter();
+  const t = useTranslations("auth");
   const [formError, setFormError] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
   const [showResetPasswordEmailButton, setShowResetPasswordEmailButton] =
@@ -97,10 +99,10 @@ export function ResetPasswordPage({
   if (!passwordResetAvailable)
     return (
       <ErrorPage
-        title="Not available"
-        message="Password reset is not configured on this instance"
+        title={t("resetPassword.notAvailableTitle")}
+        message={t("resetPassword.notAvailableMessage")}
         additionalButton={{
-          label: "Setup instructions",
+          label: t("resetPassword.setupInstructions"),
           href: "https://langfuse.com/self-hosting/security/authentication-and-sso#auth-email-password",
         }}
       />
@@ -109,7 +111,7 @@ export function ResetPasswordPage({
   return (
     <>
       <Head>
-        <title>Reset Password | Langfuse</title>
+        <title>{t("resetPassword.pageTitle")}</title>
       </Head>
       <div className="flex flex-1 flex-col py-6 sm:min-h-full sm:justify-center sm:px-6 sm:py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -117,14 +119,14 @@ export function ResetPasswordPage({
             <LangfuseIcon className="mx-auto" />
           </Link>
           <h2 className="mt-4 text-center text-2xl font-bold leading-9 tracking-tight text-primary">
-            Reset your password
+            {t("resetPassword.title")}
           </h2>
           {session.status !== "authenticated" && (
             <div className="mt-2 flex justify-center">
               <Button asChild variant="ghost">
                 <Link href="/auth/sign-in">
                   <ArrowLeft className="mr-2 h-3 w-3" />
-                  Back to sign in
+                  {t("resetPassword.backToSignIn")}
                 </Link>
               </Button>
             </div>
@@ -143,7 +145,7 @@ export function ResetPasswordPage({
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Email</FormLabel>
+                      <FormLabel>{t("resetPassword.emailLabel")}</FormLabel>
                       <FormControl>
                         <div className="relative">
                           <Input
@@ -171,7 +173,9 @@ export function ResetPasswordPage({
                       name="password"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>New Password</FormLabel>
+                          <FormLabel>
+                            {t("resetPassword.newPasswordLabel")}
+                          </FormLabel>
                           <FormControl>
                             <PasswordInput
                               autoComplete="new-password"
@@ -187,7 +191,9 @@ export function ResetPasswordPage({
                       name="confirmPassword"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Confirm New Password</FormLabel>
+                          <FormLabel>
+                            {t("resetPassword.confirmNewPasswordLabel")}
+                          </FormLabel>
                           <FormControl>
                             <PasswordInput
                               autoComplete="new-password"
@@ -211,7 +217,7 @@ export function ResetPasswordPage({
                         showResetPasswordEmailButton ? "secondary" : "default"
                       }
                     >
-                      Update Password
+                      {t("resetPassword.updatePasswordButton")}
                     </Button>
                   ) : (
                     <RequestResetPasswordEmailButton
@@ -229,7 +235,7 @@ export function ResetPasswordPage({
             ) : null}
             {isSuccess && (
               <div className="text-center text-sm font-medium">
-                Password successfully updated. Redirecting ...
+                {t("resetPassword.successMessage")}
               </div>
             )}
             {showResetPasswordEmailButton && (
@@ -242,11 +248,9 @@ export function ResetPasswordPage({
         </div>
         {session.status !== "authenticated" && (
           <div className="mx-auto mt-10 max-w-lg text-center text-xs text-muted-foreground">
-            You will only receive an email if an account with this email exists
-            and you have signed up with email and password. If you used an
-            authentication provider like Google, Gitlab, Okta, or GitHub, please{" "}
+            {t("resetPassword.emailNotice")}{" "}
             <Link href="/auth/sign-in" className="underline">
-              sign in
+              {t("resetPassword.emailNoticeSignIn")}
             </Link>
             .
           </div>

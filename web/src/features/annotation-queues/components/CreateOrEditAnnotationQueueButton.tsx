@@ -1,4 +1,5 @@
 import { Button, type ButtonProps } from "@/src/components/ui/button";
+import { useTranslations } from "next-intl";
 import React, { useEffect, useMemo, useState } from "react";
 import {
   Dialog,
@@ -59,6 +60,7 @@ export const CreateOrEditAnnotationQueueButton = ({
   variant?: ButtonProps["variant"];
   size?: ButtonProps["size"];
 }) => {
+  const t = useTranslations("scores");
   const [isOpen, setIsOpen] = useState(false);
   const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
   const hasQueueAccess = useHasProjectAccess({
@@ -230,7 +232,9 @@ export const CreateOrEditAnnotationQueueButton = ({
           size={size}
         >
           <span className="ml-1 text-sm font-normal">
-            {queueId ? "Edit" : "New queue"}
+            {queueId
+              ? t("annotationQueues.editQueue")
+              : t("annotationQueues.newQueue")}
           </span>
         </ActionButton>
       </DialogTrigger>
@@ -238,11 +242,14 @@ export const CreateOrEditAnnotationQueueButton = ({
         <DialogContent className="max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
-              {queueId ? "Edit" : "New"} annotation queue
+              {queueId
+                ? t("annotationQueues.editAnnotationQueue")
+                : t("annotationQueues.newAnnotationQueue")}
             </DialogTitle>
             <DialogDescription>
-              {queueId ? "Edit" : "Create a new"} queue to manage your
-              annotation workflows.
+              {queueId
+                ? t("annotationQueues.editQueueDescription")
+                : t("annotationQueues.createQueueDescription")}
             </DialogDescription>
           </DialogHeader>
           <Form {...form}>
@@ -290,10 +297,11 @@ export const CreateOrEditAnnotationQueueButton = ({
                   name="scoreConfigIds"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Score Configs</FormLabel>
+                      <FormLabel>
+                        {t("annotationQueues.scoreConfigsLabel")}
+                      </FormLabel>
                       <FormDescription>
-                        Define which dimensions annotators should score for the
-                        given queue.
+                        {t("annotationQueues.scoreConfigsDescription")}
                       </FormDescription>
                       <FormControl>
                         <MultiSelectKeyValues
@@ -332,7 +340,7 @@ export const CreateOrEditAnnotationQueueButton = ({
                                 );
                               }}
                             >
-                              Manage score configs
+                              {t("configs.manageConfigs")}
                             </DropdownMenuItem>
                           }
                         />
@@ -373,7 +381,7 @@ export const CreateOrEditAnnotationQueueButton = ({
                                   <ChevronRight className="h-4 w-4 text-muted-foreground" />
                                 )}
                                 <span className="text-sm font-medium">
-                                  User Assignment
+                                  {t("annotationQueues.userAssignment")}
                                 </span>
                               </div>
                             </Button>
@@ -414,7 +422,9 @@ export const CreateOrEditAnnotationQueueButton = ({
                   editQueueMutation.isPending ||
                   createQueueAssignmentsMutation.isPending
                     ? "Processing..."
-                    : `${queueId ? "Save" : "Create"} queue`}
+                    : queueId
+                      ? t("annotationQueues.saveQueue")
+                      : t("annotationQueues.createQueue")}
                 </Button>
               </DialogFooter>
             </form>

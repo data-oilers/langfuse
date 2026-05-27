@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTranslations } from "next-intl";
 import { useRowHeightLocalStorage } from "@/src/components/table/data-table-row-height-switch";
 import useColumnVisibility from "@/src/features/column-visibility/hooks/useColumnVisibility";
 import { api } from "@/src/utils/api";
@@ -72,6 +73,7 @@ function getConfigRange(
 }
 
 export function ScoreConfigsTable({ projectId }: { projectId: string }) {
+  const t = useTranslations("scores");
   const [editConfigId, setEditConfigId] = useState<string | null>(null);
   const [createConfigOpen, setCreateConfigOpen] = useState(false);
   const [paginationState, setPaginationState] = useQueryParams({
@@ -109,20 +111,20 @@ export function ScoreConfigsTable({ projectId }: { projectId: string }) {
     {
       accessorKey: "name",
       id: "name",
-      header: "Name",
+      header: t("configs.name"),
       enableHiding: true,
     },
     {
       accessorKey: "dataType",
       id: "dataType",
-      header: "Data Type",
+      header: t("list.dataType"),
       size: 80,
       enableHiding: true,
     },
     {
       accessorKey: "range",
       id: "range",
-      header: "Range",
+      header: t("configs.range"),
       enableHiding: true,
       size: 300,
       cell: ({ row }) => {
@@ -136,7 +138,7 @@ export function ScoreConfigsTable({ projectId }: { projectId: string }) {
     {
       accessorKey: "description",
       id: "description",
-      header: "Description",
+      header: t("configs.description2"),
       enableHiding: true,
       cell: ({ row }) => {
         const value = row.original.description;
@@ -149,21 +151,21 @@ export function ScoreConfigsTable({ projectId }: { projectId: string }) {
     {
       accessorKey: "id",
       id: "id",
-      header: "Config ID",
+      header: t("configs.configId"),
       enableHiding: true,
       defaultHidden: true,
     },
     {
       accessorKey: "createdAt",
       id: "createdAt",
-      header: "Created At",
+      header: t("configs.createdAt"),
       enableHiding: true,
       defaultHidden: true,
     },
     {
       accessorKey: "isArchived",
       id: "isArchived",
-      header: "Status",
+      header: t("configs.status"),
       size: 80,
       enableHiding: true,
       cell: ({ row }) => {
@@ -173,7 +175,7 @@ export function ScoreConfigsTable({ projectId }: { projectId: string }) {
     },
     {
       accessorKey: "action",
-      header: "Action",
+      header: t("configs.action"),
       size: 70,
       isFixedPosition: true,
       enableHiding: true,

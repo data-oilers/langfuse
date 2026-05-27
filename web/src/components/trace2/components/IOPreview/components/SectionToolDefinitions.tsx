@@ -2,6 +2,7 @@ import {
   ToolCallDefinitionCard,
   type ToolDefinition,
 } from "./ToolCallDefinitionCard";
+import { useTranslations } from "next-intl";
 
 // SectionToolDefinitions props
 export interface SectionToolDefinitionsProps {
@@ -20,6 +21,7 @@ export function SectionToolDefinitions({
   toolCallCounts,
   toolNameToDefinitionNumber,
 }: SectionToolDefinitionsProps) {
+  const t = useTranslations("traces");
   if (tools.length === 0) {
     return null;
   }
@@ -28,7 +30,7 @@ export function SectionToolDefinitions({
     <div className="[&_.io-message-content]:px-2 [&_.io-message-header]:px-2">
       <div className="mb-4 border-b border-border pb-4">
         <div className="io-message-header px-1 py-1 text-sm font-medium capitalize">
-          Tools
+          {t("io.tools")}
         </div>
         <ToolCallDefinitionCard
           tools={tools}

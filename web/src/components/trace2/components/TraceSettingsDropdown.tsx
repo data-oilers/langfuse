@@ -31,6 +31,7 @@ import { Switch } from "@/src/components/ui/switch";
 import { cn } from "@/src/utils/tailwind";
 import { usePostHogClientCapture } from "@/src/features/posthog-analytics/usePostHogClientCapture";
 import { useViewPreferences } from "../contexts/ViewPreferencesContext";
+import { useTranslations } from "next-intl";
 
 export interface TraceSettingsDropdownProps {
   isGraphViewAvailable: boolean;
@@ -39,6 +40,7 @@ export interface TraceSettingsDropdownProps {
 export function TraceSettingsDropdown({
   isGraphViewAvailable,
 }: TraceSettingsDropdownProps) {
+  const t = useTranslations("traces");
   const capture = usePostHogClientCapture();
 
   // Get all preferences directly from context
@@ -78,7 +80,7 @@ export function TraceSettingsDropdown({
         align="end"
         className="w-64 space-x-0 space-y-0 p-0 px-0"
       >
-        <DropdownMenuLabel>View Options</DropdownMenuLabel>
+        <DropdownMenuLabel>{t("settings.viewOptions")}</DropdownMenuLabel>
         <DropdownMenuSeparator />
 
         <div className="space-y-0 p-0 py-1">
@@ -90,7 +92,7 @@ export function TraceSettingsDropdown({
               className="space-y-0 px-2 py-1"
             >
               <div className="flex w-full items-center justify-between">
-                <span className="mr-2">Show Graph</span>
+                <span className="mr-2">{t("settings.showGraph")}</span>
                 <Switch
                   size="sm"
                   checked={showGraph}
@@ -107,7 +109,7 @@ export function TraceSettingsDropdown({
             className="px-2 py-1"
           >
             <div className="flex w-full items-center justify-between">
-              <span className="mr-2">Show Comments</span>
+              <span className="mr-2">{t("settings.showComments")}</span>
               <Switch
                 size="sm"
                 checked={showComments}
@@ -123,7 +125,7 @@ export function TraceSettingsDropdown({
             className="px-2 py-1"
           >
             <div className="flex w-full items-center justify-between">
-              <span className="mr-2">Show Scores</span>
+              <span className="mr-2">{t("settings.showScores")}</span>
               <Switch
                 size="sm"
                 checked={showScores}
@@ -144,7 +146,7 @@ export function TraceSettingsDropdown({
             className="px-2 py-1"
           >
             <div className="flex w-full items-center justify-between">
-              <span className="mr-2">Show Duration</span>
+              <span className="mr-2">{t("settings.showDuration")}</span>
               <Switch
                 size="sm"
                 checked={showDuration}
@@ -160,7 +162,7 @@ export function TraceSettingsDropdown({
             className="px-2 py-1"
           >
             <div className="flex w-full items-center justify-between">
-              <span className="mr-2">Show Cost/Tokens</span>
+              <span className="mr-2">{t("settings.showCostTokens")}</span>
               <Switch
                 size="sm"
                 checked={showCostTokens}
@@ -191,7 +193,7 @@ export function TraceSettingsDropdown({
                   !isColorCodeEnabled && "cursor-not-allowed",
                 )}
               >
-                Show Color Code Metrics
+                {t("settings.showColorCodeMetrics")}
               </span>
               <Switch
                 size="sm"
@@ -208,12 +210,12 @@ export function TraceSettingsDropdown({
         <DropdownMenuSub>
           <DropdownMenuSubTrigger>
             <span className="flex items-center">
-              Min Level: {minObservationLevel}
+              {t("settings.minLevel", { level: minObservationLevel })}
             </span>
           </DropdownMenuSubTrigger>
           <DropdownMenuSubContent>
             <DropdownMenuLabel className="font-semibold">
-              Minimum Level
+              {t("settings.minimumLevel")}
             </DropdownMenuLabel>
             {Object.values(ObservationLevel).map((level) => (
               <DropdownMenuItem

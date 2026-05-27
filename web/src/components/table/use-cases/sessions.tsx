@@ -1,4 +1,5 @@
 import { StarSessionToggle } from "@/src/components/star-toggle";
+import { useTranslations } from "next-intl";
 import { DataTable } from "@/src/components/table/data-table";
 import { DataTableToolbar } from "@/src/components/table/data-table-toolbar";
 import {
@@ -87,6 +88,7 @@ export default function SessionsTable({
   omittedFilter = [],
   isBetaEnabled = false,
 }: SessionTableProps) {
+  const t = useTranslations("sessions");
   const { setDetailPageList } = useDetailPageLists();
   const { timeRange, setTimeRange } = useTableDateRange(projectId);
 
@@ -307,11 +309,13 @@ export default function SessionsTable({
   const addToQueueMutation = api.annotationQueueItems.createMany.useMutation({
     onSuccess: (data) => {
       showSuccessToast({
-        title: "Sessions added to queue",
-        description: `Selected sessions will be added to queue "${data.queueName}". This may take a minute.`,
+        title: t("sessions.sessionAddedToQueue"),
+        description: t("sessions.sessionAddedToQueueDescription", {
+          queueName: data.queueName,
+        }),
         link: {
           href: `/project/${projectId}/annotation-queues/${data.queueId}`,
-          text: `View queue "${data.queueName}"`,
+          text: t("sessions.viewQueue", { queueName: data.queueName }),
         },
       });
     },
@@ -403,8 +407,8 @@ export default function SessionsTable({
     {
       id: ActionId.SessionAddToAnnotationQueue,
       type: BatchActionType.Create,
-      label: "Add to Annotation Queue",
-      description: "Add selected sessions to an annotation queue.",
+      label: t("sessions.addToQueue"),
+      description: t("sessions.addToQueueDescription"),
       targetLabel: "Annotation Queue",
       execute: handleAddToAnnotationQueue,
       accessCheck: {
@@ -442,7 +446,7 @@ export default function SessionsTable({
     {
       accessorKey: "id",
       id: "id",
-      header: "ID",
+      header: t("columns.id"),
       size: 200,
       isFixedPosition: true,
       cell: ({ row }) => {
@@ -459,7 +463,7 @@ export default function SessionsTable({
     {
       accessorKey: "createdAt",
       id: "createdAt",
-      header: "Created At",
+      header: t("sessions.createdAt"),
       size: 150,
       enableHiding: true,
       enableSorting: true,
@@ -471,7 +475,7 @@ export default function SessionsTable({
     {
       accessorKey: "sessionDuration",
       id: "sessionDuration",
-      header: "Duration",
+      header: t("columns.duration"),
       size: 130,
       enableHiding: true,
       cell: ({ row }) => {
@@ -488,7 +492,7 @@ export default function SessionsTable({
     },
     {
       accessorKey: "environment",
-      header: "Environment",
+      header: t("sessions.environment"),
       id: "environment",
       size: 150,
       enableHiding: true,
@@ -507,7 +511,7 @@ export default function SessionsTable({
     },
     {
       accessorKey: "scores",
-      header: "Scores",
+      header: t("sessions.scores"),
       id: "scores",
       enableHiding: true,
       defaultHidden: true,
@@ -520,7 +524,7 @@ export default function SessionsTable({
       accessorKey: "userIds",
       enableColumnFilter: !omittedFilter.find((f) => f === "userIds"),
       id: "userIds",
-      header: "User IDs",
+      header: t("sessions.userIds"),
       size: 200,
       enableHiding: true,
       cell: ({ row }) => {
@@ -544,7 +548,7 @@ export default function SessionsTable({
     {
       accessorKey: "countTraces",
       id: "countTraces",
-      header: "Traces",
+      header: t("sessions.traces"),
       size: 100,
       headerTooltip: {
         description: "The number of traces in the session.",
@@ -563,7 +567,7 @@ export default function SessionsTable({
     {
       accessorKey: "inputCost",
       id: "inputCost",
-      header: "Input Cost",
+      header: t("sessions.inputCost"),
       size: 110,
       enableHiding: true,
       defaultHidden: true,
@@ -581,7 +585,7 @@ export default function SessionsTable({
     {
       accessorKey: "outputCost",
       id: "outputCost",
-      header: "Output Cost",
+      header: t("sessions.outputCost"),
       size: 110,
       enableHiding: true,
       enableSorting: true,
@@ -599,7 +603,7 @@ export default function SessionsTable({
     {
       accessorKey: "totalCost",
       id: "totalCost",
-      header: "Total Cost",
+      header: t("columns.totalCost"),
       size: 110,
       enableHiding: true,
       enableSorting: true,
@@ -616,7 +620,7 @@ export default function SessionsTable({
     {
       accessorKey: "inputTokens",
       id: "inputTokens",
-      header: "Input Tokens",
+      header: t("sessions.inputTokens"),
       size: 110,
       enableHiding: true,
       defaultHidden: true,
@@ -635,7 +639,7 @@ export default function SessionsTable({
     {
       accessorKey: "outputTokens",
       id: "outputTokens",
-      header: "Output Tokens",
+      header: t("sessions.outputTokens"),
       size: 110,
       enableHiding: true,
       defaultHidden: true,
@@ -654,7 +658,7 @@ export default function SessionsTable({
     {
       accessorKey: "totalTokens",
       id: "totalTokens",
-      header: "Total Tokens",
+      header: t("columns.totalTokens"),
       size: 110,
       enableHiding: true,
       defaultHidden: true,
@@ -673,7 +677,7 @@ export default function SessionsTable({
     {
       accessorKey: "usage",
       id: "usage",
-      header: "Usage",
+      header: t("sessions.usage"),
       size: 220,
       enableHiding: true,
       enableSorting: true,
@@ -700,7 +704,7 @@ export default function SessionsTable({
     {
       accessorKey: "traceTags",
       id: "traceTags",
-      header: "Trace Tags",
+      header: t("sessions.traceTags"),
       size: 250,
       enableHiding: true,
       defaultHidden: true,
@@ -860,8 +864,7 @@ export default function SessionsTable({
               rowSelection={selectedRows}
               setRowSelection={setSelectedRows}
               help={{
-                description:
-                  "A session is a collection of related traces, such as a conversation or thread. To begin, add a sessionId to the trace.",
+                description: t("sessions.description"),
                 href: "https://langfuse.com/docs/observability/features/sessions",
               }}
               rowHeight={rowHeight}

@@ -1,5 +1,6 @@
 import React from "react";
 import { FormItem, FormLabel, FormMessage } from "@/src/components/ui/form";
+import { useTranslations } from "next-intl";
 import {
   Dialog,
   DialogContent,
@@ -17,6 +18,7 @@ export const EvaluatorsStep: React.FC<EvaluatorsStepProps> = ({
   evaluatorState,
   permissions,
 }) => {
+  const t = useTranslations("datasets");
   const {
     evalTemplates,
     activeEvaluators,
@@ -35,12 +37,12 @@ export const EvaluatorsStep: React.FC<EvaluatorsStepProps> = ({
   return (
     <div className="space-y-6">
       <StepHeader
-        title="Evaluators (Optional)"
-        description="Configure evaluators to automatically score experiment results. You can add multiple evaluators to assess different aspects of your LLM outputs."
+        title={t("evaluatorsStep.title")}
+        description={t("evaluatorsStep.description")}
       />
 
       <FormItem>
-        <FormLabel>Select Evaluators</FormLabel>
+        <FormLabel>{t("evaluatorsStep.selectEvaluators")}</FormLabel>
         {hasEvalReadAccess && datasetId ? (
           <TemplateSelector
             projectId={projectId}
@@ -57,8 +59,8 @@ export const EvaluatorsStep: React.FC<EvaluatorsStepProps> = ({
         ) : (
           <p className="text-sm text-muted-foreground">
             {!hasEvalReadAccess
-              ? "You don't have permission to manage evaluators"
-              : "Please select a dataset first to configure evaluators"}
+              ? t("evaluatorsStep.noPermission")
+              : t("evaluatorsStep.selectDatasetFirst")}
           </p>
         )}
         <FormMessage />
@@ -77,8 +79,9 @@ export const EvaluatorsStep: React.FC<EvaluatorsStepProps> = ({
           <DialogContent className="max-h-[90vh] max-w-screen-md overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
-                {selectedEvaluatorData.evaluator.id ? "Edit" : "Configure"}{" "}
-                Evaluator
+                {selectedEvaluatorData.evaluator.id
+                  ? t("evaluatorsStep.editEvaluator")
+                  : t("evaluatorsStep.configureEvaluator")}
               </DialogTitle>
             </DialogHeader>
             <EvaluatorForm

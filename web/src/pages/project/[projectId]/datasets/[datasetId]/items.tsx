@@ -26,8 +26,10 @@ import { DatasetVersionHistoryPanel } from "@/src/features/datasets/components/D
 import { DatasetVersionWarningBanner } from "@/src/features/datasets/components/DatasetVersionWarningBanner";
 import { useState } from "react";
 import { useDatasetVersion } from "@/src/features/datasets/hooks/useDatasetVersion";
+import { useTranslations } from "next-intl";
 
 function DatasetItemsView() {
+  const t = useTranslations("datasets");
   const router = useRouter();
   const projectId = router.query.projectId as string;
   const datasetId = router.query.datasetId as string;
@@ -77,7 +79,10 @@ function DatasetItemsView() {
             }
           : undefined,
         breadcrumb: [
-          { name: "Datasets", href: `/project/${projectId}/datasets` },
+          {
+            name: t("detail.breadcrumbDatasets"),
+            href: `/project/${projectId}/datasets`,
+          },
         ],
         tabsProps: {
           tabs: getDatasetTabs(projectId, datasetId),
@@ -150,10 +155,10 @@ function DatasetItemsView() {
             <Button
               variant="outline"
               onClick={() => setIsVersionPanelOpen(!isVersionPanelOpen)}
-              title="Version History"
+              title={t("actions.versionHistory")}
             >
               <History className="mr-2 h-4 w-4" />
-              Version History
+              {t("actions.versionHistory")}
             </Button>
           </>
         ),

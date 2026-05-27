@@ -26,9 +26,11 @@ import { useQueryOrganization } from "@/src/features/organizations/hooks";
 import { useHasOrganizationAccess } from "@/src/features/rbac/utils/checkOrganizationAccess";
 import { showSuccessToast } from "@/src/features/notifications/showSuccessToast"; // Import success toast function
 import { env } from "@/src/env.mjs";
+import { useTranslations } from "next-intl";
 
 export function DeleteOrganizationButton() {
   const capture = usePostHogClientCapture();
+  const t = useTranslations("settings");
 
   const organization = useQueryOrganization();
   const confirmMessage =
@@ -63,8 +65,8 @@ export function DeleteOrganizationButton() {
       });
       capture("organization_settings:delete_organization");
       showSuccessToast({
-        title: "Organization Deleted",
-        description: "The organization has been successfully deleted.",
+        title: t("account.deleteAccountSuccess"),
+        description: t("account.deleteAccountSuccessDescription"),
       });
       await new Promise((resolve) => setTimeout(resolve, 5000)); // Delay for 5 seconds
       window.location.href = env.NEXT_PUBLIC_BASE_PATH ?? "/"; // Browser reload to refresh jwt
@@ -77,13 +79,13 @@ export function DeleteOrganizationButton() {
     <Dialog>
       <DialogTrigger asChild>
         <Button variant="destructive-secondary" disabled={!hasAccess}>
-          Delete Organization
+          {t("actions.deleteOrganization")}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle className="text-lg font-semibold">
-            Delete Organization
+            {t("actions.deleteOrganization")}
           </DialogTitle>
           <DialogDescription>
             {hasProjects
@@ -117,7 +119,7 @@ export function DeleteOrganizationButton() {
                 disabled={hasProjects}
                 className="w-full"
               >
-                Delete Organization
+                {t("actions.deleteOrganizationConfirm")}
               </Button>
             </DialogFooter>
           </form>

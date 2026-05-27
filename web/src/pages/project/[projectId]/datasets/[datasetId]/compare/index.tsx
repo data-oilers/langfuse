@@ -13,6 +13,7 @@ import { CreateExperimentsForm } from "@/src/features/experiments/components/Cre
 import { useHasProjectAccess } from "@/src/features/rbac/utils/checkProjectAccess";
 import { usePostHogClientCapture } from "@/src/features/posthog-analytics/usePostHogClientCapture";
 import Page from "@/src/components/layouts/page";
+import { useTranslations } from "next-intl";
 import {
   DATASET_RUN_COMPARE_TABS,
   getDatasetRunCompareTabs,
@@ -26,6 +27,7 @@ import { SidePanel, SidePanelContent } from "@/src/components/ui/side-panel";
 import { AnnotationPanel } from "@/src/features/datasets/components/AnnotationPanel";
 
 function DatasetCompareInternal() {
+  const t = useTranslations("datasets");
   const router = useRouter();
   const capture = usePostHogClientCapture();
   const projectId = router.query.projectId as string;
@@ -82,16 +84,18 @@ function DatasetCompareInternal() {
   };
 
   if (!runsData.data || runs.length === 0) {
-    return <span>Loading...</span>;
+    return <span>{t("compare.loading")}</span>;
   }
 
   return (
     <Page
       headerProps={{
-        title: `Compare runs: ${dataset.data?.name ?? datasetId}`,
+        title: t("compare.title", {
+          datasetName: dataset.data?.name ?? datasetId,
+        }),
         breadcrumb: [
           {
-            name: "Datasets",
+            name: t("detail.breadcrumbDatasets"),
             href: `/project/${projectId}/datasets`,
           },
           {
@@ -100,7 +104,7 @@ function DatasetCompareInternal() {
           },
         ],
         help: {
-          description: "Compare your dataset runs side by side",
+          description: t("compare.help"),
         },
         tabsProps: {
           tabs: getDatasetRunCompareTabs(projectId, datasetId),
@@ -120,7 +124,9 @@ function DatasetCompareInternal() {
                   onClick={() => capture("dataset_run:new_form_open")}
                 >
                   <FlaskConical className="h-4 w-4" />
-                  <span className="ml-2 hidden md:block">New experiment</span>
+                  <span className="ml-2 hidden md:block">
+                    {t("actions.newExperiment")}
+                  </span>
                 </Button>
               </DialogTrigger>
               <DialogContent className="max-h-[90vh] overflow-y-auto">
@@ -138,9 +144,9 @@ function DatasetCompareInternal() {
             </Dialog>
             <MultiSelectKeyValues
               key="select-runs"
-              title="Runs"
+              title={t("compare.runs")}
               showSelectedValueStrings={false}
-              placeholder="Select runs to compare"
+              placeholder={t("runs.selectRuns")}
               className="w-fit"
               variant="outline"
               hideClearButton
@@ -211,7 +217,7 @@ function DatasetCompareInternal() {
             ) : (
               <div className="flex items-center justify-center p-4">
                 <span className="text-sm text-muted-foreground">
-                  Loading annotation data...
+                  {t("compare.loadingAnnotation")}
                 </span>
               </div>
             )}

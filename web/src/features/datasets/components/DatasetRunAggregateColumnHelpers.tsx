@@ -1,6 +1,7 @@
 import { type LangfuseColumnDef } from "@/src/components/table/types";
 import { Skeleton } from "@/src/components/ui/skeleton";
 import { DatasetAggregateTableCell } from "@/src/features/datasets/components/DatasetAggregateTableCell";
+import { useTranslations } from "next-intl";
 import { type DatasetCompareRunRowData } from "@/src/features/datasets/components/DatasetCompareRunsTable";
 import { PopoverFilterBuilder } from "@/src/features/filters/components/filter-builder";
 import { type ColumnDefinition } from "@langfuse/shared";
@@ -46,6 +47,7 @@ function DatasetAggregateCellWithBaselineDetection({
 }
 
 function BaselineToggle({ runId }: { runId: string }) {
+  const t = useTranslations("datasets");
   const router = useRouter();
   const [isHovered, setIsHovered] = useState(false);
   const justSetBaselineRef = useRef(false);
@@ -88,12 +90,14 @@ function BaselineToggle({ runId }: { runId: string }) {
 
   let text: string;
   if (!hasBaseline) {
-    text = "Set as baseline";
+    text = t("compare.setAsBaseline");
   } else if (isBaseline) {
     text =
-      isHovered && !justSetBaselineRef.current ? "Clear baseline" : "Baseline";
+      isHovered && !justSetBaselineRef.current
+        ? t("compare.clearBaseline")
+        : t("compare.baseline");
   } else {
-    text = isHovered ? "Set as baseline" : "Comparison";
+    text = isHovered ? t("compare.setAsBaseline") : t("compare.comparison");
   }
 
   return (

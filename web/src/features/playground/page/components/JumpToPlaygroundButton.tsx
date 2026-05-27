@@ -1,5 +1,6 @@
 import { Terminal, ChevronDown } from "lucide-react";
 import { useEffect, useState, useMemo } from "react";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/router";
 import { v4 as uuidv4 } from "uuid";
 
@@ -73,6 +74,7 @@ type JumpToPlaygroundButtonProps = (
 export const JumpToPlaygroundButton: React.FC<JumpToPlaygroundButtonProps> = (
   props,
 ) => {
+  const t = useTranslations("playground");
   const router = useRouter();
   const capture = usePostHogClientCapture();
   const projectId = useProjectIdFromURL();
@@ -186,8 +188,8 @@ export const JumpToPlaygroundButton: React.FC<JumpToPlaygroundButtonProps> = (
   };
 
   const tooltipMessage = isAvailable
-    ? "Test in LLM playground"
-    : "Test in LLM playground is not available since messages are not in valid ChatML format or tool calls have been used. If you think this is not correct, please open a GitHub issue.";
+    ? t("actions.testInPlayground")
+    : t("actions.testInPlaygroundUnavailable");
 
   return (
     <DropdownMenu>
@@ -214,17 +216,17 @@ export const JumpToPlaygroundButton: React.FC<JumpToPlaygroundButtonProps> = (
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={() => handlePlaygroundAction(true)}>
           <Terminal className="mr-2 h-4 w-4" />
-          Fresh playground
+          {t("actions.freshPlayground")}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => handlePlaygroundAction(false)}>
           <Terminal className="mr-2 h-4 w-4" />
-          Add to existing
+          {t("actions.addToExisting")}
         </DropdownMenuItem>
         {props.source === "generation" && (
           <>
             <DropdownMenuSeparator />
             <div className="flex items-center justify-between px-2 py-1.5">
-              <span className="text-sm">Include output</span>
+              <span className="text-sm">{t("actions.includeOutput")}</span>
               <Switch
                 checked={includeOutput}
                 onCheckedChange={setIncludeOutput}

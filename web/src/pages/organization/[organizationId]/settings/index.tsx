@@ -19,6 +19,7 @@ import AIFeatureSwitch from "@/src/features/organizations/components/AIFeatureSw
 import { useIsCloudBillingAvailable } from "@/src/ee/features/billing/utils/isCloudBilling";
 import { env } from "@/src/env.mjs";
 import { OrgAuditLogsSettingsPage } from "@/src/ee/features/audit-log-viewer/OrgAuditLogsSettingsPage";
+import { useTranslations } from "next-intl";
 
 type OrganizationSettingsPage = {
   title: string;
@@ -35,6 +36,7 @@ export function useOrganizationSettingsPages(): OrganizationSettingsPage[] {
   const plan = usePlan();
   const isLangfuseCloud = isCloudPlan(plan) ?? false;
   const isCloudBillingAvailable = useIsCloudBillingAvailable();
+  const t = useTranslations("settings");
 
   if (!organization) return [];
 
@@ -44,6 +46,7 @@ export function useOrganizationSettingsPages(): OrganizationSettingsPage[] {
     showOrgApiKeySettings,
     showAuditLogs,
     isLangfuseCloud,
+    t,
   });
 }
 
@@ -53,22 +56,24 @@ export const getOrganizationSettingsPages = ({
   showOrgApiKeySettings,
   showAuditLogs,
   isLangfuseCloud,
+  t,
 }: {
   organization: { id: string; name: string; metadata: Record<string, unknown> };
   showBillingSettings: boolean;
   showOrgApiKeySettings: boolean;
   showAuditLogs: boolean;
   isLangfuseCloud: boolean;
+  t: ReturnType<typeof useTranslations<"settings">>;
 }): OrganizationSettingsPage[] => [
   {
-    title: "General",
+    title: t("sections.general"),
     slug: "index",
     cmdKKeywords: ["name", "id", "delete"],
     content: (
       <div className="flex flex-col gap-6">
         <RenameOrganization />
         <div>
-          <Header title="Debug Information" />
+          <Header title={t("general.debugInformation")} />
           <JSONView
             title="Metadata"
             json={{
@@ -85,9 +90,8 @@ export const getOrganizationSettingsPages = ({
         <SettingsDangerZone
           items={[
             {
-              title: "Delete this organization",
-              description:
-                "Once you delete an organization, there is no going back. Please be certain.",
+              title: t("dangerZone.deleteOrganization"),
+              description: t("dangerZone.deleteOrganizationDescription"),
               button: <DeleteOrganizationButton />,
             },
           ]}
@@ -96,7 +100,7 @@ export const getOrganizationSettingsPages = ({
     ),
   },
   {
-    title: "API Keys",
+    title: t("sections.apiKeys"),
     slug: "api-keys",
     content: (
       <div className="flex flex-col gap-6">
@@ -106,13 +110,13 @@ export const getOrganizationSettingsPages = ({
     show: showOrgApiKeySettings,
   },
   {
-    title: "Members",
+    title: t("sections.members"),
     slug: "members",
     cmdKKeywords: ["invite", "user", "rbac"],
     content: (
       <div className="flex flex-col gap-6">
         <div>
-          <Header title="Organization Members" />
+          <Header title={t("members.organizationMembers")} />
           <MembersTable orgId={organization.id} />
         </div>
         <div>
@@ -122,28 +126,28 @@ export const getOrganizationSettingsPages = ({
     ),
   },
   {
-    title: "Audit Logs",
+    title: t("sections.auditLogs"),
     slug: "audit-logs",
     cmdKKeywords: ["audit", "logs", "history", "changes"],
     content: <OrgAuditLogsSettingsPage orgId={organization.id} />,
     show: showAuditLogs,
   },
   {
-    title: "Billing",
+    title: t("sections.billing"),
     slug: "billing",
     cmdKKeywords: ["payment", "subscription", "plan", "invoice"],
     content: <BillingSettings />,
     show: showBillingSettings,
   },
   {
-    title: "SSO",
+    title: t("sections.sso"),
     slug: "sso",
     cmdKKeywords: ["sso", "login", "auth", "okta", "saml", "azure"],
     content: <SSOSettings />,
     show: isLangfuseCloud,
   },
   {
-    title: "Projects",
+    title: t("sections.projects"),
     slug: "projects",
     href: `/organization/${organization.id}`,
   },
@@ -154,13 +158,14 @@ const OrgSettingsPage = () => {
   const router = useRouter();
   const { page } = router.query;
   const pages = useOrganizationSettingsPages();
+  const t = useTranslations("settings");
 
   if (!organization) return null;
 
   return (
     <ContainerPage
       headerProps={{
-        title: "Organization Settings",
+        title: t("pageTitle.organization"),
       }}
     >
       <PagedSettingsContainer

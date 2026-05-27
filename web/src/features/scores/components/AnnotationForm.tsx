@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/src/components/ui/button";
 import {
   MessageCircleMore,
@@ -83,6 +84,7 @@ function CommentField({
   loading: boolean;
   onSave: (comment: string | null) => void;
 }) {
+  const t = useTranslations("scores");
   const [localValue, setLocalValue] = useState(savedComment || "");
 
   // Reset local value when saved comment changes (after mutation completes)
@@ -95,7 +97,7 @@ function CommentField({
   return (
     <div className="relative">
       <div className="mb-1 flex items-center justify-between">
-        <FormLabel className="text-sm">Score Comment</FormLabel>
+        <FormLabel className="text-sm">{t("annotate.scoreComment")}</FormLabel>
         <div className="relative">
           {savedComment && (
             <PopoverClose asChild>
@@ -133,7 +135,7 @@ function CommentField({
                 setLocalValue(savedComment || "");
               }}
             >
-              Discard Changes
+              {t("annotate.discardChanges")}
             </Button>
           </PopoverClose>
           <PopoverClose asChild>
@@ -147,7 +149,7 @@ function CommentField({
                 onSave(localValue);
               }}
             >
-              Save Changes
+              {t("annotate.saveChanges")}
             </Button>
           </PopoverClose>
         </div>
@@ -177,9 +179,10 @@ function AnnotateHeader({
   actionButtons: React.ReactNode;
   description: string;
 }) {
+  const t = useTranslations("scores");
   return (
     <Header
-      title="Annotate"
+      title={t("annotate.title")}
       help={{
         description,
         href: "https://langfuse.com/docs/evaluation/evaluation-methods/annotation",
@@ -195,7 +198,7 @@ function AnnotateHeader({
             )}
           </div>
           <span className="text-xs text-muted-foreground">
-            {showSaving ? "Saving score data" : "Score data saved"}
+            {showSaving ? t("annotate.savingScore") : t("annotate.scoreSaved")}
           </span>
         </div>,
         actionButtons,
@@ -216,6 +219,7 @@ function InnerAnnotationForm<Target extends ScoreTarget>({
   actionButtons,
   configControl,
 }: InnerAnnotationFormProps<Target>) {
+  const t = useTranslations("scores");
   const capture = usePostHogClientCapture();
   const router = useRouter();
   const { configs, allowManualSelection } = configControl;
@@ -566,7 +570,7 @@ function InnerAnnotationForm<Target extends ScoreTarget>({
                     );
                   }}
                 >
-                  Manage score configs
+                  {t("annotate.manageScoreConfigs")}
                 </DropdownMenuItem>
               }
             />
@@ -722,9 +726,11 @@ function InnerAnnotationForm<Target extends ScoreTarget>({
                                         value: category.label,
                                         disabled: category.isOutdated,
                                       }))}
-                                      placeholder="Select category"
-                                      searchPlaceholder="Search categories..."
-                                      emptyText="No category found."
+                                      placeholder={t("annotate.selectCategory")}
+                                      searchPlaceholder={t(
+                                        "annotate.searchCategories",
+                                      )}
+                                      emptyText={t("annotate.noCategoryFound")}
                                     />
                                   </FormControl>
                                   <FormMessage className="text-xs" />
@@ -803,11 +809,10 @@ function InnerAnnotationForm<Target extends ScoreTarget>({
                               </PopoverTrigger>
                               <PopoverContent>
                                 <h2 className="text-md mb-3 font-semibold">
-                                  Your score is archived
+                                  {t("annotate.scoreArchived")}
                                 </h2>
                                 <p className="mb-3 text-sm">
-                                  This action will delete your score
-                                  irreversibly.
+                                  {t("annotate.scoreArchivedDescription")}
                                 </p>
                                 <div className="flex justify-end space-x-4">
                                   <Button

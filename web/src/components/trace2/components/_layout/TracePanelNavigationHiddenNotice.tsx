@@ -13,8 +13,10 @@
 import { ObservationLevel } from "@langfuse/shared";
 import { useTraceData } from "../../contexts/TraceDataContext";
 import { useViewPreferences } from "../../contexts/ViewPreferencesContext";
+import { useTranslations } from "next-intl";
 
 export function TracePanelNavigationHiddenNotice() {
+  const t = useTranslations("traces");
   const { hiddenObservationsCount } = useTraceData();
   const { minObservationLevel, setMinObservationLevel } = useViewPreferences();
 
@@ -31,8 +33,10 @@ export function TracePanelNavigationHiddenNotice() {
     <div className="flex flex-shrink-0 items-center justify-end gap-1 border-b px-4 py-1">
       <span className="flex flex-col gap-1 text-xs text-muted-foreground sm:flex-row">
         <p>
-          {hiddenObservationsCount} hidden observations below{" "}
-          {minObservationLevel} level.
+          {t("tree.hiddenObservations", {
+            count: hiddenObservationsCount,
+            level: minObservationLevel,
+          })}
         </p>
         <p
           className="cursor-pointer underline"
@@ -45,7 +49,7 @@ export function TracePanelNavigationHiddenNotice() {
             }
           }}
         >
-          Show all
+          {t("tree.showAll")}
         </p>
       </span>
     </div>

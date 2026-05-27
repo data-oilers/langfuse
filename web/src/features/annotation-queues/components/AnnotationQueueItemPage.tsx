@@ -1,4 +1,5 @@
 import { Card } from "@/src/components/ui/card";
+import { useTranslations } from "next-intl";
 import { Skeleton } from "@/src/components/ui/skeleton";
 import { useHasProjectAccess } from "@/src/features/rbac/utils/checkProjectAccess";
 import { api } from "@/src/utils/api";
@@ -23,6 +24,7 @@ export const AnnotationQueueItemPage: React.FC<{
   view: "showTree" | "hideTree";
   queryItemId?: string;
 }> = ({ annotationQueueId, projectId, view, queryItemId }) => {
+  const t = useTranslations("scores");
   const router = useRouter();
   const isSingleItem = router.query.singleItem === "true";
   const [nextItemData, setNextItemData] = useState<
@@ -148,7 +150,7 @@ export const AnnotationQueueItemPage: React.FC<{
   }
 
   if (!relevantItem && !(itemId && seenItemIds.includes(itemId))) {
-    return <div>No more items left to annotate!</div>;
+    return <div>{t("annotationQueues.noMoreItems")}</div>;
   }
 
   const isNextItemAvailable = totalItems > progressIndex + 1;
@@ -193,9 +195,7 @@ export const AnnotationQueueItemPage: React.FC<{
         <Card className="flex h-full w-full flex-col items-center justify-center overflow-hidden">
           <SearchXIcon className="mb-2 h-8 w-8 text-muted-foreground" />
           <span className="max-w-96 text-wrap text-sm text-muted-foreground">
-            Item has been <strong>deleted from annotation queue</strong>.
-            Previously added scores and underlying reference trace are
-            unaffected by this action.
+            {t("annotationQueues.itemDeleted")}
           </span>
         </Card>
       );
@@ -269,11 +269,11 @@ export const AnnotationQueueItemPage: React.FC<{
                   completeMutation.isPending || !hasAccess || objectData.isError
                 }
               >
-                Mark Completed
+                {t("annotationQueues.markCompleted")}
               </Button>
             ) : (
               <div className="text-dark-gree inline-flex h-9 w-full items-center justify-center rounded-md border border-dark-green bg-light-green px-8 text-sm font-medium">
-                Completed
+                {t("annotationQueues.completed")}
               </div>
             ))}
         </div>

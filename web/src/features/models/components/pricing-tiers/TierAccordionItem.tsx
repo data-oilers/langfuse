@@ -19,6 +19,7 @@ import { TierPriceEditor } from "./TierPriceEditor";
 import { TierPrefillButtons } from "./TierPrefillButtons";
 import type { UseFormReturn, FieldArrayWithId } from "react-hook-form";
 import type { FormUpsertModel } from "../../validation";
+import { useTranslations } from "next-intl";
 
 type TierAccordionItemProps = {
   tier: FieldArrayWithId<FormUpsertModel, "pricingTiers", "id">;
@@ -37,6 +38,8 @@ export function TierAccordionItem({
   remove,
   isDefault,
 }: TierAccordionItemProps) {
+  const t = useTranslations("models");
+
   return (
     <AccordionItem
       value={`tier-${index}`}
@@ -46,9 +49,11 @@ export function TierAccordionItem({
         <div className="flex w-full items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="font-semibold">{tier.name}</span>
-            {isDefault && <Badge variant="secondary">Default</Badge>}
+            {isDefault && (
+              <Badge variant="secondary">{t("pricing.default")}</Badge>
+            )}
             <span className="text-xs text-muted-foreground">
-              Priority: {tier.priority}
+              {t("pricing.priority")}: {tier.priority}
             </span>
           </div>
           {!isDefault && (
@@ -74,7 +79,7 @@ export function TierAccordionItem({
           name={`pricingTiers.${index}.name`}
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Tier Name</FormLabel>
+              <FormLabel>{t("pricing.tierName")}</FormLabel>
               <FormControl>
                 <Input {...field} disabled={isDefault} />
               </FormControl>

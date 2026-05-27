@@ -1,4 +1,5 @@
 import { Archive } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/src/components/ui/button";
 import {
   Popover,
@@ -22,6 +23,7 @@ export const ArchiveScoreConfigButton = ({
   isArchived: boolean;
   name: string;
 }) => {
+  const t = useTranslations("scores");
   const capture = usePostHogClientCapture();
   const { emptySelectedConfigIds, setEmptySelectedConfigIds } =
     useEmptyScoreConfigs();
@@ -49,7 +51,7 @@ export const ArchiveScoreConfigButton = ({
           }}
         >
           <Archive className="mr-2 h-4 w-4"></Archive>
-          Archive
+          {isArchived ? t("configs.restoreConfig") : t("configs.archiveConfig")}
         </Button>
       </PopoverTrigger>
       <PopoverContent
@@ -57,13 +59,12 @@ export const ArchiveScoreConfigButton = ({
         className="max-w-[500px]"
       >
         <h2 className="text-md mb-3 font-semibold">
-          {isArchived ? "Restore config" : "Archive config"}
+          {isArchived ? t("configs.restoreConfig") : t("configs.archiveConfig")}
         </h2>
         <p className="mb-3 text-sm">
-          Your config is currently{" "}
           {isArchived
-            ? `archived. Restore if you want to use "${name}" in annotation again.`
-            : `active. Archive if you no longer want to use "${name}" in annotation. Historic "${name}" scores will still be shown and can be deleted. You can restore your config at any point.`}
+            ? t("configs.restoreDescription", { name })
+            : t("configs.archiveDescription", { name })}
         </p>
         <div className="flex justify-end space-x-4">
           <Button

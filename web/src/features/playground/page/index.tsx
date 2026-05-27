@@ -1,4 +1,5 @@
 import React, { useCallback } from "react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/src/components/ui/button";
 import { Play, Loader2 } from "lucide-react";
 import { ResetPlaygroundButton } from "@/src/features/playground/page/components/ResetPlaygroundButton";
@@ -33,6 +34,7 @@ import useProjectIdFromURL from "@/src/hooks/useProjectIdFromURL";
  * - Clean single-header design
  */
 export default function PlaygroundPage() {
+  const t = useTranslations("playground");
   const projectId = useProjectIdFromURL();
   const { windowIds, isLoaded, addWindowWithCopy, removeWindowId } =
     usePersistedWindowIds();
@@ -89,10 +91,9 @@ export default function PlaygroundPage() {
       <Page
         withPadding={false}
         headerProps={{
-          title: "Playground",
+          title: t("page.title"),
           help: {
-            description:
-              "A sandbox to test and iterate your prompts across multiple windows",
+            description: t("page.helpDescription"),
             href: "https://langfuse.com/docs/prompt-management/features/playground",
           },
         }}
@@ -121,10 +122,9 @@ export default function PlaygroundPage() {
       scrollable={false}
       withPadding={false}
       headerProps={{
-        title: "Playground",
+        title: t("page.title"),
         help: {
-          description:
-            "A sandbox to test and iterate your prompts across multiple windows",
+          description: t("page.helpDescription"),
           href: "https://langfuse.com/docs/prompt-management/features/playground",
         },
         actionButtonsRight: (
@@ -156,8 +156,8 @@ export default function PlaygroundPage() {
               className="hidden flex-shrink-0 gap-1 md:flex"
               title={
                 !hasAnyModelConfigured
-                  ? "Please configure a model in Project Settings first"
-                  : "Execute all playground windows simultaneously"
+                  ? t("page.noModelConfiguredTitle")
+                  : t("actions.runAll")
               }
             >
               {globalIsExecutingAll ? (
@@ -165,7 +165,7 @@ export default function PlaygroundPage() {
               ) : (
                 <Play className="h-3 w-3" />
               )}
-              <span className="hidden lg:inline">Run All (Ctrl + Enter)</span>
+              <span className="hidden lg:inline">{t("actions.runAll")}</span>
             </Button>
 
             {/* Reset Playground Button */}

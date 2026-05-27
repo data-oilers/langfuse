@@ -14,6 +14,7 @@ import { usePostHogClientCapture } from "@/src/features/posthog-analytics/usePos
 import { api } from "@/src/utils/api";
 import React, { useState } from "react";
 import { useRouter } from "next/router";
+import { useTranslations } from "next-intl";
 
 export const DeleteDatasetRunButton = ({
   projectId,
@@ -26,6 +27,7 @@ export const DeleteDatasetRunButton = ({
   redirectUrl?: string;
   datasetId: string;
 }) => {
+  const t = useTranslations("datasets");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const capture = usePostHogClientCapture();
   const hasAccess = useHasProjectAccess({
@@ -49,7 +51,7 @@ export const DeleteDatasetRunButton = ({
     >
       <div className="flex w-full flex-row items-center gap-1">
         <Trash className="h-4 w-4" />
-        <span className="text-sm font-normal">Delete</span>
+        <span className="text-sm font-normal">{t("runs.deleteText")}</span>
       </div>
     </Button>
   );
@@ -66,10 +68,9 @@ export const DeleteDatasetRunButton = ({
       <DialogTrigger asChild>{button}</DialogTrigger>
       <DialogContent className="sm:max-w-xl">
         <DialogHeader>
-          <DialogTitle className="mb-4">Please confirm</DialogTitle>
+          <DialogTitle className="mb-4">{t("runs.pleaseConfirm")}</DialogTitle>
           <DialogDescription className="text-md p-0">
-            This action cannot be undone. Traces linked to this run must be
-            deleted manually.
+            {t("runs.deleteRunDescription")}
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
@@ -88,7 +89,7 @@ export const DeleteDatasetRunButton = ({
               setIsDialogOpen(false);
             }}
           >
-            Delete Dataset Run
+            {t("runs.deleteRun")}
           </Button>
         </DialogFooter>
       </DialogContent>

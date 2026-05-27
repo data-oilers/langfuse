@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { z } from "zod/v4";
 import { usePostHogClientCapture } from "@/src/features/posthog-analytics/usePostHogClientCapture";
 import { env } from "@/src/env.mjs";
+import { useTranslations } from "next-intl";
 
 export function RequestResetPasswordEmailButton({
   email,
@@ -22,6 +23,7 @@ export function RequestResetPasswordEmailButton({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const session = useSession();
   const capture = usePostHogClientCapture();
+  const t = useTranslations("auth");
 
   useEffect(() => {
     const isValidEmail = z.string().email().safeParse(email).success;
@@ -81,7 +83,7 @@ export function RequestResetPasswordEmailButton({
       {isEmailSent ? (
         <div>
           <label htmlFor="otp-code" className="mb-2 block text-sm font-medium">
-            Check your inbox for the code
+            {t("resetPassword.checkInboxLabel")}
           </label>
           <Input
             id="otp-code"
@@ -90,7 +92,7 @@ export function RequestResetPasswordEmailButton({
             maxLength={6}
             value={code}
             onChange={(e) => setCode(e.target.value.trim())}
-            placeholder="One time passcode"
+            placeholder={t("resetPassword.otpPlaceholder")}
             className="mb-8 w-full"
           />
           <Button
@@ -100,7 +102,7 @@ export function RequestResetPasswordEmailButton({
             disabled={!code || code.length !== 6}
             variant={variant}
           >
-            Verify code
+            {t("resetPassword.verifyCodeButton")}
           </Button>
         </div>
       ) : (
@@ -112,8 +114,8 @@ export function RequestResetPasswordEmailButton({
           variant={variant}
         >
           {session.status === "authenticated"
-            ? "Verify email to change password"
-            : "Request password reset"}
+            ? t("resetPassword.verifyEmailButton")
+            : t("resetPassword.requestResetButton")}
         </Button>
       )}
       {errorMessage && (

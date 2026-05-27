@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/src/components/ui/button";
 import { usePlaygroundContext } from "../context";
 import { ChatMessageRole, ChatMessageType } from "@langfuse/shared";
@@ -7,6 +8,7 @@ import { ToolCallCard } from "@/src/components/ChatMessages/ToolCallCard";
 import { copyTextToClipboard } from "@/src/utils/clipboard";
 
 export const GenerationOutput = () => {
+  const t = useTranslations("playground");
   const [isCopied, setIsCopied] = useState(false);
   const [isAdded, setIsAdded] = useState(false);
   const [isJson, setIsJson] = useState(false);
@@ -69,7 +71,7 @@ export const GenerationOutput = () => {
           size="icon"
           variant="secondary"
           onClick={!isCopied ? handleCopy : undefined}
-          title="Copy output"
+          title={t("output.copyOutput")}
         >
           {isCopied ? checkIcon : copyIcon}
         </Button>
@@ -78,11 +80,11 @@ export const GenerationOutput = () => {
           className="flex items-center gap-1 whitespace-nowrap p-0 px-1"
           variant="secondary"
           onClick={!isAdded ? handleAddAssistantMessage : undefined}
-          title="Add as assistant message"
+          title={t("messages.addToMessages")}
           disabled={isAdded}
         >
           {isAdded ? checkIcon : plusIcon}
-          <span className="text-xs">Add to messages</span>
+          <span className="text-xs">{t("messages.addToMessages")}</span>
         </Button>
       </div>
     ) : null;
@@ -95,7 +97,7 @@ export const GenerationOutput = () => {
       >
         <div className="sticky top-0 z-10 bg-muted p-3">
           <div className="flex w-full items-center">
-            <p className="flex-1 text-xs font-semibold">Output</p>
+            <p className="flex-1 text-xs font-semibold">{t("output.title")}</p>
             {copyButton}
           </div>
         </div>

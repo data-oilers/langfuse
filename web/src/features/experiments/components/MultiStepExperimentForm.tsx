@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "@/src/components/ui/button";
 import { Form } from "@/src/components/ui/form";
+import { useTranslations } from "next-intl";
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -80,6 +81,7 @@ export const MultiStepExperimentForm = ({
     runName: string;
   }) => Promise<void>;
 }) => {
+  const t = useTranslations("datasets");
   const capture = usePostHogClientCapture();
   const [activeStep, setActiveStep] = useState("prompt");
   const [selectedPromptName, setSelectedPromptName] = useState<string>(
@@ -100,11 +102,11 @@ export const MultiStepExperimentForm = ({
   );
 
   const steps = [
-    { id: "prompt", label: "Prompt & Model" },
-    { id: "dataset", label: "Dataset" },
-    { id: "evaluators", label: "Evaluators" },
-    { id: "details", label: "Experiment run details" },
-    { id: "review", label: "Review" },
+    { id: "prompt", label: t("experiments.steps.promptModel") },
+    { id: "dataset", label: t("experiments.steps.dataset") },
+    { id: "evaluators", label: t("experiments.steps.evaluators") },
+    { id: "details", label: t("experiments.steps.details") },
+    { id: "review", label: t("experiments.steps.review") },
   ];
 
   const hasEvalReadAccess = useHasProjectAccess({
@@ -439,18 +441,17 @@ export const MultiStepExperimentForm = ({
   return (
     <>
       <DialogHeader>
-        <DialogTitle>Run Experiment</DialogTitle>
+        <DialogTitle>{t("experiments.title")}</DialogTitle>
         <DialogDescription>
-          Run an experiment to evaluate prompts and model configurations against
-          a dataset. See{" "}
+          {t("experiments.runDescription")}{" "}
           <Link
             href="https://langfuse.com/docs/evaluation/dataset-runs/native-run"
             target="_blank"
             className="underline"
           >
-            documentation
+            {t("experiments.runDescriptionLink")}
           </Link>{" "}
-          to learn more.
+          {t("experiments.runDescriptionSuffix")}
         </DialogDescription>
       </DialogHeader>
       <Form {...form}>
@@ -548,7 +549,7 @@ export const MultiStepExperimentForm = ({
                 disabled={activeStep === "prompt"}
               >
                 <ChevronLeft className="mr-2 h-4 w-4" />
-                Previous
+                {t("experiments.previous")}
               </Button>
 
               <div className="flex gap-2">
@@ -564,7 +565,7 @@ export const MultiStepExperimentForm = ({
                       }
                     }}
                   >
-                    Next
+                    {t("experiments.next")}
                     <ChevronRight className="ml-2 h-4 w-4" />
                   </Button>
                 ) : (
@@ -577,7 +578,7 @@ export const MultiStepExperimentForm = ({
                     }
                     loading={form.formState.isSubmitting}
                   >
-                    Run Experiment
+                    {t("experiments.runExperiment")}
                   </Button>
                 )}
               </div>

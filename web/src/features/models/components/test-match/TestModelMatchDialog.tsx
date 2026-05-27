@@ -16,6 +16,7 @@ import { MatchedModelCard } from "./MatchedModelCard";
 import { MatchedTierCard } from "./MatchedTierCard";
 import { NoMatchDisplay } from "./NoMatchDisplay";
 import { Loader2, CheckCircle, SquareArrowOutUpRight } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 type TestModelMatchDialogProps = {
   projectId: string;
@@ -30,6 +31,8 @@ export function TestModelMatchDialog({
   open,
   onOpenChange,
 }: TestModelMatchDialogProps) {
+  const t = useTranslations("models");
+  const tCommon = useTranslations("common");
   const [modelName, setModelName] = useState("");
   const [usageDetails, setUsageDetails] = useState<Record<string, number>>({});
   const [hasSubmitted, setHasSubmitted] = useState(false);
@@ -69,10 +72,9 @@ export function TestModelMatchDialog({
       <DialogContent size="lg" className="min-h-[62vh] overflow-y-auto">
         <form onSubmit={handleSubmit} className="flex flex-1 flex-col">
           <DialogHeader>
-            <DialogTitle>Test Model Match</DialogTitle>
+            <DialogTitle>{t("testMatch.title")}</DialogTitle>
             <DialogDescription className="mt-1">
-              Test which model and pricing tier your ingestion data would match
-              against.
+              {t("testMatch.description")}
             </DialogDescription>
           </DialogHeader>
 
@@ -82,12 +84,14 @@ export function TestModelMatchDialog({
               <div className="space-y-6">
                 {/* Model Name Input */}
                 <div className="space-y-2">
-                  <div className="text-sm font-medium">Model Name *</div>
+                  <div className="text-sm font-medium">
+                    {t("testMatch.modelNameLabel")}
+                  </div>
                   <div className="text-sm text-muted-foreground">
-                    The model name on your generations.
+                    {t("testMatch.modelNameDescription")}
                   </div>
                   <Input
-                    placeholder="e.g. gpt-4-turbo"
+                    placeholder={t("testMatch.modelNamePlaceholder")}
                     value={modelName}
                     onChange={(e) => setModelName(e.target.value.trim())}
                     autoFocus
@@ -110,14 +114,14 @@ export function TestModelMatchDialog({
                   onClick={() => onOpenChange(false)}
                   className="flex-1"
                 >
-                  Close
+                  {tCommon("actions.close")}
                 </Button>
                 <Button
                   type="submit"
                   disabled={!modelName.trim() || isLoading}
                   className="flex-1"
                 >
-                  Test Match
+                  {t("testMatch.testMatchButton")}
                 </Button>
               </div>
             </div>
@@ -133,13 +137,13 @@ export function TestModelMatchDialog({
                     {isLoading && (
                       <div className="flex min-h-[300px] items-center justify-center gap-2 rounded-lg border bg-muted/30 p-6 text-muted-foreground">
                         <Loader2 className="h-5 w-5 animate-spin" />
-                        <span>Testing match...</span>
+                        <span>{t("testMatch.testing")}</span>
                       </div>
                     )}
 
                     {error && (
                       <div className="rounded-lg border border-destructive/50 bg-destructive/5 p-4 text-sm text-destructive">
-                        Error: {error.message}
+                        {t("testMatch.errorPrefix")} {error.message}
                       </div>
                     )}
 
@@ -150,7 +154,7 @@ export function TestModelMatchDialog({
                             <div className="flex items-center gap-2 rounded-lg border border-green-200 bg-green-50 px-4 py-2.5 dark:border-green-900 dark:bg-green-950">
                               <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400" />
                               <span className="text-sm font-medium text-green-900 dark:text-green-100">
-                                Match Found
+                                {t("testMatch.matchFound")}
                               </span>
                             </div>
                             <MatchedModelCard
@@ -177,7 +181,7 @@ export function TestModelMatchDialog({
                       href={`/project/${projectId}/settings/models/${data.model.id}?pricingTier=${data.matchedTier.id}`}
                       target="_blank"
                     >
-                      View Model Details
+                      {t("testMatch.viewModelDetails")}
                       <SquareArrowOutUpRight className="ml-2 h-4 w-4" />
                     </Link>
                   </Button>

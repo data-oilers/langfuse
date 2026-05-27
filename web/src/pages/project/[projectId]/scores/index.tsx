@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import { useTranslations } from "next-intl";
 import ScoresTable from "@/src/components/table/use-cases/scores";
 import Page from "@/src/components/layouts/page";
 import { api } from "@/src/utils/api";
@@ -10,6 +11,7 @@ import {
 
 export default function ScoresPage() {
   const router = useRouter();
+  const t = useTranslations("scores");
   const projectId = router.query.projectId as string;
 
   // Check if the user has any scores
@@ -31,10 +33,9 @@ export default function ScoresPage() {
   return (
     <Page
       headerProps={{
-        title: "Scores",
+        title: t("list.title"),
         help: {
-          description:
-            "A scores is an evaluation of a traces or observations. It can be created from user feedback, model-based evaluations, or manual review. See docs to learn more.",
+          description: t("list.description"),
           href: "https://langfuse.com/docs/evaluation/overview",
         },
         tabsProps: {

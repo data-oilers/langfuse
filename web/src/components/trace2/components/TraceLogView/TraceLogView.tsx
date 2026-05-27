@@ -37,6 +37,7 @@ import { useTraceData } from "@/src/components/trace2/contexts/TraceDataContext"
 import { useViewPreferences } from "@/src/components/trace2/contexts/ViewPreferencesContext";
 import { useJsonExpansion } from "@/src/components/trace2/contexts/JsonExpansionContext";
 import { JSONTableView } from "@/src/components/trace2/components/_shared/JSONTableView";
+import { useTranslations } from "next-intl";
 import {
   flattenChronological,
   flattenTreeOrder,
@@ -75,6 +76,7 @@ export const TraceLogView = ({
   projectId,
   currentView = "pretty",
 }: TraceLogViewProps) => {
+  const t = useTranslations("traces");
   const { roots, observations } = useTraceData();
   const { logViewMode, logViewTreeStyle } = useViewPreferences();
   const { formattedExpansion, setFormattedFieldExpansion } = useJsonExpansion();
@@ -293,7 +295,7 @@ export const TraceLogView = ({
       {hasNoObservations && (
         <div className="flex flex-1 items-center justify-center">
           <div className="text-sm text-muted-foreground">
-            No observations in this trace
+            {t("logView.noObservations")}
           </div>
         </div>
       )}
@@ -301,7 +303,7 @@ export const TraceLogView = ({
       {hasNoSearchResults && (
         <div className="flex flex-1 items-center justify-center">
           <div className="text-sm text-muted-foreground">
-            No observations match &quot;{searchQuery}&quot;
+            {t("logView.noSearchResults", { query: searchQuery })}
           </div>
         </div>
       )}

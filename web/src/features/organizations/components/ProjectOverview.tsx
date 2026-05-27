@@ -19,6 +19,7 @@ import { Button } from "@/src/components/ui/button";
 import { PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { StringParam, useQueryParams } from "use-query-params";
+import { useTranslations } from "next-intl";
 import { Input } from "@/src/components/ui/input";
 import { useHasOrganizationAccess } from "@/src/features/rbac/utils/checkOrganizationAccess";
 import { env } from "@/src/env.mjs";
@@ -40,6 +41,7 @@ const OrganizationProjectTiles = ({
   org: User["organizations"][number];
   search?: string;
 }) => {
+  const t = useTranslations("overview");
   return (
     <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
       {org.projects
@@ -56,7 +58,9 @@ const OrganizationProjectTiles = ({
             {!project.deletedAt ? (
               <CardFooter className="gap-2">
                 <Button asChild variant="secondary">
-                  <Link href={`/project/${project.id}`}>Go to project</Link>
+                  <Link href={`/project/${project.id}`}>
+                    {t("project.goToProject")}
+                  </Link>
                 </Button>
                 <Button asChild variant="ghost">
                   <Link href={`/project/${project.id}/settings`}>
@@ -66,7 +70,7 @@ const OrganizationProjectTiles = ({
               </CardFooter>
             ) : (
               <CardContent>
-                <CardDescription>Project is being deleted</CardDescription>
+                <CardDescription>{t("project.beingDeleted")}</CardDescription>
               </CardContent>
             )}
           </Card>
@@ -76,19 +80,17 @@ const OrganizationProjectTiles = ({
 };
 
 const DemoOrganizationTile = () => {
+  const t = useTranslations("overview");
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Try Langfuse Demo</CardTitle>
+        <CardTitle>{t("demo.tryLangfuseDemo")}</CardTitle>
       </CardHeader>
-      <CardContent>
-        We have built a Q&A chatbot that answers questions based on the Langfuse
-        Docs. Interact with it to see traces in Langfuse.
-      </CardContent>
+      <CardContent>{t("demo.demoDescription")}</CardContent>
       <CardFooter>
         <Button asChild variant="secondary">
           <Link href={`/project/${env.NEXT_PUBLIC_DEMO_PROJECT_ID}/traces`}>
-            View Demo Project
+            {t("demo.viewDemoProject")}
           </Link>
         </Button>
       </CardFooter>
@@ -111,6 +113,7 @@ const OrganizationActionButtons = ({
     organizationId: orgId,
     scope: "projects:create",
   });
+  const t = useTranslations("overview");
 
   return (
     <>
@@ -130,13 +133,13 @@ const OrganizationActionButtons = ({
         <Button asChild variant={primaryButtonVariant}>
           <Link href={createProjectRoute(orgId)}>
             <PlusIcon className="mr-2 h-4 w-4" aria-hidden="true" />
-            New project
+            {t("project.newProject")}
           </Link>
         </Button>
       ) : (
         <Button disabled variant={primaryButtonVariant}>
           <LockIcon className="mr-2 h-4 w-4" aria-hidden="true" />
-          New project
+          {t("project.newProject")}
         </Button>
       )}
     </>
@@ -152,6 +155,7 @@ const SingleOrganizationPage = ({
 }) => {
   const session = useSession();
   const org = session.data?.user?.organizations.find((o) => o.id === orgId);
+  const t = useTranslations("overview");
 
   if (!org) {
     return null;
@@ -165,7 +169,7 @@ const SingleOrganizationPage = ({
     return (
       <ContainerPage
         headerProps={{
-          title: "Demo Organization",
+          title: t("organization.demoOrganization"),
         }}
       >
         <DemoOrganizationTile />
@@ -176,7 +180,7 @@ const SingleOrganizationPage = ({
   return (
     <ContainerPage
       headerProps={{
-        title: org?.name ?? "Organization",
+        title: org?.name ?? t("organization.fallbackName"),
         actionButtonsRight: <OrganizationActionButtons orgId={orgId} />,
       }}
     >
@@ -194,6 +198,7 @@ const SingleOrganizationProjectOverviewTile = ({
 }) => {
   const session = useSession();
   const org = session.data?.user?.organizations.find((o) => o.id === orgId);
+  const t = useTranslations("overview");
 
   if (!org) {
     return null;
@@ -216,7 +221,11 @@ const SingleOrganizationProjectOverviewTile = ({
       <Header
         title={org.name}
         className="truncate"
-        status={orgId === env.NEXT_PUBLIC_DEMO_ORG_ID ? "Demo Org" : undefined}
+        status={
+          orgId === env.NEXT_PUBLIC_DEMO_ORG_ID
+            ? t("organization.demoOrgBadge")
+            : undefined
+        }
         label={
           isCloudPlan(org.plan)
             ? {
@@ -244,9 +253,10 @@ export const OrganizationProjectOverview = () => {
   const canCreateOrg = session.data?.user?.canCreateOrganizations;
   const organizations = session.data?.user?.organizations;
   const [{ search }, setQueryParams] = useQueryParams({ search: StringParam });
+  const t = useTranslations("overview");
 
   if (organizations === undefined) {
-    return "loading...";
+    return t("loading");
   }
 
   const showOnboarding =
@@ -268,15 +278,14 @@ export const OrganizationProjectOverview = () => {
   return (
     <ContainerPage
       headerProps={{
-        title: "Organizations",
+        title: t("organization.title"),
         help: {
-          description:
-            "Organizations help you manage access to projects. Each organization can have multiple projects and team members with different roles.",
+          description: t("organization.helpDescription"),
           href: "https://langfuse.com/docs/rbac",
         },
         breadcrumb: [
           {
-            name: "Organizations",
+            name: t("organization.title"),
             href: "/",
           },
         ],
@@ -284,14 +293,14 @@ export const OrganizationProjectOverview = () => {
           <>
             <Input
               className="mr-1 w-36 lg:w-56"
-              placeholder="Search projects"
+              placeholder={t("organization.searchProjects")}
               onChange={(e) => setQueryParams({ search: e.target.value })}
             />
             {canCreateOrg && (
               <Button data-testid="create-organization-btn" asChild>
                 <Link href={createOrganizationRoute}>
                   <PlusIcon className="mr-1.5 h-4 w-4" aria-hidden="true" />
-                  New Organization
+                  {t("organization.newOrganization")}
                 </Link>
               </Button>
             )}
@@ -327,18 +336,19 @@ export const OrganizationProjectOverview = () => {
 const Onboarding = () => {
   const session = useSession();
   const canCreateOrgs = session.data?.user?.canCreateOrganizations;
+  const t = useTranslations("overview");
   return (
     <Card className="mt-5">
       <CardHeader>
         <CardTitle data-testid="create-new-project-title">
-          Get Started
+          {t("onboarding.getStarted")}
         </CardTitle>
       </CardHeader>
       <CardContent>
         <CardDescription>
           {canCreateOrgs
-            ? "Create an organization to get started. Alternatively, ask your organization admin to invite you."
-            : "You need to get invited to an organization to get started with Langfuse."}
+            ? t("onboarding.createOrgDescription")
+            : t("onboarding.needInviteDescription")}
         </CardDescription>
       </CardContent>
       <CardFooter className="flex gap-4">
@@ -346,20 +356,20 @@ const Onboarding = () => {
           <Button data-testid="create-project-btn" asChild>
             <Link href={createOrganizationRoute}>
               <PlusIcon className="mr-2 h-4 w-4" aria-hidden="true" />
-              New Organization
+              {t("organization.newOrganization")}
             </Link>
           </Button>
         )}
         <Button variant="secondary" asChild>
           <Link href="https://langfuse.com/docs" target="_blank">
             <BookOpen className="mr-2 h-4 w-4" aria-hidden="true" />
-            Docs
+            {t("onboarding.docs")}
           </Link>
         </Button>
         <Button variant="secondary" asChild>
           <Link href="https://langfuse.com/docs/ask-ai" target="_blank">
             <MessageSquareText className="mr-2 h-4 w-4" aria-hidden="true" />
-            Ask AI
+            {t("onboarding.askAi")}
           </Link>
         </Button>
       </CardFooter>

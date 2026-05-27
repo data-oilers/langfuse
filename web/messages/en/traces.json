@@ -1,0 +1,161 @@
+{
+  "pages": {
+    "tracingTitle": "Tracing",
+    "tracingHelp": "A trace represents a single function/api invocation. Traces contain observations.",
+    "observationsHelp": "An observation captures a single function call in an application. See docs to learn more.",
+    "tracingSetupTitle": "Tracing Setup",
+    "tracingSetupHelp": "Setup tracing to track and analyze your LLM calls. You can create API keys and integrate Langfuse with your application.",
+    "tracingEventsTitle": "Tracing - Events Table (New)",
+    "tracingEventsHelp": "An observation captures a single function call in an application. This view uses the new ClickHouse events table."
+  },
+  "setup": {
+    "step1Title": "1. Get API keys",
+    "step1Description": "You need to create an API key to start tracing your application. You can create more keys later in the project settings.",
+    "createApiKey": "Create new API key",
+    "manageApiKeys": "Manage API keys",
+    "step2Title": "2. Add tracing to your application",
+    "step2Description": "Langfuse relies on OpenTelemetry to instrument your application and export LLM application/agent traces to Langfuse. You can use one of our SDKs or 50+ framework integrations. Please follow the quickstart in the documentation to add Langfuse to your application.",
+    "quickstartGuide": "Quickstart guide"
+  },
+  "detail": {
+    "loading": "Loading...",
+    "traceNotFound": "Trace not found",
+    "traceNotFoundMessage": "The trace is either still being processed or has been deleted.",
+    "traceNotFoundEventsMessage": "No observations found for this trace. The trace may still be processing or has been deleted.",
+    "noAccess": "You do not have access to this trace.",
+    "breadcrumbTraces": "Traces",
+    "publicBadge": "Public",
+    "signIn": "Sign in",
+    "observationNotFound": "Observation not found",
+    "retry": "Retry"
+  },
+  "tabs": {
+    "preview": "Preview",
+    "logView": "Log View",
+    "scores": "Scores"
+  },
+  "viewToggle": {
+    "formatted": "Formatted",
+    "jsonViewUnavailable": "JSON view unavailable",
+    "jsonViewUnavailableDescription": "Disabled for traces with {threshold}+ observations to maintain performance.",
+    "beta": "Beta"
+  },
+  "logView": {
+    "searchPlaceholder": "Search observations...",
+    "largeTrace": "Large Trace",
+    "optimizedForPerformance": "Optimized for performance",
+    "largeTraceDescription": "This trace has {count} observations. To keep things smooth:",
+    "largeTraceFeature1": "Content loads as you scroll",
+    "largeTraceFeature2": "JSON view is disabled",
+    "largeTraceFeature3": "Download/copy includes I/O for cached observations only",
+    "noObservations": "No observations in this trace",
+    "noSearchResults": "No observations match \"{query}\"",
+    "collapseAll": "Collapse all",
+    "expandAll": "Expand all",
+    "disabledForLargeTraces": "Disabled for large traces",
+    "copyAsJson": "Copy as JSON",
+    "copyAsJsonCacheOnly": "Copy as JSON (cache only)",
+    "downloadAsJson": "Download as JSON",
+    "downloadAsJsonCacheOnly": "Download as JSON (cache only)",
+    "loadingData": "Loading data...",
+    "cacheonlyMode": "Cache-only mode",
+    "cacheonlyDescription": "For large traces, only expanded observations include full I/O data.",
+    "observationsLoaded": "{loaded} of {total} observations loaded",
+    "showIndentation": "Show indentation",
+    "hideIndentation": "Hide indentation",
+    "indentationUnavailable": "Indentation unavailable",
+    "indentationUnavailableDescription": "Disabled for deeply nested trees to maintain readability.",
+    "showMilliseconds": "Show milliseconds",
+    "hideMilliseconds": "Hide milliseconds"
+  },
+  "columns": {
+    "observation": "Observation",
+    "depth": "Depth",
+    "start": "Start",
+    "duration": "Duration"
+  },
+  "tree": {
+    "searchPlaceholder": "Search",
+    "expandAll": "Expand all",
+    "collapseAll": "Collapse all",
+    "downloadTrace": "Download trace as JSON",
+    "timeline": "Timeline",
+    "expandPanel": "Expand panel",
+    "collapsePanel": "Collapse panel",
+    "hiddenObservations": "{count} hidden observations below {level} level.",
+    "showAll": "Show all"
+  },
+  "search": {
+    "noResults": "No results found",
+    "noResultsHint": "Try searching by type, title, or id",
+    "clearSearch": "Clear search",
+    "depthContext": "depth {depth} • +{traceTime}"
+  },
+  "settings": {
+    "viewOptions": "View Options",
+    "showGraph": "Show Graph",
+    "showComments": "Show Comments",
+    "showScores": "Show Scores",
+    "showDuration": "Show Duration",
+    "showCostTokens": "Show Cost/Tokens",
+    "showColorCodeMetrics": "Show Color Code Metrics",
+    "minLevel": "Min Level: {level}",
+    "minimumLevel": "Minimum Level"
+  },
+  "badges": {
+    "session": "Session: {sessionId}",
+    "userId": "User ID: {userId}",
+    "targetTrace": "Target Trace: {traceId}",
+    "env": "Env: {environment}",
+    "release": "Release: {release}",
+    "version": "Version: {version}",
+    "latency": "Latency: {value}",
+    "timeToFirstToken": "Time to first token: {value}",
+    "traceId": "Trace ID",
+    "observationId": "Observation ID",
+    "copyId": "Copy ID"
+  },
+  "breakdown": {
+    "costBreakdown": "Cost breakdown",
+    "usageBreakdown": "Usage breakdown",
+    "inputCost": "Input cost",
+    "inputUsage": "Input usage",
+    "outputCost": "Output cost",
+    "outputUsage": "Output usage",
+    "otherCost": "Other cost",
+    "otherUsage": "Other usage",
+    "totalCost": "Total cost",
+    "totalUsage": "Total usage"
+  },
+  "io": {
+    "tags": "Tags",
+    "emptyIOTitle": "Looks like this trace didn't receive an input or output.",
+    "emptyIODescription": "Add it in your code to make debugging a lot easier.",
+    "viewDocumentation": "View Documentation",
+    "dismiss": "Dismiss",
+    "tools": "Tools",
+    "arguments": "Arguments"
+  },
+  "correction": {
+    "correctedOutput": "Corrected Output (Beta)",
+    "invalidJson": "Invalid JSON - fix to save",
+    "cannotSaveEmpty": "Cannot save empty content",
+    "saving": "Saving",
+    "saved": "Saved",
+    "viewDiff": "View diff between original and corrected output",
+    "editCorrection": "Edit corrected output",
+    "deleteCorrection": "Delete corrected output",
+    "clickToAdd": "Click to add corrected output",
+    "enterPlaceholder": "Enter corrected output...",
+    "diffDialogTitle": "Output Correction Diff",
+    "diffDialogDescription": "Compare the original output with the corrected version",
+    "noOriginalOutput": "No original output",
+    "noOriginalOutputDescription": "There is no original output to compare with the correction.",
+    "close": "Close",
+    "originalOutput": "Original Output",
+    "correctedOutputLabel": "Corrected Output"
+  },
+  "graphView": {
+    "loadingGraph": "Loading graph..."
+  }
+}

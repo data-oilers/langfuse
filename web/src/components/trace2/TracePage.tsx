@@ -16,6 +16,7 @@ import { stripBasePath } from "@/src/utils/redirect";
 import { Badge } from "@/src/components/ui/badge";
 import { useV4Beta } from "@/src/features/events/hooks/useV4Beta";
 import { useEventsTraceData } from "@/src/features/events/hooks/useEventsTraceData";
+import { useTranslations } from "next-intl";
 
 export function TracePage({
   traceId,
@@ -71,6 +72,7 @@ export function TracePage({
     projectIdForAccessCheck,
   );
 
+  const t = useTranslations("traces");
   const [selectedTab, setSelectedTab] = useQueryParam(
     "display",
     withDefault(StringParam, "details"),
@@ -78,15 +80,15 @@ export function TracePage({
 
   // Handle errors - for events path, we check if there's no data after loading
   if (!isBetaEnabled && tracesQuery.error?.data?.code === "UNAUTHORIZED")
-    return <ErrorPage message="You do not have access to this trace." />;
+    return <ErrorPage message={t("detail.noAccess")} />;
 
   if (!isBetaEnabled && tracesQuery.error?.data?.code === "NOT_FOUND")
     return (
       <ErrorPage
-        title="Trace not found"
-        message="The trace is either still being processed or has been deleted."
+        title={t("detail.traceNotFound")}
+        message={t("detail.traceNotFoundMessage")}
         additionalButton={{
-          label: "Retry",
+          label: t("detail.retry"),
           onClick: () => void window.location.reload(),
         }}
       />
@@ -96,16 +98,16 @@ export function TracePage({
   if (isBetaEnabled && !eventsData.isLoading && !eventsData.data)
     return (
       <ErrorPage
-        title="Trace not found"
-        message="No observations found for this trace. The trace may still be processing or has been deleted."
+        title={t("detail.traceNotFound")}
+        message={t("detail.traceNotFoundEventsMessage")}
         additionalButton={{
-          label: "Retry",
+          label: t("detail.retry"),
           onClick: () => void window.location.reload(),
         }}
       />
     );
 
-  if (!trace.data) return <div className="p-3">Loading...</div>;
+  if (!trace.data) return <div className="p-3">{t("detail.loading")}</div>;
 
   const isSharedTrace = trace.data.public;
   const showPublicIndicators = isSharedTrace && !hasProjectAccess;
@@ -139,7 +141,7 @@ export function TracePage({
   ) : undefined;
   const sharedBadge = showPublicIndicators ? (
     <Badge variant="outline" className="text-xs font-medium">
-      Public
+      {t("detail.publicBadge")}
     </Badge>
   ) : undefined;
 
@@ -152,7 +154,7 @@ export function TracePage({
         itemType: "TRACE",
         breadcrumb: [
           {
-            name: "Traces",
+            name: t("detail.breadcrumbTraces"),
             href: `/project/${router.query.projectId as string}/traces`,
           },
         ],

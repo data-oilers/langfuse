@@ -11,6 +11,7 @@ import {
 import { useRouter } from "next/router";
 import useProjectIdFromURL from "@/src/hooks/useProjectIdFromURL";
 import { usePostHogClientCapture } from "@/src/features/posthog-analytics/usePostHogClientCapture";
+import { useTranslations } from "next-intl";
 
 export function DeletePromptVersion({
   promptVersionId,
@@ -21,6 +22,7 @@ export function DeletePromptVersion({
   version: number;
   countVersions: number;
 }) {
+  const t = useTranslations("prompts");
   const capture = usePostHogClientCapture();
   const projectId = useProjectIdFromURL();
   const utils = api.useUtils();
@@ -73,17 +75,15 @@ export function DeletePromptVersion({
           }}
         >
           <Trash className="mr-2 h-4 w-4" />
-          Delete version
+          {t("actions.deletePromptVersion")}
         </Button>
       </PopoverTrigger>
       <PopoverContent>
-        <h2 className="text-md mb-3 font-semibold">Please confirm</h2>
+        <h2 className="text-md mb-3 font-semibold">
+          {t("actions.pleaseConfirm")}
+        </h2>
         <p className="mb-3 text-sm">
-          This action deletes the prompt version. Requests of version{" "}
-          <code className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold">
-            {version}
-          </code>
-          of this prompt will return an error.
+          {t("actions.deleteVersionConfirm", { version })}
         </p>
         {error && (
           <div className="mb-3 rounded border border-red-200 bg-red-50 p-3 text-sm text-red-700">
@@ -110,7 +110,7 @@ export function DeletePromptVersion({
               });
             }}
           >
-            Delete Prompt Version
+            {t("actions.deletePromptVersionButton")}
           </Button>
         </div>
       </PopoverContent>

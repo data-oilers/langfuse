@@ -9,6 +9,7 @@ import { useMemo } from "react";
 import { usePriceUnitMultiplier } from "@/src/features/models/hooks/usePriceUnitMultiplier";
 import Decimal from "decimal.js";
 import { getMaxDecimals } from "@/src/features/models/utils";
+import { useTranslations } from "next-intl";
 
 type MatchedTierCardProps = {
   tier: {
@@ -23,6 +24,7 @@ type MatchedTierCardProps = {
 export type { MatchedTierCardProps };
 
 export function MatchedTierCard({ tier }: MatchedTierCardProps) {
+  const t = useTranslations("models");
   const { priceUnit, priceUnitMultiplier } = usePriceUnitMultiplier();
 
   const maxDecimals = useMemo(
@@ -39,7 +41,7 @@ export function MatchedTierCard({ tier }: MatchedTierCardProps) {
     <Card>
       <CardHeader className="pb-3">
         <CardTitle className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-          Matched Pricing Tier
+          {t("testMatch.matchedPricingTier")}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -47,17 +49,17 @@ export function MatchedTierCard({ tier }: MatchedTierCardProps) {
           <span className="text-base font-semibold">{tier.name}</span>
           {tier.isDefault && (
             <Badge variant="secondary" className="text-xs">
-              Default
+              {t("pricing.default")}
             </Badge>
           )}
           <span className="text-xs text-muted-foreground">
-            Priority: {tier.priority}
+            {t("pricing.priority")}: {tier.priority}
           </span>
         </div>
 
         <div>
           <div className="mb-2 text-xs font-medium text-muted-foreground">
-            Prices (per {priceUnit}):
+            {t("pricing.prices")} ({t("pricing.pricesPerUnit")} {priceUnit}):
           </div>
           <div className="space-y-1.5">
             {Object.entries(tier.prices).map(([usageType, price]) => (

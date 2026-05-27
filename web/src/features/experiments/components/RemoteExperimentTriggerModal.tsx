@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod/v4";
 import { Button } from "@/src/components/ui/button";
+import { useTranslations } from "next-intl";
 import {
   DialogBody,
   DialogDescription,
@@ -50,6 +51,7 @@ export const RemoteExperimentTriggerModal = ({
   };
   setShowTriggerModal: (show: boolean) => void;
 }) => {
+  const t = useTranslations("datasets");
   const hasDatasetAccess = useHasProjectAccess({
     projectId,
     scope: "datasets:CUD",
@@ -72,12 +74,12 @@ export const RemoteExperimentTriggerModal = ({
       onSuccess: (data) => {
         if (data.success) {
           showSuccessToast({
-            title: "Dataset run started",
-            description: "Your dataset run may take a few minutes to complete.",
+            title: t("remoteExperiment.runStarted"),
+            description: t("remoteExperiment.runStartedDescription"),
           });
         } else {
           showErrorToast(
-            "Failed to start dataset run",
+            t("remoteExperiment.runFailed"),
             "Please try again or check your remote dataset run configuration.",
           );
         }
@@ -122,11 +124,11 @@ export const RemoteExperimentTriggerModal = ({
           onClick={() => setShowTriggerModal(false)}
           className="inline-block self-start"
         >
-          ← Back
+          {t("remoteExperiment.back")}
         </Button>
-        <DialogTitle>Run remote dataset run</DialogTitle>
+        <DialogTitle>{t("remoteExperiment.runTitle")}</DialogTitle>
         <DialogDescription>
-          This action will send the following information to{" "}
+          {t("remoteExperiment.runDescription")}{" "}
           <strong>{remoteExperimentConfig.url}</strong>.
         </DialogDescription>
       </DialogHeader>
@@ -140,11 +142,11 @@ export const RemoteExperimentTriggerModal = ({
                 name="payload"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Config</FormLabel>
+                    <FormLabel>{t("remoteExperiment.configLabel")}</FormLabel>
                     <FormDescription>
-                      Confirm the config you want to send to the remote dataset
-                      run URL along with the{" "}
-                      <strong>{dataset.data?.name}</strong> dataset information.
+                      {t("remoteExperiment.configDescription")}{" "}
+                      <strong>{dataset.data?.name}</strong>{" "}
+                      {t("remoteExperiment.configDescriptionSuffix")}
                     </FormDescription>
                     <FormControl>
                       <CodeMirrorEditor
@@ -171,7 +173,7 @@ export const RemoteExperimentTriggerModal = ({
                 onClick={() => setShowTriggerModal(false)}
                 disabled={runRemoteExperimentMutation.isPending}
               >
-                Cancel
+                {t("remoteExperiment.cancel")}
               </Button>
               <Button
                 type="submit"
@@ -180,7 +182,7 @@ export const RemoteExperimentTriggerModal = ({
                 {runRemoteExperimentMutation.isPending && (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 )}
-                Run
+                {t("remoteExperiment.run")}
               </Button>
             </div>
           </DialogFooter>

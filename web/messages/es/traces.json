@@ -1,0 +1,161 @@
+{
+  "pages": {
+    "tracingTitle": "Seguimiento",
+    "tracingHelp": "Una traza representa una única invocación de función/API. Las trazas contienen observaciones.",
+    "observationsHelp": "Una observación captura una única llamada a función en una aplicación. Consulte la documentación para obtener más información.",
+    "tracingSetupTitle": "Configuración de seguimiento",
+    "tracingSetupHelp": "Configure el seguimiento para rastrear y analizar sus llamadas LLM. Puede crear claves API e integrar Langfuse con su aplicación.",
+    "tracingEventsTitle": "Seguimiento - Tabla de eventos (nuevo)",
+    "tracingEventsHelp": "Una observación captura una única llamada a función en una aplicación. Esta vista utiliza la nueva tabla de eventos ClickHouse."
+  },
+  "setup": {
+    "step1Title": "1. Obtener claves API",
+    "step1Description": "Necesita crear una clave API para comenzar a rastrear su aplicación. Puede crear más claves posteriormente en la configuración del proyecto.",
+    "createApiKey": "Crear nueva clave API",
+    "manageApiKeys": "Administrar claves API",
+    "step2Title": "2. Agregar seguimiento a su aplicación",
+    "step2Description": "Langfuse utiliza OpenTelemetry para instrumentar su aplicación y exportar trazas de aplicaciones/agentes LLM a Langfuse. Puede usar uno de nuestros SDKs o más de 50 integraciones de frameworks. Siga la guía de inicio rápido en la documentación para agregar Langfuse a su aplicación.",
+    "quickstartGuide": "Guía de inicio rápido"
+  },
+  "detail": {
+    "loading": "Cargando...",
+    "traceNotFound": "Traza no encontrada",
+    "traceNotFoundMessage": "La traza aún está siendo procesada o ha sido eliminada.",
+    "traceNotFoundEventsMessage": "No se encontraron observaciones para esta traza. La traza puede estar aún en proceso o haber sido eliminada.",
+    "noAccess": "No tiene acceso a esta traza.",
+    "breadcrumbTraces": "Trazas",
+    "publicBadge": "Pública",
+    "signIn": "Iniciar sesión",
+    "observationNotFound": "Observación no encontrada",
+    "retry": "Reintentar"
+  },
+  "tabs": {
+    "preview": "Vista previa",
+    "logView": "Vista de log",
+    "scores": "Puntuaciones"
+  },
+  "viewToggle": {
+    "formatted": "Formateado",
+    "jsonViewUnavailable": "Vista JSON no disponible",
+    "jsonViewUnavailableDescription": "Deshabilitado para trazas con {threshold}+ observaciones para mantener el rendimiento.",
+    "beta": "Beta"
+  },
+  "logView": {
+    "searchPlaceholder": "Buscar observaciones...",
+    "largeTrace": "Traza grande",
+    "optimizedForPerformance": "Optimizado para rendimiento",
+    "largeTraceDescription": "Esta traza tiene {count} observaciones. Para mantener la fluidez:",
+    "largeTraceFeature1": "El contenido se carga a medida que desplaza",
+    "largeTraceFeature2": "La vista JSON está deshabilitada",
+    "largeTraceFeature3": "La descarga/copia incluye E/S solo para observaciones en caché",
+    "noObservations": "No hay observaciones en esta traza",
+    "noSearchResults": "No hay observaciones que coincidan con \"{query}\"",
+    "collapseAll": "Contraer todo",
+    "expandAll": "Expandir todo",
+    "disabledForLargeTraces": "Deshabilitado para trazas grandes",
+    "copyAsJson": "Copiar como JSON",
+    "copyAsJsonCacheOnly": "Copiar como JSON (solo caché)",
+    "downloadAsJson": "Descargar como JSON",
+    "downloadAsJsonCacheOnly": "Descargar como JSON (solo caché)",
+    "loadingData": "Cargando datos...",
+    "cacheonlyMode": "Modo solo caché",
+    "cacheonlyDescription": "Para trazas grandes, solo las observaciones expandidas incluyen datos completos de E/S.",
+    "observationsLoaded": "{loaded} de {total} observaciones cargadas",
+    "showIndentation": "Mostrar sangría",
+    "hideIndentation": "Ocultar sangría",
+    "indentationUnavailable": "Sangría no disponible",
+    "indentationUnavailableDescription": "Deshabilitado para árboles profundamente anidados para mantener la legibilidad.",
+    "showMilliseconds": "Mostrar milisegundos",
+    "hideMilliseconds": "Ocultar milisegundos"
+  },
+  "columns": {
+    "observation": "Observación",
+    "depth": "Profundidad",
+    "start": "Inicio",
+    "duration": "Duración"
+  },
+  "tree": {
+    "searchPlaceholder": "Buscar",
+    "expandAll": "Expandir todo",
+    "collapseAll": "Contraer todo",
+    "downloadTrace": "Descargar traza como JSON",
+    "timeline": "Línea de tiempo",
+    "expandPanel": "Expandir panel",
+    "collapsePanel": "Contraer panel",
+    "hiddenObservations": "{count} observaciones ocultas por debajo del nivel {level}.",
+    "showAll": "Mostrar todo"
+  },
+  "search": {
+    "noResults": "No se encontraron resultados",
+    "noResultsHint": "Intente buscar por tipo, título o id",
+    "clearSearch": "Limpiar búsqueda",
+    "depthContext": "profundidad {depth} • +{traceTime}"
+  },
+  "settings": {
+    "viewOptions": "Opciones de vista",
+    "showGraph": "Mostrar gráfico",
+    "showComments": "Mostrar comentarios",
+    "showScores": "Mostrar puntuaciones",
+    "showDuration": "Mostrar duración",
+    "showCostTokens": "Mostrar costo/tokens",
+    "showColorCodeMetrics": "Mostrar código de color en métricas",
+    "minLevel": "Nivel mín.: {level}",
+    "minimumLevel": "Nivel mínimo"
+  },
+  "badges": {
+    "session": "Sesión: {sessionId}",
+    "userId": "ID de usuario: {userId}",
+    "targetTrace": "Traza destino: {traceId}",
+    "env": "Env: {environment}",
+    "release": "Release: {release}",
+    "version": "Version: {version}",
+    "latency": "Latencia: {value}",
+    "timeToFirstToken": "Tiempo al primer token: {value}",
+    "traceId": "ID de traza",
+    "observationId": "ID de observación",
+    "copyId": "Copiar ID"
+  },
+  "breakdown": {
+    "costBreakdown": "Desglose de costo",
+    "usageBreakdown": "Desglose de uso",
+    "inputCost": "Costo de entrada",
+    "inputUsage": "Uso de entrada",
+    "outputCost": "Costo de salida",
+    "outputUsage": "Uso de salida",
+    "otherCost": "Otro costo",
+    "otherUsage": "Otro uso",
+    "totalCost": "Costo total",
+    "totalUsage": "Uso total"
+  },
+  "io": {
+    "tags": "Etiquetas",
+    "emptyIOTitle": "Parece que esta traza no recibió una entrada ni una salida.",
+    "emptyIODescription": "Agréguela en su código para facilitar la depuración.",
+    "viewDocumentation": "Ver documentación",
+    "dismiss": "Descartar",
+    "tools": "Herramientas",
+    "arguments": "Argumentos"
+  },
+  "correction": {
+    "correctedOutput": "Salida corregida (Beta)",
+    "invalidJson": "JSON inválido - corrija para guardar",
+    "cannotSaveEmpty": "No se puede guardar contenido vacío",
+    "saving": "Guardando",
+    "saved": "Guardado",
+    "viewDiff": "Ver diferencias entre la salida original y la corregida",
+    "editCorrection": "Editar salida corregida",
+    "deleteCorrection": "Eliminar salida corregida",
+    "clickToAdd": "Haga clic para agregar la salida corregida",
+    "enterPlaceholder": "Ingrese la salida corregida...",
+    "diffDialogTitle": "Diferencia de corrección de salida",
+    "diffDialogDescription": "Compare la salida original con la versión corregida",
+    "noOriginalOutput": "Sin salida original",
+    "noOriginalOutputDescription": "No hay salida original para comparar con la corrección.",
+    "close": "Cerrar",
+    "originalOutput": "Salida original",
+    "correctedOutputLabel": "Salida corregida"
+  },
+  "graphView": {
+    "loadingGraph": "Cargando gráfico..."
+  }
+}

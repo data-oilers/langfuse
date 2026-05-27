@@ -8,6 +8,7 @@
 import Link from "next/link";
 import { ExternalLinkIcon } from "lucide-react";
 import { Badge } from "@/src/components/ui/badge";
+import { useTranslations } from "next-intl";
 
 export function SessionBadge({
   sessionId,
@@ -16,6 +17,7 @@ export function SessionBadge({
   sessionId: string | null;
   projectId: string;
 }) {
+  const t = useTranslations("traces");
   if (!sessionId) return null;
   return (
     <Link
@@ -23,7 +25,7 @@ export function SessionBadge({
       className="inline-flex"
     >
       <Badge>
-        <span className="truncate">Session: {sessionId}</span>
+        <span className="truncate">{t("badges.session", { sessionId })}</span>
         <ExternalLinkIcon className="ml-1 h-3 w-3" />
       </Badge>
     </Link>
@@ -37,6 +39,7 @@ export function UserIdBadge({
   userId: string | null;
   projectId: string;
 }) {
+  const t = useTranslations("traces");
   if (!userId) return null;
   return (
     <Link
@@ -44,7 +47,7 @@ export function UserIdBadge({
       className="inline-flex"
     >
       <Badge>
-        <span className="truncate">User ID: {userId}</span>
+        <span className="truncate">{t("badges.userId", { userId })}</span>
         <ExternalLinkIcon className="ml-1 h-3 w-3" />
       </Badge>
     </Link>
@@ -58,6 +61,7 @@ export function TargetTraceBadge({
   targetTraceId: string | null;
   projectId: string;
 }) {
+  const t = useTranslations("traces");
   if (!targetTraceId) return null;
   return (
     <Link
@@ -65,7 +69,9 @@ export function TargetTraceBadge({
       className="inline-flex"
     >
       <Badge>
-        <span className="truncate">Target Trace: {targetTraceId}</span>
+        <span className="truncate">
+          {t("badges.targetTrace", { traceId: targetTraceId })}
+        </span>
         <ExternalLinkIcon className="ml-1 h-3 w-3" />
       </Badge>
     </Link>
@@ -77,16 +83,19 @@ export function EnvironmentBadge({
 }: {
   environment: string | null;
 }) {
+  const t = useTranslations("traces");
   if (!environment) return null;
-  return <Badge variant="tertiary">Env: {environment}</Badge>;
+  return <Badge variant="tertiary">{t("badges.env", { environment })}</Badge>;
 }
 
 export function ReleaseBadge({ release }: { release: string | null }) {
+  const t = useTranslations("traces");
   if (!release) return null;
-  return <Badge variant="tertiary">Release: {release}</Badge>;
+  return <Badge variant="tertiary">{t("badges.release", { release })}</Badge>;
 }
 
 export function VersionBadge({ version }: { version: string | null }) {
+  const t = useTranslations("traces");
   if (!version) return null;
-  return <Badge variant="tertiary">Version: {version}</Badge>;
+  return <Badge variant="tertiary">{t("badges.version", { version })}</Badge>;
 }

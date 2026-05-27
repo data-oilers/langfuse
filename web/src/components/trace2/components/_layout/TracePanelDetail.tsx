@@ -20,8 +20,10 @@ import { useTraceData } from "../../contexts/TraceDataContext";
 import { TraceDetailView } from "../TraceDetailView/TraceDetailView";
 import { ObservationDetailView } from "../ObservationDetailView/ObservationDetailView";
 import { useMemo, useEffect } from "react";
+import { useTranslations } from "next-intl";
 
 export function TracePanelDetail() {
+  const t = useTranslations("traces");
   const { selectedNodeId, setSelectedNodeId } = useSelection();
   const {
     trace,
@@ -56,7 +58,7 @@ export function TracePanelDetail() {
         return (
           <div className="flex h-full w-full items-center justify-center p-4">
             <p className="text-sm text-muted-foreground">
-              Observation not found
+              {t("detail.observationNotFound")}
             </p>
           </div>
         );

@@ -3,6 +3,7 @@ import { cn } from "@/src/utils/tailwind";
 import { PrettyJsonView } from "@/src/components/ui/PrettyJsonView";
 import type { z } from "zod/v4";
 import type { ChatMlMessageSchema } from "@/src/components/schemas/ChatMlSchema";
+import { useTranslations } from "next-intl";
 
 interface ToolCallInvocationsViewProps {
   message: z.infer<typeof ChatMlMessageSchema>;
@@ -15,6 +16,7 @@ export function ToolCallInvocationsView({
   toolCallNumbers,
   className,
 }: ToolCallInvocationsViewProps) {
+  const t = useTranslations("traces");
   const toolCalls = message.tool_calls;
 
   if (!toolCalls || !Array.isArray(toolCalls) || toolCalls.length === 0) {
@@ -71,7 +73,7 @@ export function ToolCallInvocationsView({
             {/* Arguments view */}
             <div className="py-2 [&_.io-message-content]:px-0">
               <div className="mb-1.5 text-xs font-medium text-muted-foreground">
-                Arguments
+                {t("io.arguments")}
               </div>
               <PrettyJsonView
                 json={parsedArguments}

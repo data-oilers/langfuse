@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useEffect, useState, useMemo } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
+import { useTranslations } from "next-intl";
 
 import { CodeMirrorEditor } from "@/src/components/editor";
 import { Button } from "@/src/components/ui/button";
@@ -72,6 +73,8 @@ export const UpsertModelFormDialog = (({
   const [formError, setFormError] = useState<string | null>(null);
   const utils = api.useUtils();
   const [open, setOpen] = useState(false);
+  const t = useTranslations("models");
+  const tCommon = useTranslations("common");
 
   // Initialize form default values
   const defaultValues: FormUpsertModel = useMemo(() => {
@@ -204,8 +207,18 @@ export const UpsertModelFormDialog = (({
       form.reset();
       setOpen(false);
       showSuccessToast({
-        title: `Model ${props.action === "edit" ? "updated" : "created"}`,
-        description: `The model '${upsertedModel.modelName}' has been successfully ${props.action === "edit" ? "updated" : "created"}. New generations will use these model prices.`,
+        title:
+          props.action === "edit"
+            ? t("actions.modelUpdated")
+            : t("actions.modelCreated"),
+        description:
+          props.action === "edit"
+            ? t("actions.modelUpdatedDescription", {
+                modelName: upsertedModel.modelName,
+              })
+            : t("actions.modelCreatedDescription", {
+                modelName: upsertedModel.modelName,
+              }),
       });
       router.push(
         `/project/${props.projectId}/settings/models/${upsertedModel.id}`,
@@ -284,8 +297,8 @@ export const UpsertModelFormDialog = (({
         className={props.className}
         title={
           props.action === "create"
-            ? "Create model definition"
-            : "Edit model definition"
+            ? t("actions.addModelDefinition")
+            : t("actions.editModel")
         }
       >
         {children}
@@ -294,17 +307,17 @@ export const UpsertModelFormDialog = (({
         <DialogHeader>
           <DialogTitle>
             {props.action === "create"
-              ? "Create Model"
+              ? t("actions.createModel")
               : props.action === "clone"
-                ? "Clone Model"
-                : "Edit Model"}
+                ? t("actions.cloneModel")
+                : t("actions.editModel")}
           </DialogTitle>
           {props.action === "edit" && (
             <DialogDescription>{props.modelData.modelName}</DialogDescription>
           )}
           {props.action === "create" && (
             <DialogDescription>
-              Create a new model configuration to track generation costs.
+              {t("actions.createModelDescription")}
             </DialogDescription>
           )}
         </DialogHeader>
@@ -320,11 +333,9 @@ export const UpsertModelFormDialog = (({
                 disabled={props.action === "edit"}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Model Name</FormLabel>
+                    <FormLabel>{t("fields.modelName")}</FormLabel>
                     <FormDescription>
-                      The name of the model. This will be used to reference the
-                      model in the API. You can track price changes of models by
-                      using the same name and match pattern.
+                      {t("fields.modelNameDescription")}
                     </FormDescription>
                     <FormControl>
                       <Input {...field} />
@@ -338,12 +349,9 @@ export const UpsertModelFormDialog = (({
                 name="matchPattern"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Match pattern</FormLabel>
+                    <FormLabel>{t("fields.matchPattern")}</FormLabel>
                     <FormDescription>
-                      Regular expression (Postgres syntax) to match ingested
-                      generations (model attribute) to this model definition.
-                      For an exact, case-insensitive match to a model name, use
-                      the expression: (?i)^(modelname)$
+                      {t("fields.matchPatternDescription")}
                     </FormDescription>
                     <FormControl>
                       <Input {...field} />
@@ -366,7 +374,7 @@ export const UpsertModelFormDialog = (({
                 name="tokenizerId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Tokenizer</FormLabel>
+                    <FormLabel>{t("fields.tokenizer")}</FormLabel>
                     <Select
                       onValueChange={(tokenizerId) => {
                         field.onChange(tokenizerId);
@@ -378,7 +386,7 @@ export const UpsertModelFormDialog = (({
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select a unit" />
+                          <SelectValue placeholder={t("pricing.selectUnit")} />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -390,10 +398,7 @@ export const UpsertModelFormDialog = (({
                       </SelectContent>
                     </Select>
                     <FormDescription>
-                      Optionally, Langfuse can tokenize the input and output of
-                      a generation if no unit counts are ingested. This is
-                      useful for e.g. streamed OpenAI completions. For details
-                      on the supported tokenizers, see the{" "}
+                      {t("fields.tokenizerDescription")}{" "}
                       <Link
                         href="https://langfuse.com/docs/model-usage-and-cost"
                         className="underline"
@@ -413,15 +418,14 @@ export const UpsertModelFormDialog = (({
                   name="tokenizerConfig"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Tokenizer Config</FormLabel>
+                      <FormLabel>{t("fields.tokenizerConfig")}</FormLabel>
                       <CodeMirrorEditor
                         mode="json"
                         value={field.value ?? "{}"}
                         onChange={field.onChange}
                       />
                       <FormDescription>
-                        The config for the tokenizer. Required for openai. See
-                        the{" "}
+                        {t("fields.tokenizerConfigDescription")}{" "}
                         <Link
                           href="https://langfuse.com/docs/model-usage-and-cost"
                           className="underline"
@@ -429,7 +433,6 @@ export const UpsertModelFormDialog = (({
                         >
                           docs
                         </Link>{" "}
-                        for details.
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -444,11 +447,11 @@ export const UpsertModelFormDialog = (({
                 variant="outline"
                 onClick={() => setOpen(false)}
               >
-                Cancel
+                {tCommon("actions.cancel")}
               </Button>
 
               <Button type="submit" loading={upsertModelMutation.isPending}>
-                Submit
+                {tCommon("actions.submit")}
               </Button>
             </DialogFooter>
           </form>

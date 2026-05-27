@@ -26,10 +26,12 @@ import { DialogDescription } from "@radix-ui/react-dialog";
 import { Alert, AlertDescription, AlertTitle } from "@/src/components/ui/alert";
 import { CreateLLMApiKeyDialog } from "./CreateLLMApiKeyDialog";
 import { UpdateLLMApiKeyDialog } from "./UpdateLLMApiKeyDialog";
+import { useTranslations } from "next-intl";
 
 export function LlmApiKeyList(props: { projectId: string }) {
   const [editingKeyId, setEditingKeyId] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
+  const t = useTranslations("settings");
 
   const hasAccess = useHasProjectAccess({
     projectId: props.projectId,
@@ -52,11 +54,11 @@ export function LlmApiKeyList(props: { projectId: string }) {
   if (!hasAccess) {
     return (
       <div>
-        <Header title="LLM Connections" />
+        <Header title={t("llmKeys.title")} />
         <Alert>
-          <AlertTitle>Access Denied</AlertTitle>
+          <AlertTitle>{t("llmKeys.accessDenied")}</AlertTitle>
           <AlertDescription>
-            You do not have permission to view LLM API keys for this project.
+            {t("llmKeys.accessDeniedDescription")}
           </AlertDescription>
         </Alert>
       </div>
@@ -65,27 +67,28 @@ export function LlmApiKeyList(props: { projectId: string }) {
 
   return (
     <div id="llm-api-keys">
-      <Header title="LLM Connections" />
-      <p className="mb-4 text-sm">
-        Connect your LLM services to enable evaluations and playground features.
-        Your provider will charge based on usage.
-      </p>
+      <Header title={t("llmKeys.title")} />
+      <p className="mb-4 text-sm">{t("llmKeys.connectionDescription")}</p>
       <Card className="mb-4 overflow-auto">
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead className="text-primary md:table-cell">
-                Provider
+                {t("llmKeys.provider")}
               </TableHead>
               <TableHead className="text-primary md:table-cell">
-                Adapter
+                {t("llmKeys.adapter")}
               </TableHead>
               <TableHead className="text-primary md:table-cell">
-                Base URL
+                {t("llmKeys.baseUrl")}
               </TableHead>
-              <TableHead className="text-primary">API Key</TableHead>
+              <TableHead className="text-primary">
+                {t("llmKeys.apiKey")}
+              </TableHead>
               {hasExtraHeaderKeys ? (
-                <TableHead className="text-primary">Extra headers</TableHead>
+                <TableHead className="text-primary">
+                  {t("llmKeys.extraHeaders")}
+                </TableHead>
               ) : null}
               <TableHead />
             </TableRow>
@@ -167,6 +170,7 @@ function DeleteApiKeyButton(props: { projectId: string; apiKeyId: string }) {
     onSuccess: () => utils.llmApiKey.invalidate(),
   });
   const [open, setOpen] = useState(false);
+  const tLlm = useTranslations("settings");
 
   if (!hasAccess) return null;
 
@@ -179,11 +183,10 @@ function DeleteApiKeyButton(props: { projectId: string; apiKeyId: string }) {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="mb-5">Delete LLM Connection</DialogTitle>
-          <DialogDescription>
-            Are you sure you want to delete this connection? This action cannot
-            be undone.
-          </DialogDescription>
+          <DialogTitle className="mb-5">
+            {tLlm("llmKeys.deleteTitle")}
+          </DialogTitle>
+          <DialogDescription>{tLlm("llmKeys.deleteConfirm")}</DialogDescription>
         </DialogHeader>
 
         <DialogFooter>
@@ -205,7 +208,7 @@ function DeleteApiKeyButton(props: { projectId: string; apiKeyId: string }) {
             }}
             loading={mutDeleteApiKey.isPending}
           >
-            Permanently delete
+            {tLlm("llmKeys.permanentlyDelete")}
           </Button>
           <Button variant="ghost" onClick={() => setOpen(false)}>
             Cancel

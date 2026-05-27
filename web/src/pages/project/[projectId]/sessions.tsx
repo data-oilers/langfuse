@@ -1,5 +1,6 @@
 import React from "react";
 import { useRouter } from "next/router";
+import { useTranslations } from "next-intl";
 import SessionsTable from "@/src/components/table/use-cases/sessions";
 import Page from "@/src/components/layouts/page";
 import { SessionsOnboarding } from "@/src/components/onboarding/SessionsOnboarding";
@@ -8,6 +9,7 @@ import { useV4Beta } from "@/src/features/events/hooks/useV4Beta";
 
 export default function Sessions() {
   const router = useRouter();
+  const t = useTranslations("sessions");
   const projectId = router.query.projectId as string;
   const { isBetaEnabled } = useV4Beta();
 
@@ -45,7 +47,7 @@ export default function Sessions() {
   return (
     <Page
       headerProps={{
-        title: "Sessions",
+        title: t("sessions.title"),
         help: {
           description: (
             <>

@@ -13,6 +13,7 @@ import { DatasetForm } from "@/src/features/datasets/components/DatasetForm";
 import { useHasProjectAccess } from "@/src/features/rbac/utils/checkProjectAccess";
 import { type Prisma } from "@langfuse/shared";
 import { usePostHogClientCapture } from "@/src/features/posthog-analytics/usePostHogClientCapture";
+import { useTranslations } from "next-intl";
 
 interface BaseDatasetButtonProps {
   mode: "create" | "update" | "delete";
@@ -53,6 +54,7 @@ export const DatasetActionButton = forwardRef<
   HTMLButtonElement,
   DatasetActionButtonProps
 >((props, ref) => {
+  const t = useTranslations("datasets");
   const capture = usePostHogClientCapture();
   const [open, setOpen] = useState(false);
   const hasAccess = useHasProjectAccess({
@@ -98,7 +100,7 @@ export const DatasetActionButton = forwardRef<
               ) : (
                 <LockIcon className="mr-2 h-4 w-4" aria-hidden="true" />
               )}
-              Edit
+              {t("actions.updateDataset")}
             </Button>
           )
         ) : props.mode === "delete" ? (
@@ -120,7 +122,7 @@ export const DatasetActionButton = forwardRef<
             ) : (
               <LockIcon className="mr-2 h-4 w-4" aria-hidden="true" />
             )}
-            Delete
+            {t("actions.deleteDataset")}
           </Button>
         ) : (
           <Button
@@ -136,7 +138,7 @@ export const DatasetActionButton = forwardRef<
             ) : (
               <LockIcon className="-ml-0.5 mr-1.5 h-3 w-3" aria-hidden="true" />
             )}
-            New dataset
+            {t("actions.newDataset")}
           </Button>
         )}
       </DialogTrigger>
@@ -144,15 +146,14 @@ export const DatasetActionButton = forwardRef<
         <DialogHeader>
           <DialogTitle className="mb-4">
             {props.mode === "create"
-              ? "Create new dataset"
+              ? t("actions.createNewDataset")
               : props.mode === "delete"
-                ? "Please confirm"
-                : "Update dataset"}
+                ? t("actions.pleaseConfirm")
+                : t("actions.updateDatasetTitle")}
           </DialogTitle>
           {props.mode === "delete" && (
             <DialogDescription className="text-md p-0">
-              This action cannot be undone and removes all the data associated
-              with this dataset.
+              {t("actions.deleteDescription")}
             </DialogDescription>
           )}
         </DialogHeader>

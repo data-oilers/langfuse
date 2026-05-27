@@ -11,12 +11,14 @@ import {
 import { useV4Beta } from "@/src/features/events/hooks/useV4Beta";
 import ObservationsEventsTable from "@/src/features/events/components/EventsTable";
 import { useQueryProject } from "@/src/features/projects/hooks";
+import { useTranslations } from "next-intl";
 
 export default function Generations() {
   const router = useRouter();
   const projectId = router.query.projectId as string;
   const { isBetaEnabled } = useV4Beta();
   const { project } = useQueryProject();
+  const t = useTranslations("traces");
 
   // Check if the user has tracing configured
   // Skip polling entirely if the project flag is already set in the session
@@ -41,10 +43,9 @@ export default function Generations() {
   return (
     <Page
       headerProps={{
-        title: "Tracing",
+        title: t("pages.tracingTitle"),
         help: {
-          description:
-            "An observation captures a single function call in an application. See docs to learn more.",
+          description: t("pages.observationsHelp"),
           href: "https://langfuse.com/docs/observability/data-model",
         },
         tabsProps: isBetaEnabled
