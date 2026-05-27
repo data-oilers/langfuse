@@ -1,4 +1,5 @@
 import { CalendarDays } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { SidebarMenuButton } from "@/src/components/ui/sidebar";
 import useLocalStorage from "@/src/components/useLocalStorage";
 import Link from "next/link";
@@ -9,6 +10,7 @@ const FIRST_SEEN_KEY = "book-a-call-first-seen";
 
 export const BookACallButton = () => {
   const capture = usePostHogClientCapture();
+  const t = useTranslations("navigation.routes");
   const [firstSeen, setFirstSeen] = useLocalStorage<number | null>(
     FIRST_SEEN_KEY,
     null,
@@ -38,7 +40,7 @@ export const BookACallButton = () => {
         }}
       >
         <CalendarDays className="h-4 w-4" />
-        Book a call
+        {t("bookACall")}
       </Link>
     </SidebarMenuButton>
   );

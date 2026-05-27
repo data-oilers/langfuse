@@ -1,21 +1,30 @@
 {
-  "main": {
+  "routes": {
+    "goTo": "Go to...",
+    "organizations": "Organizations",
+    "projects": "Projects",
+    "home": "Home",
+    "dashboards": "Dashboards",
     "tracing": "Tracing",
     "sessions": "Sessions",
     "users": "Users",
     "prompts": "Prompts",
     "playground": "Playground",
-    "datasets": "Datasets",
     "scores": "Scores",
-    "dashboard": "Dashboard",
+    "llmAsJudge": "LLM-as-a-Judge",
+    "humanAnnotation": "Human Annotation",
+    "datasets": "Datasets",
+    "upgrade": "Upgrade",
     "settings": "Settings",
-    "models": "Models",
-    "annotations": "Annotations"
+    "support": "Support",
+    "bookACall": "Book a call",
+    "cloudStatus": "Cloud Status",
+    "v4BetaToggle": "v4 Beta Toggle"
   },
   "groups": {
-    "observability": "Observability",
-    "promptManagement": "Prompt Management",
-    "evaluation": "Evaluation"
+    "Observability": "Observability",
+    "Prompt Management": "Prompt Management",
+    "Evaluation": "Evaluation"
   },
   "breadcrumbs": {
     "home": "Home",

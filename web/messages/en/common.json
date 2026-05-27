@@ -110,5 +110,33 @@
     "theme": "Theme",
     "language": "Language",
     "signOut": "Sign out"
+  },
+  "auth": {
+    "signIn": "Sign In"
+  },
+  "errors": {
+    "error": "Error",
+    "projectNotFound": "Project Not Found",
+    "projectNotFoundMessage": "The project you are trying to access does not exist or you do not have access to it.",
+    "goToHome": "Go to Home"
+  },
+  "loading": {
+    "loading": "Loading"
+  },
+  "commandMenu": {
+    "placeholder": "Type a command or search...",
+    "noResults": "No results found.",
+    "mainNavigation": "Main Navigation",
+    "projects": "Projects",
+    "dashboards": "Dashboards",
+    "projectSettings": "Project Settings",
+    "organizationSettings": "Organization Settings",
+    "accountSettings": "Account Settings"
+  },
+  "demo": {
+    "demoProject": "Demo Project (view only)",
+    "useDemoApp": "Use Demo App",
+    "useDemoAppTooltip": "Use Demo App to create traces",
+    "yourOrgs": "Your Langfuse Orgs"
   }
 }

@@ -4,31 +4,50 @@
  */
 
 import { useMemo } from "react";
+import { useTranslations } from "next-intl";
 import { useLangfuseCloudRegion } from "@/src/features/organizations/hooks";
 import { env } from "@/src/env.mjs";
 import type { NavigationItem } from "@/src/components/layouts/utilities/routes";
 
-/**
- * Generates metadata for the layout including:
- * - Dynamic page title based on active route
- * - Region-specific favicon (dev vs production)
- * - Apple touch icon path
- *
- * @param activePathName - Title of the currently active navigation item
- * @param navigation - Full navigation array for finding active item
- * @returns Metadata object with title and icon paths
- */
+const TITLE_TO_KEY: Record<string, string> = {
+  "Go to...": "goTo",
+  Organizations: "organizations",
+  Projects: "projects",
+  Home: "home",
+  Dashboards: "dashboards",
+  Tracing: "tracing",
+  Sessions: "sessions",
+  Users: "users",
+  Prompts: "prompts",
+  Playground: "playground",
+  Scores: "scores",
+  "LLM-as-a-Judge": "llmAsJudge",
+  "Human Annotation": "humanAnnotation",
+  Datasets: "datasets",
+  Upgrade: "upgrade",
+  Settings: "settings",
+  Support: "support",
+  "Book a call": "bookACall",
+  "Cloud Status": "cloudStatus",
+  "v4 Beta Toggle": "v4BetaToggle",
+};
+
 export function useLayoutMetadata(
   activePathName: string | undefined,
   _navigation: NavigationItem[],
 ) {
   const { region } = useLangfuseCloudRegion();
+  const t = useTranslations("navigation.routes");
 
   return useMemo(() => {
     const basePath = env.NEXT_PUBLIC_BASE_PATH ?? "";
 
-    // Determine page title from active route
-    const title = activePathName ? `${activePathName} | Langfuse` : "Langfuse";
+    const translatedName = activePathName
+      ? TITLE_TO_KEY[activePathName]
+        ? t(TITLE_TO_KEY[activePathName])
+        : activePathName
+      : undefined;
+    const title = translatedName ? `${translatedName} | Langfuse` : "Langfuse";
 
     // Use dev favicon in DEV region for visual distinction
     // Using SVG for modern browsers with PNG fallback specified in sizes
@@ -42,5 +61,5 @@ export function useLayoutMetadata(
       favicon256Path: `${basePath}/icon256.png`,
       appleTouchIconPath: `${basePath}/apple-touch-icon.png`,
     };
-  }, [activePathName, region]);
+  }, [activePathName, region, t]);
 }

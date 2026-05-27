@@ -110,5 +110,33 @@
     "theme": "Tema",
     "language": "Idioma",
     "signOut": "Cerrar sesión"
+  },
+  "auth": {
+    "signIn": "Iniciar sesión"
+  },
+  "errors": {
+    "error": "Error",
+    "projectNotFound": "Proyecto no encontrado",
+    "projectNotFoundMessage": "El proyecto al que intenta acceder no existe o no tiene permisos para acceder.",
+    "goToHome": "Ir al inicio"
+  },
+  "loading": {
+    "loading": "Cargando"
+  },
+  "commandMenu": {
+    "placeholder": "Escriba un comando o busque...",
+    "noResults": "No se encontraron resultados.",
+    "mainNavigation": "Navegación principal",
+    "projects": "Proyectos",
+    "dashboards": "Paneles",
+    "projectSettings": "Configuración del proyecto",
+    "organizationSettings": "Configuración de organización",
+    "accountSettings": "Configuración de cuenta"
+  },
+  "demo": {
+    "demoProject": "Proyecto Demo (solo lectura)",
+    "useDemoApp": "Usar App Demo",
+    "useDemoAppTooltip": "Use la App Demo para crear trazas",
+    "yourOrgs": "Sus organizaciones"
   }
 }

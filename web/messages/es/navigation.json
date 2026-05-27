@@ -1,21 +1,30 @@
 {
-  "main": {
+  "routes": {
+    "goTo": "Ir a...",
+    "organizations": "Organizaciones",
+    "projects": "Proyectos",
+    "home": "Inicio",
+    "dashboards": "Paneles",
     "tracing": "Trazas",
     "sessions": "Sesiones",
     "users": "Usuarios",
     "prompts": "Prompts",
     "playground": "Playground",
-    "datasets": "Datasets",
     "scores": "Puntuaciones",
-    "dashboard": "Panel",
+    "llmAsJudge": "LLM como Juez",
+    "humanAnnotation": "Anotación Humana",
+    "datasets": "Datasets",
+    "upgrade": "Mejorar plan",
     "settings": "Configuración",
-    "models": "Modelos",
-    "annotations": "Anotaciones"
+    "support": "Soporte",
+    "bookACall": "Agendar llamada",
+    "cloudStatus": "Estado del servicio",
+    "v4BetaToggle": "v4 Beta"
   },
   "groups": {
-    "observability": "Observabilidad",
-    "promptManagement": "Gestión de Prompts",
-    "evaluation": "Evaluación"
+    "Observability": "Observabilidad",
+    "Prompt Management": "Gestión de Prompts",
+    "Evaluation": "Evaluación"
   },
   "breadcrumbs": {
     "home": "Inicio",

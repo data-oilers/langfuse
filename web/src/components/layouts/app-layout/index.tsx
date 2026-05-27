@@ -12,6 +12,7 @@
 import { type PropsWithChildren, useEffect } from "react";
 import { useRouter } from "next/router";
 import { signOut } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import posthog from "posthog-js";
 import { env } from "@/src/env.mjs";
 import { useQueryProjectOrOrganization } from "@/src/features/projects/hooks";
@@ -41,6 +42,7 @@ import { useLayoutMetadata } from "./hooks/useLayoutMetadata";
  */
 export function AppLayout(props: PropsWithChildren) {
   const router = useRouter();
+  const t = useTranslations("common");
   const session = useAuthSession();
   const { organization } = useQueryProjectOrOrganization();
 
@@ -92,10 +94,10 @@ export function AppLayout(props: PropsWithChildren) {
     // For non-publishable paths, show error page
     return (
       <ErrorPageWithSentry
-        title="Project Not Found"
-        message="The project you are trying to access does not exist or you do not have access to it."
+        title={t("errors.projectNotFound")}
+        message={t("errors.projectNotFoundMessage")}
         additionalButton={{
-          label: "Go to Home",
+          label: t("errors.goToHome"),
           href: "/",
         }}
       />
@@ -124,7 +126,7 @@ export function AppLayout(props: PropsWithChildren) {
   // The authGuard hook ensures we don't reach here without a valid session
   if (!session.data) {
     // This should never happen due to guards above, but TypeScript needs this
-    return <LoadingLayout message="Loading" />;
+    return <LoadingLayout message={t("loading.loading")} />;
   }
 
   const handleSignOut = async () => {

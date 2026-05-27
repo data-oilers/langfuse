@@ -21,6 +21,7 @@ import {
 } from "@/src/components/ui/sidebar";
 import { env } from "@/src/env.mjs";
 import { useRouter } from "next/router";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { LangfuseLogo } from "@/src/components/LangfuseLogo";
 import { SidebarNotifications } from "@/src/components/nav/sidebar-notifications";
@@ -74,6 +75,7 @@ export function AppSidebar({
 const DemoBadge = () => {
   const router = useRouter();
   const { isLangfuseCloud } = useLangfuseCloudRegion();
+  const t = useTranslations("common.demo");
   const routerProjectId = router.query.projectId as string | undefined;
 
   if (
@@ -88,13 +90,13 @@ const DemoBadge = () => {
 
   return (
     <SidebarGroup className="border-b">
-      <SidebarGroupLabel>Demo Project (view only)</SidebarGroupLabel>
+      <SidebarGroupLabel>{t("demoProject")}</SidebarGroupLabel>
       <SidebarGroupContent>
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
               asChild
-              tooltip="Use Demo App to create traces"
+              tooltip={t("useDemoAppTooltip")}
               variant="cta"
             >
               <Link
@@ -103,15 +105,15 @@ const DemoBadge = () => {
                 rel="noopener noreferrer"
               >
                 <ExternalLink className="h-4 w-4" />
-                <span>Use Demo App</span>
+                <span>{t("useDemoApp")}</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild tooltip="Your Langfuse Organizations">
+            <SidebarMenuButton asChild tooltip={t("yourOrgs")}>
               <Link href="/">
                 <Grid2X2 className="h-4 w-4" />
-                <span>Your Langfuse Orgs</span>
+                <span>{t("yourOrgs")}</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>

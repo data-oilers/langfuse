@@ -10,6 +10,7 @@ import {
 import { useRouter } from "next/router";
 import { useEffect, memo } from "react";
 import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import { env } from "@/src/env.mjs";
 import { usePostHogClientCapture } from "@/src/features/posthog-analytics/usePostHogClientCapture";
 import { useDebounce } from "@/src/hooks/useDebounce";
@@ -30,9 +31,10 @@ function MainNavigationGroup({
 }) {
   const router = useRouter();
   const capture = usePostHogClientCapture();
+  const t = useTranslations("common.commandMenu");
 
   return (
-    <CommandGroup heading="Main Navigation">
+    <CommandGroup heading={t("mainNavigation")}>
       {navItems.map((item) => (
         <CommandItem
           key={item.url}
@@ -58,6 +60,7 @@ function MainNavigationGroup({
 function ProjectsGroup({ onNavigate }: { onNavigate: () => void }) {
   const router = useRouter();
   const capture = usePostHogClientCapture();
+  const t = useTranslations("common.commandMenu");
   const { allProjectItems } = useNavigationItems();
 
   if (allProjectItems.length === 0) return null;
@@ -65,7 +68,7 @@ function ProjectsGroup({ onNavigate }: { onNavigate: () => void }) {
   return (
     <>
       <CommandSeparator />
-      <CommandGroup heading="Projects">
+      <CommandGroup heading={t("projects")}>
         {allProjectItems.map((item) => (
           <CommandItem
             key={item.url}
@@ -93,6 +96,7 @@ function ProjectsGroup({ onNavigate }: { onNavigate: () => void }) {
 function DashboardsGroup({ onNavigate }: { onNavigate: () => void }) {
   const router = useRouter();
   const capture = usePostHogClientCapture();
+  const t = useTranslations("common.commandMenu");
   const { project } = useQueryProjectOrOrganization();
   const { open } = useCommandMenu();
 
@@ -118,7 +122,7 @@ function DashboardsGroup({ onNavigate }: { onNavigate: () => void }) {
   return (
     <>
       <CommandSeparator />
-      <CommandGroup heading="Dashboards">
+      <CommandGroup heading={t("dashboards")}>
         {dashboards.map((dashboard) => (
           <CommandItem
             key={dashboard.id}
@@ -151,13 +155,14 @@ function DashboardsGroup({ onNavigate }: { onNavigate: () => void }) {
 function ProjectSettingsGroup({ onNavigate }: { onNavigate: () => void }) {
   const router = useRouter();
   const capture = usePostHogClientCapture();
+  const t = useTranslations("common.commandMenu");
   const settingsPages = useProjectSettingsPages();
   const { project } = useQueryProjectOrOrganization();
 
   const projectSettingsItems = settingsPages
     .filter((page) => page.show !== false && !("href" in page))
     .map((page) => ({
-      title: `Project Settings > ${page.title}`,
+      title: `${t("projectSettings")} > ${page.title}`,
       url: `/project/${project?.id}/settings${page.slug === "index" ? "" : `/${page.slug}`}`,
       keywords: page.cmdKKeywords || [],
     }));
@@ -167,7 +172,7 @@ function ProjectSettingsGroup({ onNavigate }: { onNavigate: () => void }) {
   return (
     <>
       <CommandSeparator />
-      <CommandGroup heading="Project Settings">
+      <CommandGroup heading={t("projectSettings")}>
         {projectSettingsItems.map((item) => (
           <CommandItem
             key={item.url}
@@ -194,13 +199,14 @@ function ProjectSettingsGroup({ onNavigate }: { onNavigate: () => void }) {
 function OrganizationSettingsGroup({ onNavigate }: { onNavigate: () => void }) {
   const router = useRouter();
   const capture = usePostHogClientCapture();
+  const t = useTranslations("common.commandMenu");
   const orgSettingsPages = useOrganizationSettingsPages();
   const { organization } = useQueryProjectOrOrganization();
 
   const orgSettingsItems = orgSettingsPages
     .filter((page) => page.show !== false && !("href" in page))
     .map((page) => ({
-      title: `Organization Settings > ${page.title}`,
+      title: `${t("organizationSettings")} > ${page.title}`,
       url: `/organization/${organization?.id}/settings${page.slug === "index" ? "" : `/${page.slug}`}`,
       keywords: page.cmdKKeywords || [],
     }));
@@ -210,7 +216,7 @@ function OrganizationSettingsGroup({ onNavigate }: { onNavigate: () => void }) {
   return (
     <>
       <CommandSeparator />
-      <CommandGroup heading="Organization Settings">
+      <CommandGroup heading={t("organizationSettings")}>
         {orgSettingsItems.map((item) => (
           <CommandItem
             key={item.url}
@@ -237,10 +243,11 @@ function OrganizationSettingsGroup({ onNavigate }: { onNavigate: () => void }) {
 function AccountSettingsGroup({ onNavigate }: { onNavigate: () => void }) {
   const router = useRouter();
   const capture = usePostHogClientCapture();
+  const t = useTranslations("common.commandMenu");
   const accountSettingsPages = useAccountSettingsPages();
 
   const accountSettingsItems = accountSettingsPages.map((page) => ({
-    title: `Account Settings > ${page.title}`,
+    title: `${t("accountSettings")} > ${page.title}`,
     url: `/account/settings${page.slug === "index" ? "" : `/${page.slug}`}`,
     keywords: page.cmdKKeywords || [],
   }));
@@ -250,7 +257,7 @@ function AccountSettingsGroup({ onNavigate }: { onNavigate: () => void }) {
   return (
     <>
       <CommandSeparator />
-      <CommandGroup heading="Account Settings">
+      <CommandGroup heading={t("accountSettings")}>
         {accountSettingsItems.map((item) => (
           <CommandItem
             key={item.url}
@@ -281,6 +288,7 @@ function CommandMenuComponent({
 }) {
   const { open, setOpen } = useCommandMenu();
   const capture = usePostHogClientCapture();
+  const t = useTranslations("common.commandMenu");
 
   const debouncedSearchChange = useDebounce(
     (value: string) => {
@@ -346,12 +354,12 @@ function CommandMenuComponent({
       }}
     >
       <CommandInput
-        placeholder="Type a command or search..."
+        placeholder={t("placeholder")}
         className="border-none focus:border-none focus:outline-none focus:ring-0 focus:ring-transparent"
         onValueChange={debouncedSearchChange}
       />
       <CommandList>
-        <CommandEmpty>No results found.</CommandEmpty>
+        <CommandEmpty>{t("noResults")}</CommandEmpty>
         <MainNavigationGroup navItems={navItems} onNavigate={handleNavigate} />
         <ProjectsGroup onNavigate={handleNavigate} />
         <DashboardsGroup onNavigate={handleNavigate} />
