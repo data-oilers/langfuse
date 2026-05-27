@@ -2,10 +2,9 @@ import {
   GetAnnotationQueueByIdQuery,
   GetAnnotationQueueByIdResponse,
 } from "@/src/features/public-api/types/annotation-queues";
+import { getAnnotationQueueForApi } from "@/src/features/annotation-queues/server/publicAnnotationQueueService";
 import { defineTool } from "../../../core/define-tool";
 import { runMcpTool } from "../../../core/run-mcp-tool";
-import { annotationQueueToApi } from "../schema";
-import { verifyAnnotationQueue } from "../utils";
 
 export const [getAnnotationQueueTool, handleGetAnnotationQueue] = defineTool({
   name: "getAnnotationQueue",
@@ -18,16 +17,13 @@ export const [getAnnotationQueueTool, handleGetAnnotationQueue] = defineTool({
       spanName: "mcp.annotation_queues.get",
       context,
       attributes: { "mcp.annotation_queue_id": input.queueId },
-      fn: async () => {
-        const queue = await verifyAnnotationQueue({
-          projectId: context.projectId,
-          queueId: input.queueId,
-        });
-
-        return GetAnnotationQueueByIdResponse.parse(
-          annotationQueueToApi(queue),
-        );
-      },
+      fn: async () =>
+        GetAnnotationQueueByIdResponse.parse(
+          await getAnnotationQueueForApi({
+            projectId: context.projectId,
+            queueId: input.queueId,
+          }),
+        ),
     }),
   readOnlyHint: true,
 });

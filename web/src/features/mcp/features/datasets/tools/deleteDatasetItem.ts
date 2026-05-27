@@ -1,5 +1,4 @@
-import { deleteDatasetItem } from "@langfuse/shared/src/server";
-import { auditLog } from "@/src/features/audit-logs/auditLog";
+import { deleteDatasetItemForApi } from "@/src/features/datasets/server/publicDatasetService";
 import {
   DeleteDatasetItemV1Query,
   DeleteDatasetItemV1Response,
@@ -18,26 +17,15 @@ export const [deleteDatasetItemTool, handleDeleteDatasetItem] = defineTool({
       spanName: "mcp.dataset_items.delete",
       context,
       attributes: { "mcp.dataset_item_id": input.datasetItemId },
-      fn: async () => {
-        const result = await deleteDatasetItem({
-          projectId: context.projectId,
-          datasetItemId: input.datasetItemId,
-        });
-
-        await auditLog({
-          action: "delete",
-          resourceType: "datasetItem",
-          resourceId: input.datasetItemId,
-          projectId: context.projectId,
-          orgId: context.orgId,
-          apiKeyId: context.apiKeyId,
-          before: result.deletedItem,
-        });
-
-        return DeleteDatasetItemV1Response.parse({
-          message: "Dataset item successfully deleted",
-        });
-      },
+      fn: async () =>
+        DeleteDatasetItemV1Response.parse(
+          await deleteDatasetItemForApi({
+            datasetItemId: input.datasetItemId,
+            projectId: context.projectId,
+            orgId: context.orgId,
+            apiKeyId: context.apiKeyId,
+          }),
+        ),
     }),
   destructiveHint: true,
 });

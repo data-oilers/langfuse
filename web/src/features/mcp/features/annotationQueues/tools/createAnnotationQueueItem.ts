@@ -1,14 +1,8 @@
-import { AnnotationQueueStatus } from "@langfuse/shared";
-import { prisma } from "@langfuse/shared/src/db";
-import { auditLog } from "@/src/features/audit-logs/auditLog";
+import { createAnnotationQueueItemForApi } from "@/src/features/annotation-queues/server/publicAnnotationQueueService";
 import { CreateAnnotationQueueItemResponse } from "@/src/features/public-api/types/annotation-queues";
 import { defineTool } from "../../../core/define-tool";
 import { runMcpTool } from "../../../core/run-mcp-tool";
-import {
-  annotationQueueItemToApi,
-  CreateAnnotationQueueItemToolSchema,
-} from "../schema";
-import { verifyAnnotationQueue } from "../utils";
+import { CreateAnnotationQueueItemToolSchema } from "../schema";
 
 export const [createAnnotationQueueItemTool, handleCreateAnnotationQueueItem] =
   defineTool({
@@ -22,40 +16,14 @@ export const [createAnnotationQueueItemTool, handleCreateAnnotationQueueItem] =
         spanName: "mcp.annotation_queue_items.create",
         context,
         attributes: { "mcp.annotation_queue_id": input.queueId },
-        fn: async () => {
-          await verifyAnnotationQueue({
-            projectId: context.projectId,
-            queueId: input.queueId,
-          });
-
-          const status = input.status || AnnotationQueueStatus.PENDING;
-          const completedAt =
-            status === AnnotationQueueStatus.COMPLETED ? new Date() : null;
-
-          const item = await prisma.annotationQueueItem.create({
-            data: {
-              queueId: input.queueId,
-              objectId: input.objectId,
-              objectType: input.objectType,
-              status,
-              completedAt,
+        fn: async () =>
+          CreateAnnotationQueueItemResponse.parse(
+            await createAnnotationQueueItemForApi({
               projectId: context.projectId,
-            },
-          });
-
-          await auditLog({
-            action: "create",
-            resourceType: "annotationQueueItem",
-            resourceId: item.id,
-            projectId: context.projectId,
-            orgId: context.orgId,
-            apiKeyId: context.apiKeyId,
-            after: item,
-          });
-
-          return CreateAnnotationQueueItemResponse.parse(
-            annotationQueueItemToApi(item),
-          );
-        },
+              queueId: input.queueId,
+              input,
+              auditScope: context,
+            }),
+          ),
       }),
   });

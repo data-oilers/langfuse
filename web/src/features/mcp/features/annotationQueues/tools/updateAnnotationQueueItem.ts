@@ -1,14 +1,8 @@
-import { AnnotationQueueStatus, LangfuseNotFoundError } from "@langfuse/shared";
-import { prisma } from "@langfuse/shared/src/db";
-import { auditLog } from "@/src/features/audit-logs/auditLog";
+import { updateAnnotationQueueItemForApi } from "@/src/features/annotation-queues/server/publicAnnotationQueueService";
 import { UpdateAnnotationQueueItemResponse } from "@/src/features/public-api/types/annotation-queues";
 import { defineTool } from "../../../core/define-tool";
 import { runMcpTool } from "../../../core/run-mcp-tool";
-import {
-  annotationQueueItemToApi,
-  UpdateAnnotationQueueItemToolSchema,
-} from "../schema";
-import { verifyAnnotationQueue } from "../utils";
+import { UpdateAnnotationQueueItemToolSchema } from "../schema";
 
 export const [updateAnnotationQueueItemTool, handleUpdateAnnotationQueueItem] =
   defineTool({
@@ -25,54 +19,16 @@ export const [updateAnnotationQueueItemTool, handleUpdateAnnotationQueueItem] =
           "mcp.annotation_queue_id": input.queueId,
           "mcp.annotation_queue_item_id": input.itemId,
         },
-        fn: async () => {
-          await verifyAnnotationQueue({
-            projectId: context.projectId,
-            queueId: input.queueId,
-          });
-
-          const existingItem = await prisma.annotationQueueItem.findUnique({
-            where: {
-              id: input.itemId,
-              queueId: input.queueId,
+        fn: async () =>
+          UpdateAnnotationQueueItemResponse.parse(
+            await updateAnnotationQueueItemForApi({
               projectId: context.projectId,
-            },
-          });
-
-          if (!existingItem) {
-            throw new LangfuseNotFoundError("Annotation queue item not found");
-          }
-
-          const item = await prisma.annotationQueueItem.update({
-            where: {
-              id: input.itemId,
               queueId: input.queueId,
-              projectId: context.projectId,
-            },
-            data: {
-              status: input.status,
-              completedAt:
-                input.status === AnnotationQueueStatus.COMPLETED
-                  ? new Date()
-                  : undefined,
-            },
-          });
-
-          await auditLog({
-            action: "update",
-            resourceType: "annotationQueueItem",
-            resourceId: item.id,
-            projectId: context.projectId,
-            orgId: context.orgId,
-            apiKeyId: context.apiKeyId,
-            before: existingItem,
-            after: item,
-          });
-
-          return UpdateAnnotationQueueItemResponse.parse(
-            annotationQueueItemToApi(item),
-          );
-        },
+              itemId: input.itemId,
+              input,
+              auditScope: context,
+            }),
+          ),
       }),
     destructiveHint: true,
   });
