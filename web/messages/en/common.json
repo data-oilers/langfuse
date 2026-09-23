@@ -138,5 +138,10 @@
     "useDemoApp": "Use Demo App",
     "useDemoAppTooltip": "Use Demo App to create traces",
     "yourOrgs": "Your Langfuse Orgs"
+  },
+  "jsonViewer": {
+    "matchesInSection": "{count, plural, one {# match in this section} other {# matches in this section}}",
+    "matchesInValue": "{count, plural, one {# match in this value} other {# matches in this value}}",
+    "filesInCategory": "{count, plural, one {# {category} file} other {# {category} files}}"
   }
 }

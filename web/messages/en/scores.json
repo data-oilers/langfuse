@@ -157,5 +157,14 @@
     "source": "Source",
     "comment": "Comment",
     "metadata": "Metadata"
+  },
+  "timeline": {
+    "chartTitleAverage": "Average by {count} {unit}",
+    "chartTitleCount": "Count by {count} {unit}",
+    "dayUnit": "{count, plural, one {day} other {days}}",
+    "hourUnit": "{count, plural, one {hour} other {hours}}",
+    "minuteUnit": "{count, plural, one {minute} other {minutes}}",
+    "weekUnit": "{count, plural, one {week} other {weeks}}",
+    "monthUnit": "{count, plural, one {month} other {months}}"
   }
 }

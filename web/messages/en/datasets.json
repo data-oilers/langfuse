@@ -84,8 +84,7 @@
     "compare": "Compare",
     "deleteRun": "Delete Dataset Run",
     "deleteRuns": "Delete Dataset Runs",
-    "deleteRunsDescription": "This action cannot be undone and removes all the data associated with {count} dataset run.",
-    "deleteRunsDescriptionPlural": "This action cannot be undone and removes all the data associated with {count} dataset runs.",
+    "deleteRunsDescription": "This action cannot be undone and removes all the data associated with {count, plural, one {# dataset run} other {# dataset runs}}.",
     "deleteRunDescription": "This action cannot be undone. Traces linked to this run must be deleted manually.",
     "pleaseConfirm": "Please confirm",
     "selectRuns": "Select runs to compare",
@@ -266,7 +265,17 @@
     "latest": "Latest",
     "versionActions": "Version actions",
     "viewingVersion": "Viewing version from",
-    "returnToLatest": "Return to latest"
+    "returnToLatest": "Return to latest",
+    "versionCount": "{count, plural, one {# version} other {# versions}}"
+  },
+  "csvColumns": {
+    "columnCount": "{count, plural, one {# column} other {# columns}}"
+  },
+  "warningBanner": {
+    "changeCount": "{count, plural, one {# change} other {# changes}}",
+    "upsertCount": "{count, plural, one {# upsert} other {# upserts}}",
+    "deleteCount": "{count, plural, one {# delete} other {# deletes}}",
+    "sinceThisVersion": "since this version"
   },
   "remoteExperiment": {
     "editTitle": "Edit remote dataset run trigger",
@@ -301,5 +310,10 @@
     "jsonSchema": "JSON Schema",
     "exampleObject": "Example Object",
     "schemaEnforced": "Schema enforced"
+  },
+  "validation": {
+    "itemsFailedValidation": "{count, plural, one {# item failed validation.} other {# items failed validation.}}",
+    "datasetsSelected": "{count, plural, one {# dataset selected} other {# datasets selected}}",
+    "addingObservationsTo": "Adding {count, plural, one {# observation} other {# observations}} to"
   }
 }

@@ -57,9 +57,7 @@
     "searchChatPrompts": "Buscar prompts de chat...",
     "noChatPromptFound": "No se encontró ningún prompt de chat",
     "newSplitWindow": "Nueva ventana dividida",
-    "removeWindow": "Eliminar ventana",
-    "windows": "{count} ventanas",
-    "window": "{count} ventana"
+    "removeWindow": "Eliminar ventana"
   },
   "page": {
     "title": "Playground",
@@ -67,6 +65,11 @@
     "noModelConfiguredTitle": "Ningún modelo configurado",
     "noModelConfiguredDescriptionBefore": "Para usar el Playground, primero debe configurar un modelo. Vaya a",
     "noModelConfiguredDescriptionAfter": "para agregar una clave de API de LLM y configurar sus modelos.",
-    "llmConnectionSettings": "Configuración de conexiones LLM"
+    "llmConnectionSettings": "Configuración de conexiones LLM",
+    "windowCount": "{count, plural, one {# ventana} other {# ventanas}}",
+    "executing": "Ejecutando {windowCount}"
+  },
+  "collapsibleSection": {
+    "itemsConfigured": "{count, plural, one {# elemento configurado} other {# elementos configurados}}"
   }
 }

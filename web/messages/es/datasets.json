@@ -84,8 +84,7 @@
     "compare": "Comparar",
     "deleteRun": "Eliminar ejecución del dataset",
     "deleteRuns": "Eliminar ejecuciones del dataset",
-    "deleteRunsDescription": "Esta acción no se puede deshacer y elimina todos los datos asociados con {count} ejecución del dataset.",
-    "deleteRunsDescriptionPlural": "Esta acción no se puede deshacer y elimina todos los datos asociados con {count} ejecuciones del dataset.",
+    "deleteRunsDescription": "Esta acción no se puede deshacer y elimina todos los datos asociados con {count, plural, one {# ejecución del dataset} other {# ejecuciones del dataset}}.",
     "deleteRunDescription": "Esta acción no se puede deshacer. Las trazas vinculadas a esta ejecución deben eliminarse manualmente.",
     "pleaseConfirm": "Por favor, confirme",
     "selectRuns": "Seleccionar ejecuciones para comparar",
@@ -266,7 +265,17 @@
     "latest": "Más reciente",
     "versionActions": "Acciones de versión",
     "viewingVersion": "Viendo versión del",
-    "returnToLatest": "Volver a la versión más reciente"
+    "returnToLatest": "Volver a la versión más reciente",
+    "versionCount": "{count, plural, one {# versión} other {# versiones}}"
+  },
+  "csvColumns": {
+    "columnCount": "{count, plural, one {# columna} other {# columnas}}"
+  },
+  "warningBanner": {
+    "changeCount": "{count, plural, one {# cambio} other {# cambios}}",
+    "upsertCount": "{count, plural, one {# actualización} other {# actualizaciones}}",
+    "deleteCount": "{count, plural, one {# eliminación} other {# eliminaciones}}",
+    "sinceThisVersion": "desde esta versión"
   },
   "remoteExperiment": {
     "editTitle": "Editar disparador de ejecución remota del dataset",
@@ -301,5 +310,10 @@
     "jsonSchema": "JSON Schema",
     "exampleObject": "Objeto de ejemplo",
     "schemaEnforced": "Esquema aplicado"
+  },
+  "validation": {
+    "itemsFailedValidation": "{count, plural, one {# elemento no pasó la validación.} other {# elementos no pasaron la validación.}}",
+    "datasetsSelected": "{count, plural, one {# dataset seleccionado} other {# datasets seleccionados}}",
+    "addingObservationsTo": "Agregando {count, plural, one {# observación} other {# observaciones}} a"
   }
 }

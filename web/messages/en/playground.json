@@ -57,9 +57,7 @@
     "searchChatPrompts": "Search chat prompts...",
     "noChatPromptFound": "No chat prompt found",
     "newSplitWindow": "New split window",
-    "removeWindow": "Remove window",
-    "windows": "{count} windows",
-    "window": "{count} window"
+    "removeWindow": "Remove window"
   },
   "page": {
     "title": "Playground",
@@ -67,6 +65,11 @@
     "noModelConfiguredTitle": "No Model Configured",
     "noModelConfiguredDescriptionBefore": "To use the playground, you need to configure a model first. Go to",
     "noModelConfiguredDescriptionAfter": "to add an LLM API key and configure your models.",
-    "llmConnectionSettings": "LLM Connection Settings"
+    "llmConnectionSettings": "LLM Connection Settings",
+    "windowCount": "{count, plural, one {# window} other {# windows}}",
+    "executing": "Executing {windowCount}"
+  },
+  "collapsibleSection": {
+    "itemsConfigured": "{count, plural, one {# item configured} other {# items configured}}"
   }
 }

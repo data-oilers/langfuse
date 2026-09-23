@@ -125,7 +125,12 @@
     "otherCost": "Otro costo",
     "otherUsage": "Otro uso",
     "totalCost": "Costo total",
-    "totalUsage": "Uso total"
+    "totalUsage": "Uso total",
+    "aggregateAcross": "Agregado de",
+    "generationCount": "{count, plural, one {generación} other {generaciones}}"
+  },
+  "logView": {
+    "childItemCount": "{count, plural, one {# elemento} other {# elementos}}"
   },
   "io": {
     "tags": "Etiquetas",

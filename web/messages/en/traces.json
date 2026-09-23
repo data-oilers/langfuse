@@ -125,7 +125,12 @@
     "otherCost": "Other cost",
     "otherUsage": "Other usage",
     "totalCost": "Total cost",
-    "totalUsage": "Total usage"
+    "totalUsage": "Total usage",
+    "aggregateAcross": "Aggregate across",
+    "generationCount": "{count, plural, one {generation} other {generations}}"
+  },
+  "logView": {
+    "childItemCount": "{count, plural, one {# item} other {# items}}"
   },
   "io": {
     "tags": "Tags",

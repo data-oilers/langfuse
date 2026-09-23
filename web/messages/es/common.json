@@ -138,5 +138,10 @@
     "useDemoApp": "Usar App Demo",
     "useDemoAppTooltip": "Use la App Demo para crear trazas",
     "yourOrgs": "Sus organizaciones"
+  },
+  "jsonViewer": {
+    "matchesInSection": "{count, plural, one {# coincidencia en esta sección} other {# coincidencias en esta sección}}",
+    "matchesInValue": "{count, plural, one {# coincidencia en este valor} other {# coincidencias en este valor}}",
+    "filesInCategory": "{count, plural, one {# archivo {category}} other {# archivos {category}}}"
   }
 }
