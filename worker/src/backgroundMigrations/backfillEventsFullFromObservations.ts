@@ -366,7 +366,18 @@ export default class BackfillEventsFullFromObservations extends ChunkedClickhous
           SELECT project_id, trace_id FROM dataset_run_items_rmt
         )
       SETTINGS
-        join_algorithm = 'full_sorting_merge',
+        -- 'hash', not a sorting algorithm, because the two sides of this join
+        -- are asymmetric. The right side is one partition of traces, deduped
+        -- to one row per (project_id, id) and carrying metadata columns only,
+        -- so its size tracks trace count. The left side carries the
+        -- observation payload, input and output included, and its size
+        -- tracks how much text the instrumented application logged.
+        -- 'full_sorting_merge' sorts both inputs unconditionally, which pulls
+        -- that payload through a sort and makes this step's memory scale with
+        -- part size -- exactly what the per-part chunking above is trying to
+        -- bound. Hashing the small side instead lets the large side stream.
+        -- See https://github.com/langfuse/langfuse/issues/17517.
+        join_algorithm = 'hash',
         type_json_skip_duplicated_paths = 1
     `;
 
