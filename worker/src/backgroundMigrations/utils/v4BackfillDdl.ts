@@ -72,11 +72,43 @@ export function buildDisableSharedMergeTreeMergesQuery(
   );
 }
 
+/**
+ * Reverses `buildDisableSharedMergeTreeMergesQuery` via `RESET SETTING`, so
+ * the table returns to the server's default instead of a value hard-coded in
+ * this migration. Safe to call even when the setting was never modified.
+ * See https://github.com/langfuse/langfuse/issues/17524.
+ */
+export function buildEnableSharedMergeTreeMergesQuery(
+  target: ClickhouseDdlTarget = clickhouseDdlTarget(),
+): string {
+  return joinSql(
+    "ALTER TABLE",
+    pidTidSortingTable(target),
+    "RESET SETTING shared_merge_tree_disable_merges_and_mutations_assignment",
+  );
+}
+
 export function buildStopMergesQuery(
   target: ClickhouseDdlTarget = clickhouseDdlTarget(),
 ): string {
   return joinSql(
     "SYSTEM STOP MERGES",
+    onClusterClause(target),
+    pidTidSortingTable(target),
+  );
+}
+
+/**
+ * Lifts an in-memory `SYSTEM STOP MERGES` lock. Cheap and side-effect-free to
+ * call even when no freeze is in effect, so callers can use it unconditionally
+ * to normalize state before freezing again.
+ * See https://github.com/langfuse/langfuse/issues/17524.
+ */
+export function buildStartMergesQuery(
+  target: ClickhouseDdlTarget = clickhouseDdlTarget(),
+): string {
+  return joinSql(
+    "SYSTEM START MERGES",
     onClusterClause(target),
     pidTidSortingTable(target),
   );
@@ -97,6 +129,24 @@ export function buildFreezeReplicatedMergesQuery(
     pidTidSortingTable(target),
     onClusterClause(target),
     "MODIFY SETTING max_replicated_merges_in_queue = 0, always_fetch_merged_part = 1",
+  );
+}
+
+/**
+ * Reverses `buildFreezeReplicatedMergesQuery`. Uses `RESET SETTING` rather
+ * than assigning the pre-freeze values back, so the table returns to the
+ * server's default instead of a value hard-coded in this migration. Safe to
+ * call even when no freeze is in effect.
+ * See https://github.com/langfuse/langfuse/issues/17524.
+ */
+export function buildUnfreezeReplicatedMergesQuery(
+  target: ClickhouseDdlTarget = clickhouseDdlTarget(),
+): string {
+  return joinSql(
+    "ALTER TABLE",
+    pidTidSortingTable(target),
+    onClusterClause(target),
+    "RESET SETTING max_replicated_merges_in_queue, always_fetch_merged_part",
   );
 }
 

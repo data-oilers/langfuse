@@ -13,9 +13,12 @@ import {
 import {
   PID_TID_SORTING_TABLE,
   buildDisableSharedMergeTreeMergesQuery,
+  buildEnableSharedMergeTreeMergesQuery,
   buildFreezeReplicatedMergesQuery,
+  buildStartMergesQuery,
   buildStopMergesQuery,
   buildSyncReplicaQuery,
+  buildUnfreezeReplicatedMergesQuery,
   onClusterClause,
   pidTidSortingTable,
 } from "./utils/v4BackfillDdl";
@@ -179,6 +182,57 @@ export default class RewriteObservationsToPidTidSorting extends ChunkedClickhous
   }
 
   /**
+   * Reverses `stopMergesOnScratchTable`: lifts the in-memory action lock and,
+   * for the replicated/shared engines, resets the persisted freeze setting
+   * back to the server default via `RESET SETTING` rather than reassigning a
+   * value by hand. Idempotent — safe to call even when nothing is frozen.
+   *
+   * Called unconditionally before `syncReplicasOnScratchTable` so that a merge
+   * entry queued while a previous freeze was in effect cannot deadlock the
+   * `SYSTEM SYNC REPLICA ... STRICT` that follows: `STRICT` waits for the
+   * queue to fully drain, and a frozen table can never drain a merge it is
+   * also refusing to execute. See
+   * https://github.com/langfuse/langfuse/issues/17524.
+   */
+  private async resumeMergesOnScratchTable(): Promise<void> {
+    const engine = await detectTableEngine(PID_TID_SORTING_TABLE);
+    const isSharedMergeTree = engine.startsWith("Shared");
+    const isReplicatedMergeTree = engine.startsWith("Replicated");
+
+    logger.info(
+      `${this.logPrefix} Resuming merges on observations_pid_tid_sorting (engine=${engine || "unknown"})`,
+    );
+
+    if (isSharedMergeTree) {
+      await commandClickhouse({
+        query: buildEnableSharedMergeTreeMergesQuery(),
+        tags: {
+          surface: "worker",
+          route: "background-migration.resumeMerges",
+        },
+      });
+    } else {
+      if (isReplicatedMergeTree) {
+        await commandClickhouse({
+          query: buildUnfreezeReplicatedMergesQuery(),
+          tags: {
+            surface: "worker",
+            route: "background-migration.resumeMerges",
+          },
+        });
+      }
+
+      await commandClickhouse({
+        query: buildStartMergesQuery(),
+        tags: {
+          surface: "worker",
+          route: "background-migration.resumeMerges",
+        },
+      });
+    }
+  }
+
+  /**
    * Drives every replica to drain its replication queue so each node's
    * `system.parts` reflects the full, post-backfill part set before M3 reads
    * it. This is the convergence half of the pair: the freeze above keeps the
@@ -291,8 +345,17 @@ export default class RewriteObservationsToPidTidSorting extends ChunkedClickhous
   protected async onBackfillSucceeded(
     _state: ChunkedBackfillState<BaseChunkTodo>,
   ): Promise<void> {
-    await this.stopMergesOnScratchTable();
+    // Resume first: a merge queued while an earlier attempt's freeze was
+    // still in effect would otherwise sit in the replication queue forever,
+    // and `syncReplicasOnScratchTable`'s STRICT wait can never return while
+    // that queue cannot drain. Resuming unconditionally also makes a retry
+    // self-healing after a prior attempt died mid-freeze instead of
+    // inheriting its stuck state. Only once the cluster has actually
+    // converged do we freeze it for the read that M3 depends on.
+    // See https://github.com/langfuse/langfuse/issues/17524.
+    await this.resumeMergesOnScratchTable();
     await this.syncReplicasOnScratchTable();
+    await this.stopMergesOnScratchTable();
     logger.info(
       `${this.logPrefix} Froze and synced observations_pid_tid_sorting for downstream processing`,
     );
